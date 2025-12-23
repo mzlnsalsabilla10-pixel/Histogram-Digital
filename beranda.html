@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Belajar Histogram – Deep Learning</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body onload="cekStatusAwal()">
+
+<header>
+    <h1>Media Belajar Histogram<br><span>Pembelajaran Mendalam</span></h1>
+    <p class="subjudul" id="sapaan"></p>
+</header>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    let namaK = localStorage.getItem("kelompokNama");
+    if (namaK) {
+        document.getElementById("sapaan").innerHTML =
+            "Selamat datang, <b>" + namaK + "</b>!";
+    }
+});
+</script>
+if(!localStorage.getItem("login")){
+  window.location.href = "login.html";
+}
+
+<section class="cards-container">
+
+    <!-- AKTIVITAS 1 (TERBUKA) -->
+    <div class="card" onclick="bukaHalaman('aktivitas1.html')">
+        <div class="badge purple">1</div>
+        <h3>Identifikasi Grafik</h3>
+        <p>Amati dua grafik dan temukan perbedaannya.</p>
+    </div>
+
+    <!-- KODE AKSES AKTIVITAS 2 -->
+    <div class="kode-akses">
+        <p><b>Masukkan kode dari guru untuk membuka Aktivitas 2</b></p>
+        <input type="text" id="kodeAkt2" placeholder="Masukkan kode">
+        <button onclick="cekKodeAkt2()">Buka Aktivitas 2</button>
+    </div>
+
+    <!-- AKTIVITAS 2 (TERKUNCI) -->
+    <div id="card2" class="card locked">
+        <div class="badge aqua">2</div>
+        <h3>Kumpulkan Data</h3>
+        <p>Input data mentah untuk membuat histogram.</p>
+    </div>
+
+    <!-- AKTIVITAS 3 -->
+    <div id="card3" class="card locked">
+        <div class="badge yellow">3</div>
+        <h3>Tentukan Interval</h3>
+        <p>Buat kelas interval yang sesuai.</p>
+    </div>
+
+    <!-- AKTIVITAS 4 -->
+    <div id="card4" class="card locked">
+        <div class="badge blue">4</div>
+        <h3>Buat Histogram</h3>
+        <p>Bangun histogram dari data yang kamu buat.</p>
+    </div>
+
+    <!-- AKTIVITAS 5 -->
+    <div id="card5" class="card locked">
+        <div class="badge pink">5</div>
+        <h3>Analisis</h3>
+        <p>Berikan interpretasi dan kesimpulan.</p>
+    </div>
+
+</section>
+
+<script src="script.js"></script>
+
+</body>
+</html>
