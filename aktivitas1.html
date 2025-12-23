@@ -25,17 +25,18 @@
             margin-top: 8px;
         }
 
-        .btn {
-            margin-top: 20px;
-            background: #553AD1;
-            color: white;
-            padding: 12px 22px;
-            border-radius: 12px;
-            cursor: pointer;
-            display: inline-block;
-            opacity: 0.6;
-            pointer-events: none;
-        }
+.btn {
+    margin-top: 20px;
+    background: #553AD1;
+    color: white;
+    padding: 12px 22px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: inline-block;
+    opacity: 1;
+    pointer-events: auto;
+}
+
 
         .btn.active {
             opacity: 1;
@@ -146,33 +147,11 @@
 </div>
 
 <script src="script.js"></script>
-<script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
-let player;
-const btnTonton = document.getElementById("btnTonton");
-
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player("videoEksplorasi", {
-    events: {
-      onStateChange: onPlayerStateChange
-    }
-  });
-}
-
-function onPlayerStateChange(event) {
-  // 0 = video selesai
-  if (event.data === YT.PlayerState.ENDED) {
-    btnTonton.classList.add("active");
-    btnTonton.disabled = false;
-  }
-}
-
-btnTonton.addEventListener("click", () => {
-  if (!btnTonton.classList.contains("active")) return;
-
-  document.getElementById("videoSection").classList.add("hidden");
-  document.getElementById("checkpointSection").classList.remove("hidden");
+document.getElementById("btnTonton").addEventListener("click", () => {
+    document.getElementById("videoSection").classList.add("hidden");
+    document.getElementById("checkpointSection").classList.remove("hidden");
 });
 
 function lanjutSoal1() {
@@ -228,6 +207,7 @@ function submitAktivitas1() {
 
 </body>
 </html>
+
 
 
 
