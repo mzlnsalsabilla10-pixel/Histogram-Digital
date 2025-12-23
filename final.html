@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akhir Kegiatan</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .final-container {
+            max-width: 700px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0px 8px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        .final-container h2 {
+            color: #553AD1;
+            margin-bottom: 10px;
+        }
+        .final-container p {
+            color: #444;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        .btn-area {
+            margin-top: 30px;
+        }
+        .btn-final {
+            padding: 12px 22px;
+            background: #553AD1;
+            color: white;
+            border-radius: 12px;
+            margin: 6px;
+            cursor: pointer;
+            display: inline-block;
+            transition: 0.2s ease;
+        }
+        .btn-final:hover {
+            background: #4025ad;
+        }
+    </style>
+</head>
+
+<body onload="cekLogin(); isiNamaKelompok();">
+
+<div class="final-container">
+
+    <h2>🎉 Selamat! 🎉</h2>
+    <p id="ucapan"></p>
+
+    <p>
+        Kamu telah menyelesaikan *seluruh rangkaian Aktivitas Pembelajaran Deep Learning*  
+        untuk materi <b>Histogram</b>.  
+        Terima kasih atas kerja keras, kolaborasi, dan proses berpikir mendalam yang telah dilakukan oleh kelompokmu!
+    </p>
+
+    <div class="btn-area">
+        <div class="btn-final" onclick="downloadReport()">⬇ Download Report</div>
+        <div class="btn-final" onclick="kembaliHome()">🏠 Kembali ke Halaman Utama</div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+<script>
+function isiNamaKelompok() {
+    let nama = localStorage.getItem("kelompokNama");
+    if (!nama) nama = "Kelompok";
+
+    document.getElementById("ucapan").innerHTML =
+        "Terima kasih, <b>" + nama + "</b>!";
+}
+
+function kembaliHome() {
+    window.location.href = "index.html";
+}
+
+// sementara, tombol report belum ada fungsinya
+function downloadReport() {
+    alert("Fitur download report akan diaktifkan setelah aktivitas final dirapikan. 😊");
+}
+</script>
+
+</body>
+</html>

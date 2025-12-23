@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Aktivitas 1 - Eksplorasi Histogram</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .box {
+            max-width: 800px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 22px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        .hidden { display: none; }
+
+        textarea {
+            width: 100%;
+            border-radius: 14px;
+            padding: 12px;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .btn {
+            margin-top: 20px;
+            background: #553AD1;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: inline-block;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .btn.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .opsi label {
+            display: block;
+            margin: 8px 0;
+        }
+
+        .disclaimer {
+            background: #f5f3ff;
+            border-left: 5px solid #553AD1;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body onload="cekLogin(); cekAkses(1);">
+
+<!-- ================= VIDEO ================= -->
+<div class="box" id="videoSection">
+    <h2>Eksplorasi Awal</h2>
+
+    <div class="disclaimer">
+        ⚠️ <b>Perhatian:</b> Video ini hanya dapat ditonton satu kali.
+        Pastikan peserta didik menyimak dengan baik sebelum melanjutkan.
+    </div>
+
+    <video id="videoEksplorasi" width="100%" controls>
+    <source src="video_histogram.mp4" type="video/mp4">
+    Browser kamu tidak mendukung video.
+</video>
+
+
+    <div id="btnTonton" class="btn">Saya sudah menonton</div>
+</div>
+
+<!-- ================= CHECKPOINT ================= -->
+<div class="box hidden" id="checkpointSection">
+    <h3>Pertanyaan Pemantik</h3>
+    <p>
+        Berdasarkan video yang telah ditonton, menurut kelompokmu
+        apa perbedaan paling penting antara diagram batang dan histogram?
+    </p>
+
+    <textarea id="checkpointJawaban"></textarea>
+    <div class="btn active" onclick="lanjutSoal1()">Lanjut</div>
+</div>
+
+<!-- ================= SOAL 1 ================= -->
+<div class="box hidden" id="soal1">
+    <h3>Soal 1</h3>
+    <p>Grafik manakah yang merupakan histogram?</p>
+    <img src="assets/images/grafik1.png" width="100%">
+
+    <div class="opsi">
+        <label><input type="radio" name="s1" value="A"> Grafik A</label>
+        <label><input type="radio" name="s1" value="B"> Grafik B</label>
+    </div>
+
+    <p>Alasan:</p>
+    <textarea id="alasan1"></textarea>
+
+    <div class="btn active" onclick="lanjutSoal2()">Next</div>
+</div>
+
+<!-- ================= SOAL 2 ================= -->
+<div class="box hidden" id="soal2">
+    <h3>Soal 2</h3>
+    <p>Apa makna lebar batang pada histogram?</p>
+
+    <div class="opsi">
+        <label><input type="radio" name="s2" value="A"> Menunjukkan kelas interval</label>
+        <label><input type="radio" name="s2" value="B"> Menunjukkan warna grafik</label>
+    </div>
+
+    <p>Alasan:</p>
+    <textarea id="alasan2"></textarea>
+
+    <div class="btn active" onclick="lanjutSoal3()">Next</div>
+</div>
+
+<!-- ================= SOAL 3 ================= -->
+<div class="box hidden" id="soal3">
+    <h3>Soal 3</h3>
+    <p>Mengapa batang pada histogram tidak memiliki jarak?</p>
+
+    <div class="opsi">
+        <label><input type="radio" name="s3" value="A"> Karena datanya kontinu</label>
+        <label><input type="radio" name="s3" value="B"> Karena desain grafik</label>
+    </div>
+
+    <p>Alasan:</p>
+    <textarea id="alasan3"></textarea>
+
+    <div class="btn active" onclick="submitAktivitas1()">Kirim Jawaban</div>
+</div>
+
+<script src="script.js"></script>
+
+<script>
+const video = document.getElementById("videoEksplorasi");
+const btnTonton = document.getElementById("btnTonton");
+
+video.addEventListener("ended", () => {
+    btnTonton.classList.add("active");
+});
+
+btnTonton.addEventListener("click", () => {
+    document.getElementById("videoSection").classList.add("hidden");
+    document.getElementById("checkpointSection").classList.remove("hidden");
+});
+
+function lanjutSoal1() {
+    if (!checkpointJawaban.value.trim()) {
+        alert("Jawaban checkpoint harus diisi.");
+        return;
+    }
+    document.getElementById("checkpointSection").classList.add("hidden");
+    document.getElementById("soal1").classList.remove("hidden");
+}
+
+function lanjutSoal2() {
+    if (!document.querySelector('input[name="s1"]:checked') ||
+        !alasan1.value.trim()) {
+        alert("Jawaban dan alasan harus diisi.");
+        return;
+    }
+    document.getElementById("soal1").classList.add("hidden");
+    document.getElementById("soal2").classList.remove("hidden");
+}
+
+function lanjutSoal3() {
+    if (!document.querySelector('input[name="s2"]:checked') ||
+        !alasan2.value.trim()) {
+        alert("Jawaban dan alasan harus diisi.");
+        return;
+    }
+    document.getElementById("soal2").classList.add("hidden");
+    document.getElementById("soal3").classList.remove("hidden");
+}
+
+function submitAktivitas1() {
+    if (!document.querySelector('input[name="s3"]:checked') ||
+        !alasan3.value.trim()) {
+        alert("Jawaban dan alasan harus diisi.");
+        return;
+    }
+
+    localStorage.setItem("checkpoint1", checkpointJawaban.value);
+    localStorage.setItem("a1", document.querySelector('input[name="s1"]:checked').value);
+    localStorage.setItem("alasan1", alasan1.value);
+    localStorage.setItem("a2", document.querySelector('input[name="s2"]:checked').value);
+    localStorage.setItem("alasan2", alasan2.value);
+    localStorage.setItem("a3", document.querySelector('input[name="s3"]:checked').value);
+    localStorage.setItem("alasan3", alasan3.value);
+
+    localStorage.setItem("aktivitas1", "true");
+
+    alert("Jawaban kelompokmu telah dikirim.\nSelanjutnya akan dibahas bersama guru.");
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aktivitas 5 - Refleksi Pembelajaran</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .refleksi-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 24px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            color: #553AD1;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .soal {
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .petunjuk {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid #aaa;
+            padding: 12px;
+            font-size: 14px;
+            height: 100px;
+            resize: vertical;
+            margin-bottom: 25px;
+        }
+
+        .btn-submit {
+            margin-top: 10px;
+            padding: 12px 24px;
+            background: #553AD1;
+            color: white;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .btn-submit:hover {
+            background: #4025ad;
+        }
+    </style>
+</head>
+
+<body onload="cekLogin(); cekAkses(5);">
+
+<div class="refleksi-container">
+    <h2>Aktivitas 5 — Refleksi Pembelajaran</h2>
+
+    <p class="petunjuk">
+        Refleksi ini bertujuan untuk membantu kamu memahami kembali proses berpikir
+        yang telah kamu lakukan selama pembelajaran statistika, khususnya dalam
+        menyusun dan menganalisis histogram.
+    </p>
+
+    <p class="soal">
+        1. Setelah menyelesaikan seluruh rangkaian aktivitas (Aktivitas 1–4),
+        pemahaman baru apa yang kamu peroleh tentang histogram dan fungsinya dalam
+        menyajikan data?
+    </p>
+    <textarea id="r1"></textarea>
+
+    <p class="soal">
+        2. Jelaskan proses berpikirmu saat mengubah data mentah menjadi tabel distribusi
+        frekuensi dan kemudian menjadi histogram. Langkah mana yang paling membantumu
+        memahami bentuk sebaran data? Mengapa?
+    </p>
+    <textarea id="r2"></textarea>
+
+    <p class="soal">
+        3. Pada Aktivitas 4, kamu membandingkan histogram buatanmu dengan histogram sistem.
+        Kesalahan atau perbedaan apa yang kamu temukan, dan apa penyebab utama kesalahan tersebut?
+    </p>
+    <textarea id="r3"></textarea>
+
+    <p class="soal">
+        4. Jika kamu diminta mengulang kembali pembuatan histogram,
+        strategi atau langkah apa yang akan kamu perbaiki agar hasilnya lebih akurat?
+        Jelaskan alasanmu.
+    </p>
+    <textarea id="r4"></textarea>
+
+    <div class="btn-submit" onclick="submitRefleksi()">Kirim Refleksi</div>
+</div>
+
+<script src="script.js"></script>
+
+<script>
+function submitRefleksi() {
+    let r1 = document.getElementById("r1").value.trim();
+    let r2 = document.getElementById("r2").value.trim();
+    let r3 = document.getElementById("r3").value.trim();
+    let r4 = document.getElementById("r4").value.trim();
+
+    let totalKosong = 0;
+    if (!r1) totalKosong++;
+    if (!r2) totalKosong++;
+    if (!r3) totalKosong++;
+    if (!r4) totalKosong++;
+
+    let skor = 100;
+    if (totalKosong === 1) skor = 75;
+    else if (totalKosong === 2) skor = 50;
+    else if (totalKosong === 3) skor = 25;
+    else if (totalKosong === 4) skor = 0;
+
+    localStorage.setItem("refleksi_r1", r1);
+    localStorage.setItem("refleksi_r2", r2);
+    localStorage.setItem("refleksi_r3", r3);
+    localStorage.setItem("refleksi_r4", r4);
+    localStorage.setItem("nilai_refleksi", skor);
+
+    localStorage.setItem("aktivitas5", "true");
+    window.location.href = "final.html";
+}
+</script>
+
+</body>
+</html>

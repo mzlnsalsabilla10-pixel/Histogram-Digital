@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Aktivitas 4 - Histogram</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body { font-family: Arial, sans-serif; background:#f4f6ff; }
+
+.box{
+  max-width:950px;
+  margin:30px auto;
+  background:white;
+  padding:30px;
+  border-radius:20px;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.slider-box{margin:10px 0}
+
+.histogram-wrapper{
+  position:relative;
+  padding:30px;
+}
+
+.axis-x, .axis-y{
+  position:absolute;
+  font-weight:bold;
+}
+
+.axis-x{bottom:0; left:50%; transform:translateX(-50%);}
+.axis-y{top:50%; left:-40px; transform:rotate(-90deg) translateY(-50%);}
+
+.histogram-area{
+  display:flex;
+  align-items:flex-end;
+  height:260px;
+  border-left:3px solid black;
+  border-bottom:3px solid black;
+  padding-left:5px;
+}
+
+.bar-wrap{
+  width:70px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.bar{
+  width:100%;
+  background:#6C4DDC;
+  color:white;
+  font-size:12px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+}
+
+.bar.system{background:#4ade80}
+
+.bar-label{font-size:12px; margin-top:6px}
+
+.btn{
+  background:#6C4DDC;
+  color:white;
+  padding:12px 22px;
+  border-radius:14px;
+  cursor:pointer;
+  display:inline-block;
+  margin-top:20px;
+}
+.btn:hover{background:#5940b7}
+
+textarea{width:100%;padding:12px;border-radius:12px}
+</style>
+</head>
+
+<body onload="muatData()">
+
+<div class="box">
+    <h2>Aktivitas 4 — Membuat Histogram</h2>
+
+    <p>
+        Pada aktivitas ini, kamu akan menggunakan tabel distribusi frekuensi
+        untuk menyusun histogram dan membandingkannya dengan histogram sistem.
+    </p>
+
+    <h3>Tujuan Aktivitas</h3>
+    <ol>
+        <li>Menggunakan data terurut dari Aktivitas 2 sebagai dasar pembuatan histogram.</li>
+        <li>Menyesuaikan frekuensi tiap kelas berdasarkan tabel distribusi frekuensi.</li>
+        <li>Mengamati perubahan bentuk histogram akibat perubahan frekuensi.</li>
+        <li>Membandingkan histogram buatanmu dengan histogram sistem.</li>
+    </ol>
+    <p id="judulData"></p>
+<h3>Data Terurut (hasil Aktivitas 2)</h3>
+<p>
+    Data berikut merupakan data yang kamu kumpulkan pada Aktivitas 2,
+    kemudian diurutkan dari nilai terkecil ke terbesar.
+</p>
+<p id="dataTerurut"></p>
+</div>
+
+
+<div class="box">
+<h3>Atur Frekuensi Kelas</h3>
+<p>
+    Geser nilai frekuensi pada setiap kelas sesuai dengan hasil perhitungan
+    pada tabel distribusi frekuensi di Aktivitas 3.
+</p>
+<p>
+    ⚠️ Perubahan nilai frekuensi akan langsung memengaruhi
+    tinggi batang histogram di bawah.
+</p>
+<table border="1" width="100%" cellpadding="8" style="border-collapse:collapse">
+  <thead>
+    <tr>
+      <th>Kelas</th>
+      <th>Interval Kelas</th>
+      <th>Frekuensi (Geser)</th>
+      <th>Nilai</th>
+    </tr>
+  </thead>
+  <tbody id="tabelFrekuensiUser"></tbody>
+</table>
+
+</div>
+
+<div class="box">
+<h3 id="judulGrafikUser"></h3>
+
+<div class="histogram-wrapper">
+<div class="axis-y">Frekuensi ↑</div>
+<div class="axis-x">Kelas Interval →</div>
+
+<div class="histogram-area" id="histogramUser"></div>
+</div>
+
+<div class="btn" onclick="tampilkanHistogramSistem()">Bandingkan dengan Histogram Sistem</div>
+</div>
+
+<div class="box" id="systemBox" style="display:none">
+<h3 id="judulGrafikSistem"></h3>
+
+<div class="histogram-wrapper">
+<div class="axis-y">Frekuensi ↑</div>
+<div class="axis-x">Kelas Interval →</div>
+
+<div class="histogram-area" id="histogramSystem"></div>
+</div>
+</div>
+
+<div class="box" id="hasilKecocokan" style="display:none;">
+    <h3>Hasil Kecocokan</h3>
+    <p id="persenCocok"></p>
+    <ul id="detailSalah"></ul>
+</div>
+
+<div class="box" id="refleksiBox" style="display:none">
+<h3>Pertanyaan</h3>
+<p>Jawablah pertanyaan berikut berdasarkan hasil yang kamu peroleh.</p>
+<ol>
+    <li>Apa perbedaan utama antara histogram yang kamu buat dan histogram sistem?</li>
+    <li>Menurutmu, kesalahan apa yang paling berpengaruh terhadap perbedaan tersebut?</li>
+    <li>Jika kamu mengulang aktivitas ini, bagian mana yang akan kamu perbaiki terlebih dahulu?</li>
+    <li>Apa hubungan antara tabel distribusi frekuensi dan bentuk histogram?</li>
+</ol>
+<textarea id="refleksi"></textarea>
+</div>
+
+<div class="btn" onclick="submitAktivitas4()">
+  ✔ Submit & Simpan Pekerjaan
+</div>
+
+
+<script>
+let intervalKelas=[], frekuensiBenar=[], sliderValues=[];
+
+function muatData(){
+  const data=JSON.parse(localStorage.getItem("dataAktivitas2"));
+  intervalKelas=JSON.parse(localStorage.getItem("intervalKelas"));
+  frekuensiBenar=JSON.parse(localStorage.getItem("frekuensiBenar"));
+  const nama=localStorage.getItem("namaData")||"Data Pengukuran";
+
+  if(!data||!intervalKelas||!frekuensiBenar){
+    alert("Aktivitas 3 belum selesai");
+    location.href="index.html";
+    return;
+  }
+
+  document.getElementById("dataTerurut").innerText=data.sort((a,b)=>a-b).join(", ");
+  document.getElementById("judulGrafikUser").innerText="Histogram "+nama;
+  document.getElementById("judulGrafikSistem").innerText="Histogram "+nama+" (Sistem)";
+
+  buatSlider();
+}
+
+function buatSlider(){
+  const tbody=document.getElementById("tabelFrekuensiUser");
+  tbody.innerHTML="";
+  sliderValues=[];
+
+  intervalKelas.forEach((interval,i)=>{
+    sliderValues.push(0);
+
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>K${i+1}</td>
+      <td>${interval}</td>
+      <td>
+        <input type="range" min="0" max="30" value="0"
+          oninput="ubahBar(${i},this.value)">
+      </td>
+      <td><b id="nilai${i}">0</b></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+
+function buatBar(container,height,label,isSystem){
+  const wrap=document.createElement("div");
+  wrap.className="bar-wrap";
+
+  const bar=document.createElement("div");
+  bar.className=isSystem?"bar system":"bar";
+  bar.style.height=height+"px";
+  bar.innerText=height/10;
+
+  const lbl=document.createElement("div");
+  lbl.className="bar-label";
+  lbl.innerText=label;
+
+  wrap.appendChild(bar);
+  wrap.appendChild(lbl);
+  document.getElementById(container).appendChild(wrap);
+}
+
+function ubahBar(i,val){
+  sliderValues[i]=Number(val);
+  document.getElementById("nilai"+i).innerText=val;
+
+  const area=document.getElementById("histogramUser");
+  area.innerHTML="";
+  sliderValues.forEach((v,idx)=>{
+    buatBar("histogramUser",v*10,intervalKelas[idx],false);
+  });
+}
+
+function tampilkanHistogramSistem(){
+  const area=document.getElementById("histogramSystem");
+  area.innerHTML="";
+  frekuensiBenar.forEach((f,i)=>{
+    buatBar("histogramSystem",f*10,intervalKelas[i],true);
+  });
+  systemBox.style.display="block";
+  refleksiBox.style.display="block";
+    hitungKecocokan(); 
+}
+
+function hitungKecocokan() {
+    let total = 0;
+    let detail = [];
+
+    sliderValues.forEach((fUser, i) => {
+        const fBenar = frekuensiBenar[i];
+
+        let skor;
+        if (fBenar === 0) {
+            skor = fUser === 0 ? 1 : 0;
+        } else {
+            skor = 1 - Math.abs(fUser - fBenar) / fBenar;
+            if (skor < 0) skor = 0;
+        }
+
+        total += skor;
+
+        if (fUser !== fBenar) {
+            detail.push(
+                `Kelas ${intervalKelas[i]}: frekuensi kamu ${fUser}, seharusnya ${fBenar}`
+            );
+        }
+    });
+
+    const persen = Math.round((total / frekuensiBenar.length) * 100);
+    tampilkanHasil(persen, detail);
+}
+
+
+function tampilkanHasil(persen, detail) {
+    document.getElementById("hasilKecocokan").style.display = "block";
+    document.getElementById("persenCocok").innerHTML =
+        `<b>Persentase kecocokan histogram:</b> ${persen}%`;
+
+    const ul = document.getElementById("detailSalah");
+    ul.innerHTML = "";
+
+    if (detail.length === 0) {
+        ul.innerHTML = "<li>✅ Semua frekuensi sudah sesuai.</li>";
+    } else {
+        detail.forEach(d => {
+            const li = document.createElement("li");
+            li.innerText = d;
+            ul.appendChild(li);
+        });
+    }
+}
+
+function submitAktivitas4(){
+  const hasil = {
+    frekuensiUser: sliderValues,
+    frekuensiBenar: frekuensiBenar,
+    intervalKelas: intervalKelas,
+    refleksi: document.getElementById("refleksi").value,
+    kecocokan: document.getElementById("persenCocok").innerText
+  };
+
+  localStorage.setItem("hasilAktivitas4", JSON.stringify(hasil));
+  localStorage.setItem("aktivitas4", "true");
+
+  alert("Aktivitas 4 berhasil disimpan.");
+  window.location.href = "index.html";
+}
+
+</script>
+
+</body>
+</html>

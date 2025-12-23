@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Aktivitas 3 - Menentukan Interval Histogram</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .box {
+            max-width: 900px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 22px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        .hidden { display: none; }
+        .btn {
+            background: #6C4DDC;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 14px;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .btn:hover { background: #5940b7; }
+        .alert {
+            background: #FFF3CD;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+            color: #664d03;
+            font-weight: 500;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        input {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #aaa;
+            width: 100%;
+        }
+        .rumus-box {
+            background: #f4f6ff;
+            padding: 20px;
+            border-radius: 16px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body onload="cekAkses(3); muatData();">
+
+
+<!-- ================= PART 1 : MATERI ================= -->
+<div class="box" id="materiSection">
+    <h2>Langkah Menyusun Interval Histogram</h2>
+    <p>
+        Untuk membuat histogram, data yang telah kamu kumpulkan tidak bisa langsung
+        digambar begitu saja. Data tersebut perlu diolah terlebih dahulu melalui
+        beberapa langkah berikut agar histogram yang dihasilkan tepat dan mudah dibaca.
+    </p>
+
+    <h3>1. Mengurutkan data</h3>
+    <p>
+        Urutkan data hasil pengukuran dari nilai terkecil ke nilai terbesar.
+        Pengurutan data memudahkan kamu menentukan nilai minimum dan maksimum
+        secara tepat, serta membantu melihat sebaran data secara keseluruhan.
+    </p>
+
+    <h3>2. Menentukan nilai minimum dan maksimum</h3>
+    <ul>
+        <li><b>Nilai minimum</b> adalah data terkecil dari seluruh data yang dikumpulkan.</li>
+        <li><b>Nilai maksimum</b> adalah data terbesar dari seluruh data yang dikumpulkan.</li>
+    </ul>
+    <p>
+        Nilai minimum dan maksimum digunakan sebagai dasar untuk menghitung jangkauan data.
+    </p>
+
+    <h3>3. Menghitung jangkauan data</h3>
+    <p>
+        Jangkauan (range) menunjukkan seberapa lebar penyebaran data.
+        Jangkauan diperoleh dari selisih antara nilai maksimum dan nilai minimum.
+    </p>
+    <p><b>Rumus:</b></p>
+    <p>Jangkauan (R) = Nilai maksimum − Nilai minimum</p>
+
+    <h3>4. Menentukan banyak kelas</h3>
+    <p>
+        Banyak kelas menunjukkan berapa kelompok interval yang akan digunakan
+        dalam histogram. Untuk menentukan banyak kelas, digunakan
+        <b>Aturan Sturges</b>, yang mempertimbangkan jumlah data yang dimiliki.
+    </p>
+    <p><b>Rumus (Aturan Sturges):</b></p>
+    <p>Banyak kelas (k) = 1 + 3,3 log n</p>
+    <p>
+        dengan <i>n</i> adalah banyaknya data.
+    </p>
+
+    <h3>5. Menghitung panjang interval</h3>
+    <p>
+        Panjang interval menunjukkan lebar setiap kelas pada histogram.
+        Panjang interval diperoleh dengan membagi jangkauan data dengan banyak kelas.
+    </p>
+    <p><b>Rumus:</b></p>
+    <p>Panjang interval (i) = Jangkauan (R) ÷ Banyak kelas (k)</p>
+
+    <div class="rumus-box">
+        <h3>Contoh singkat</h3>
+        <p>Data: 40, 42, 45, 47, 50</p>
+        <ul>
+            <li>Minimum = 40</li>
+            <li>Maksimum = 50</li>
+            <li>Jangkauan = 50 − 40 = 10</li>
+            <li>Jumlah data (n) = 5 → k ≈ 1 + 3,3 log 5 ≈ 4</li>
+            <li>Panjang interval = 10 ÷ 4 ≈ 2,5</li>
+        </ul>
+    </div>
+
+  <div class="box" style="background:#fff7d6;">
+        ⚠️ <b>Perhatian:</b>  
+        Halaman ini tidak dapat dibuka kembali.  
+        Pastikan kamu memahami dan mencatat langkah-langkah penting sebelum melanjutkan.
+    </div>
+
+    <div class="button" onclick="lanjutKeHitung()">
+        Saya paham, lanjut ke perhitungan
+    </div>
+</div>
+
+
+<!-- ================= PART 2 & 3 : PERHITUNGAN & TABEL ================= -->
+<div class="activity-container" id="praktikSection" style="display:none;">
+
+    <h2>Perhitungan Interval Kelas</h2>
+
+    <p><b>Data:</b> <span id="judulData"></span></p>
+
+    <div class="box">
+        <p><b>Data terurut:</b></p>
+        <p id="dataUrut"></p>
+    </div>
+
+    <h3>1. Hitung nilai dasar</h3>
+
+    <label>Nilai minimum:</label>
+    <input type="number" id="min" class="dataInput">
+
+    <label>Nilai maksimum:</label>
+    <input type="number" id="max" class="dataInput">
+
+    <label>Jangkauan (R):</label>
+    <input type="number" id="range" class="dataInput">
+
+<label>Banyak kelas (k):</label>
+<input type="number" id="kelas" class="dataInput" onchange="buatTabelInterval()">
+
+
+    <label>Panjang interval (i):</label>
+    <input type="number" id="interval" class="dataInput">
+
+    <br><br>
+
+    <h3>2. Buat tabel interval</h3>
+
+    <table width="100%" border="1" cellpadding="6">
+        <tr>
+            <th>Kelas</th>
+            <th>Batas Bawah</th>
+            <th>Batas Atas</th>
+        </tr>
+        <tbody id="tabelInterval"></tbody>
+    </table>
+
+    <br>
+    <div class="button" onclick="submitAktivitas3()">✔ Simpan & Lanjutkan</div>
+
+</div>
+
+<script src="script.js"></script>
+
+<script>
+let data = [];
+
+function muatData() {
+    const raw = localStorage.getItem("dataAktivitas2");
+
+    if (!raw) {
+        alert("Data belum ditemukan. Silakan selesaikan Aktivitas 2 terlebih dahulu.");
+        window.location.href = "index.html";
+        return;
+    }
+
+    const parsed = JSON.parse(raw);
+
+    if (!Array.isArray(parsed) || parsed.length < 25) {
+        alert("Data belum lengkap.\nPastikan kamu sudah memasukkan minimal 25 data pada Aktivitas 2.");
+        window.location.href = "index.html";
+        return;
+    }
+
+    data = parsed.sort((a, b) => a - b);
+
+    const nama = localStorage.getItem("namaData") || "Data Pengukuran";
+    const satuan = localStorage.getItem("satuanData") || "";
+
+    document.getElementById("judulData").innerText =
+        satuan ? `${nama} (${satuan})` : nama;
+
+    document.getElementById("dataUrut").innerText =
+        data.join(", ");
+}
+
+function lanjutKeHitung() {
+    document.getElementById("materiSection").style.display = "none";
+    document.getElementById("praktikSection").style.display = "block";
+
+    document.getElementById("dataUrut").innerText = data.join(", ");
+}
+
+
+function buatTabelInterval() {
+    const k = parseInt(document.getElementById("kelas").value);
+    const tbody = document.getElementById("tabelInterval");
+
+    tbody.innerHTML = ""; // reset tabel
+
+    if (!k || k <= 0) {
+        alert("Masukkan banyak kelas terlebih dahulu.");
+        return;
+    }
+
+    for (let i = 1; i <= k; i++) {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>K${i}</td>
+<td><input type="number" class="bawah"></td>
+<td><input type="number" class="atas"></td>
+
+        `;
+
+        tbody.appendChild(row);
+    }
+}
+
+function submitAktivitas3() {
+
+  const rows = document.querySelectorAll("#tabelInterval tr");
+
+  let intervalKelas = [];
+  let frekuensiBenar = [];
+
+  rows.forEach(row => {
+    const bawah = row.children[1].querySelector("input").value;
+    const atas  = row.children[2].querySelector("input").value;
+
+    intervalKelas.push(`${bawah}–${atas}`);
+
+    // hitung frekuensi sistem
+    let f = data.filter(x => x >= bawah && x <= atas).length;
+    frekuensiBenar.push(f);
+  });
+
+  localStorage.setItem("intervalKelas", JSON.stringify(intervalKelas));
+  localStorage.setItem("frekuensiBenar", JSON.stringify(frekuensiBenar));
+  localStorage.setItem("aktivitas3", "true");
+
+  alert("Aktivitas 3 selesai. Lanjut ke Aktivitas 4.");
+  window.location.href = "index.html";
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Kelompok</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .login-container {
+            max-width: 450px;
+            margin: 40px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 24px;
+            box-shadow: 0px 6px 18px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #553ad1;
+        }
+        .inputBox {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+        .inputBox label {
+            font-weight: 600;
+            color: #333;
+        }
+        .inputBox input, .inputBox textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid #aaa;
+            margin-top: 6px;
+            font-size: 14px;
+        }
+        .inputBox textarea {
+            height: 80px;
+            resize: vertical;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <h2>Media Belajar Histogram<br><span style="font-size:16px; font-weight:400;">Pembelajaran Mendalam</span></h2>
+
+    <p style="margin-bottom:20px; color:#555;">
+        Silakan isi identitas kelompok sebelum memulai.
+    </p>
+
+    <div class="inputBox">
+        <label>Nama Kelompok</label>
+        <input type="text" id="kelompokNama" placeholder="Misal: Kelompok Histogram 1">
+    </div>
+
+    <div class="inputBox">
+        <label>Nama Anggota</label>
+        <textarea id="kelompokAnggota" placeholder="Contoh: Alya, Dinda, Daffa"></textarea>
+    </div>
+
+    <div class="inputBox">
+        <label>Kelas / Rombel</label>
+        <input type="text" id="kelompokKelas" placeholder="Misal: XI IPA 3">
+    </div>
+
+    <div class="button" onclick="mulai()">
+        ✔ Mulai Belajar
+    </div>
+
+</div>
+
+<script>
+function mulai() {
+    let nama = document.getElementById("kelompokNama").value.trim();
+    let anggota = document.getElementById("kelompokAnggota").value.trim();
+    let kelas = document.getElementById("kelompokKelas").value.trim();
+
+    if (!nama || !anggota || !kelas) {
+        alert("Semua data harus diisi ya!");
+        return;
+    }
+
+    localStorage.setItem("kelompokNama", nama);
+    localStorage.setItem("kelompokAnggota", anggota);
+    localStorage.setItem("kelompokKelas", kelas);
+
+    // redirect ke halaman utama
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>

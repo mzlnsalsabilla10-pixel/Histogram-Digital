@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aktivitas 2 - Mengumpulkan Data</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body onload="cekAkses(2)">
+
+<div class="activity-container">
+
+    <h2>Aktivitas 2 — Mengumpulkan Data</h2>
+
+    <p>
+        Masukkan <b>minimal 25 data numerik</b> hasil pengukuran atau observasi di kelas.
+        Data ini akan digunakan untuk menyusun histogram pada aktivitas berikutnya.
+    </p>
+
+    <hr><br>
+
+    <!-- IDENTITAS DATA -->
+    <p><b>Identitas Data</b></p>
+
+    <label>Nama data / variabel:</label><br>
+    <input type="text" id="namaData" placeholder="Contoh: Tinggi badan peserta didik"
+        style="width:100%; padding:10px; border-radius:10px; border:1px solid #aaa; margin-bottom:10px;">
+
+    <label>Satuan data:</label><br>
+    <input type="text" id="satuanData" placeholder="Contoh: cm / menit / kg"
+        style="width:100%; padding:10px; border-radius:10px; border:1px solid #aaa;">
+
+    <br><br><hr><br>
+
+    <!-- INPUT DATA -->
+    <p><b>Masukkan data numerik:</b></p>
+
+    <div id="inputArea"></div>
+
+    <div class="button" onclick="tambahBaris()">+ Tambah Data</div>
+    <br>
+    <div class="button" onclick="cekData()">✔ Simpan Data</div>
+
+    <br><br>
+
+    <!-- REFLEKSI -->
+    <div id="refleksiSection" style="display:none;">
+        <hr><br>
+        <h3>Refleksi Singkat</h3>
+        <p>
+            Menurut kelompokmu, mengapa data yang telah dikumpulkan lebih sesuai
+            disajikan dalam bentuk <b>histogram</b> dibandingkan diagram batang?
+        </p>
+
+        <textarea id="refleksiAkt2"
+            style="width:100%; min-height:120px; border-radius:12px; padding:12px;"></textarea>
+
+        <br>
+        <div class="button" onclick="selesaiAktivitas2()">✔ Selesai & Lanjutkan</div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+<script>
+// buat input awal (25 baris)
+for (let i = 0; i < 25; i++) tambahBaris();
+
+function tambahBaris() {
+    const div = document.createElement('div');
+    div.style.marginBottom = "8px";
+    div.innerHTML = `
+        <input type="number" class="dataInput"
+               placeholder="Masukkan angka"
+               style="padding:8px; width:180px; border-radius:8px; border:1px solid #aaa;">
+    `;
+    document.getElementById("inputArea").appendChild(div);
+}
+
+function cekData() {
+    const namaData = document.getElementById("namaData").value.trim();
+    const satuanData = document.getElementById("satuanData").value.trim();
+    const inputs = document.querySelectorAll(".dataInput");
+    let data = [];
+
+    if (!namaData || !satuanData) {
+        alert("Nama data dan satuan harus diisi terlebih dahulu.");
+        return;
+    }
+
+    inputs.forEach(i => {
+        let val = i.value.trim();
+        if (val !== "" && !isNaN(val)) data.push(Number(val));
+    });
+
+    if (data.length < 25) {
+        alert("Minimal harus ada 25 data yang valid.");
+        return;
+    }
+
+    // simpan ke localStorage
+    localStorage.setItem("namaData", namaData);
+    localStorage.setItem("satuanData", satuanData);
+    localStorage.setItem("dataAktivitas2", JSON.stringify(data));
+
+    alert("Data berhasil disimpan. Lanjutkan ke refleksi.");
+
+    document.getElementById("refleksiSection").style.display = "block";
+}
+
+function selesaiAktivitas2() {
+    const refleksi = document.getElementById("refleksiAkt2").value.trim();
+
+    if (!refleksi) {
+        alert("Refleksi harus diisi.");
+        return;
+    }
+
+    localStorage.setItem("refleksiAktivitas2", refleksi);
+    localStorage.setItem("aktivitas2", "true");
+
+    alert("Aktivitas 2 selesai. Lanjut ke Aktivitas 3.");
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
