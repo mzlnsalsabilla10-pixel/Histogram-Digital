@@ -85,16 +85,19 @@ function mulai() {
         return;
     }
 
+    // simpan data login
     localStorage.setItem("kelompokNama", nama);
     localStorage.setItem("kelompokAnggota", anggota);
     localStorage.setItem("kelompokKelas", kelas);
-function submitLogin(){
-  localStorage.setItem("login","true");
-  window.location.href = "beranda.html";
+    localStorage.setItem("login", "true");
+
+    // pindah ke beranda
+    window.location.href = "beranda.html";
 }
 </script>
 
 </body>
 </html>
+
 
 
