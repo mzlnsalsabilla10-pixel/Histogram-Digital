@@ -70,7 +70,7 @@
 
   <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:16px;">
   <iframe 
-    src="https://www.youtube.com/embed/JsEwJD1mYpU?si=g58JsVW0i4FvGPoN"
+    src="https://www.youtube.com/embed/JsEwJD1mYpU?si=g58JsVW0i4FvGPoN?enablejsapi=1"
     frameborder="0"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
     allowfullscreen
@@ -147,16 +147,28 @@
 <script src="script.js"></script>
 
 <script>
-const video = document.getElementById("videoEksplorasi");
+let player;
 const btnTonton = document.getElementById("btnTonton");
 
-video.addEventListener("ended", () => {
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('videoEksplorasi', {
+    events: {
+      'onStateChange': onPlayerStateChange
+    }
+  });
+}
+
+function onPlayerStateChange(event) {
+  // video selesai
+  if (event.data === YT.PlayerState.ENDED) {
     btnTonton.classList.add("active");
-});
+    btnTonton.disabled = false;
+  }
+}
 
 btnTonton.addEventListener("click", () => {
-    document.getElementById("videoSection").classList.add("hidden");
-    document.getElementById("checkpointSection").classList.remove("hidden");
+  document.getElementById("videoSection").classList.add("hidden");
+  document.getElementById("checkpointSection").classList.remove("hidden");
 });
 
 function lanjutSoal1() {
@@ -209,7 +221,9 @@ function submitAktivitas1() {
     window.location.href = "index.html";
 }
 </script>
+<script src="https://www.youtube.com/iframe_api"></script>
 
 </body>
 </html>
+
 
