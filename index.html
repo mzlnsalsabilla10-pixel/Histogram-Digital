@@ -88,11 +88,13 @@ function mulai() {
     localStorage.setItem("kelompokNama", nama);
     localStorage.setItem("kelompokAnggota", anggota);
     localStorage.setItem("kelompokKelas", kelas);
-
-    // redirect ke halaman utama
-    window.location.href = "beranda.html";
+function submitLogin(){
+  localStorage.setItem("login","true");
+  window.location.href = "beranda.html";
+}
 }
 </script>
 
 </body>
 </html>
+
