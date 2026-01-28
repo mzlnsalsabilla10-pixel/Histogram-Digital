@@ -39,13 +39,14 @@ body { font-family: Arial, sans-serif; background:#f4f6ff; }
   border-left:3px solid black;
   border-bottom:3px solid black;
   padding-left:5px;
+  gap:0;
 }
 
 .bar-wrap{
-  width:70px;
+  flex:1;
   display:flex;
   flex-direction:column;
-  align-items:center;
+  align-items:stretch;
 }
 
 .bar{
@@ -56,9 +57,16 @@ body { font-family: Arial, sans-serif; background:#f4f6ff; }
   display:flex;
   align-items:flex-end;
   justify-content:center;
+  border-right:1px solid #f4f6ff;
 }
 
-.bar.system{background:#4ade80}
+.bar-label{
+  font-size:12px;
+  margin-top:6px;
+  text-align:center;
+  padding:0 4px;
+  word-break:break-word;
+}
 
 .bar-label{font-size:12px; margin-top:6px}
 
@@ -176,12 +184,13 @@ textarea{width:100%;padding:12px;border-radius:12px}
 
 
 <script>
-let intervalKelas=[], frekuensiBenar=[], sliderValues=[];
+let intervalKelas=[], frekuensiBenar=[], sliderValues=[], lebarKelas=[];
+const tinggiMaksBar = 240;
 
-function muatData(){
-  const data=JSON.parse(localStorage.getItem("dataAktivitas2"));
-  intervalKelas=JSON.parse(localStorage.getItem("intervalKelas"));
-  frekuensiBenar=JSON.parse(localStorage.getItem("frekuensiBenar"));
+function muatData(){␊
+  const data=JSON.parse(localStorage.getItem("dataAktivitas2"));␊
+  intervalKelas=JSON.parse(localStorage.getItem("intervalKelas"));␊
+  frekuensiBenar=JSON.parse(localStorage.getItem("frekuensiBenar"));␊
   const nama=localStorage.getItem("namaData")||"Data Pengukuran";
 
   if(!data||!intervalKelas||!frekuensiBenar){
@@ -190,9 +199,11 @@ function muatData(){
     return;
   }
 
-  document.getElementById("dataTerurut").innerText=data.sort((a,b)=>a-b).join(", ");
+document.getElementById("dataTerurut").innerText=data.sort((a,b)=>a-b).join(", ");
   document.getElementById("judulGrafikUser").innerText="Histogram "+nama;
   document.getElementById("judulGrafikSistem").innerText="Histogram "+nama+" (Sistem)";
+
+  lebarKelas = intervalKelas.map(hitungLebarKelas);
 
   buatSlider();
 }
@@ -201,6 +212,8 @@ function buatSlider(){
   const tbody=document.getElementById("tabelFrekuensiUser");
   tbody.innerHTML="";
   sliderValues=[];
+  const maxFrekuensi = Math.max(1, ...frekuensiBenar);
+  const maxSlider = Math.max(10, maxFrekuensi + 5);
 
   intervalKelas.forEach((interval,i)=>{
     sliderValues.push(0);
@@ -210,7 +223,7 @@ function buatSlider(){
       <td>K${i+1}</td>
       <td>${interval}</td>
       <td>
-        <input type="range" min="0" max="30" value="0"
+        <input type="range" min="0" max="${maxSlider}" value="0"
           oninput="ubahBar(${i},this.value)">
       </td>
       <td><b id="nilai${i}">0</b></td>
@@ -219,15 +232,29 @@ function buatSlider(){
   });
 }
 
+function hitungLebarKelas(interval){
+  if (!interval || typeof interval !== "string") return 1;
+  const cleaned = interval.replace(/[–—]/g, "-");
+  const parts = cleaned.split("-").map(p => parseFloat(p.trim()));
+  if (parts.length !== 2 || Number.isNaN(parts[0]) || Number.isNaN(parts[1])) {
+    return 1;
+  }
+  return Math.max(1, parts[1] - parts[0] + 1);
+}
 
-function buatBar(container,height,label,isSystem){
+function hitungSkalaMaks() {
+  return Math.max(1, ...frekuensiBenar);
+}
+
+function buatBar(container,height,label,isSystem,frekuensi,lebar){
   const wrap=document.createElement("div");
   wrap.className="bar-wrap";
+  wrap.style.flexGrow = lebar;
 
   const bar=document.createElement("div");
   bar.className=isSystem?"bar system":"bar";
   bar.style.height=height+"px";
-  bar.innerText=height/10;
+  bar.innerText=frekuensi;
 
   const lbl=document.createElement("div");
   lbl.className="bar-label";
@@ -242,24 +269,27 @@ function ubahBar(i,val){
   sliderValues[i]=Number(val);
   document.getElementById("nilai"+i).innerText=val;
 
-  const area=document.getElementById("histogramUser");
-  area.innerHTML="";
-  sliderValues.forEach((v,idx)=>{
-    buatBar("histogramUser",v*10,intervalKelas[idx],false);
-  });
+  renderHistogram("histogramUser", sliderValues, false);
 }
 
 function tampilkanHistogramSistem(){
-  const area=document.getElementById("histogramSystem");
-  area.innerHTML="";
-  frekuensiBenar.forEach((f,i)=>{
-    buatBar("histogramSystem",f*10,intervalKelas[i],true);
-  });
+  renderHistogram("histogramSystem", frekuensiBenar, true);
   systemBox.style.display="block";
   refleksiBox.style.display="block";
     hitungKecocokan(); 
 }
 
+function renderHistogram(container, values, isSystem) {
+  const area=document.getElementById(container);
+  area.innerHTML="";
+  const skalaMaks = hitungSkalaMaks();
+
+  values.forEach((v,idx)=>{
+    const tinggi = Math.round((v / skalaMaks) * tinggiMaksBar);
+    buatBar(container, tinggi, intervalKelas[idx], isSystem, v, lebarKelas[idx] || 1);
+  });
+}
+  
 function hitungKecocokan() {
     let total = 0;
     let detail = [];
@@ -328,4 +358,5 @@ function submitAktivitas4(){
 
 </body>
 </html>
+
 
