@@ -282,42 +282,6 @@ header h1 span {
     gap: 10px;
 }
 
-.nav-toggle {
-    display: none;
-    width: 46px;
-    height: 46px;
-    border-radius: 14px;
-    border: 1px solid var(--line-soft);
-    background: rgba(255, 255, 255, 0.88);
-    color: var(--primary-dark);
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 4px;
-    box-shadow: 0 10px 24px rgba(49, 84, 215, 0.08);
-}
-
-.nav-toggle span {
-    display: block;
-    width: 18px;
-    height: 2px;
-    border-radius: 999px;
-    background: currentColor;
-    transition: transform .2s ease, opacity .2s ease;
-}
-
-.topbar.nav-open .nav-toggle span:nth-child(1) {
-    transform: translateY(6px) rotate(45deg);
-}
-
-.topbar.nav-open .nav-toggle span:nth-child(2) {
-    opacity: 0;
-}
-
-.topbar.nav-open .nav-toggle span:nth-child(3) {
-    transform: translateY(-6px) rotate(-45deg);
-}
 
 .topnav a {
     color: var(--text-soft);
@@ -862,12 +826,6 @@ header h1 span {
     .topbar {
         padding: 16px 14px;
         border-radius: 22px;
-        position: relative;
-    }
-
-    .nav-toggle {
-        display: inline-flex;
-        margin-left: auto;
     }
 
     .brand-mark {
@@ -887,18 +845,9 @@ header h1 span {
     }
 
     .topnav {
-        display: none;
         flex-direction: column;
         align-items: stretch;
         gap: 8px;
-        width: 100%;
-        margin-top: 12px;
-        padding-top: 10px;
-        border-top: 1px solid var(--line-soft);
-    }
-
-    .topbar.nav-open .topnav {
-        display: flex;
     }
 
     .topnav a {
