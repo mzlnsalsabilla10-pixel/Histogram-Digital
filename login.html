@@ -3,96 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Kelompok</title>
+    <title>Login Pembelajaran Histogram</title>
     <link rel="stylesheet" href="style.css">
-
-    <style>
-        .login-container {
-            max-width: 450px;
-            margin: 40px auto;
-            background: white;
-            padding: 35px;
-            border-radius: 24px;
-            box-shadow: 0px 6px 18px rgba(0,0,0,0.08);
-            text-align: center;
-        }
-        .login-container h2 {
-            margin-bottom: 20px;
-            color: #553ad1;
-        }
-        .inputBox {
-            margin-bottom: 18px;
-            text-align: left;
-        }
-        .inputBox label {
-            font-weight: 600;
-            color: #333;
-        }
-        .inputBox input, .inputBox textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border-radius: 12px;
-            border: 1px solid #aaa;
-            margin-top: 6px;
-            font-size: 14px;
-        }
-        .inputBox textarea {
-            height: 80px;
-            resize: vertical;
-        }
-    </style>
 </head>
+<body class="landing-body">
+    <header class="topbar sticky-topbar">
+        <div class="brand-mark">
+            <span class="brand-dot"></span>
+            <div>
+                <strong>Histogram Digital</strong>
+                <p>Login pembelajaran</p>
+            </div>
+        </div>
 
-<body>
+        <nav class="topnav">
+            <a href="index.html#tentang-media">Tentang Media</a>
+            <a href="index.html#tujuan-pembelajaran">Tujuan Pembelajaran</a>
+            <a href="index.html#panduan-penggunaan">Panduan Penggunaan</a>
+            <a href="index.html#referensi">Referensi</a>
+            <a class="topnav-cta" href="login.html">Mulai Belajar</a>
+        </nav>
+    </header>
 
-<div class="login-container">
+    <main class="landing-main">
+        <section class="content-section form-section single-form-section">
+            <div class="section-heading">
+                <span class="section-kicker">Mulai Belajar</span>
+                <h2>Isi identitas diri terlebih dahulu</h2>
+                <p>Data ini digunakan untuk mencatat proses dan hasil belajar selama menggunakan media.</p>
+            </div>
 
-    <h2>Media Belajar Histogram<br><span style="font-size:16px; font-weight:400;">Pembelajaran Mendalam</span></h2>
+            <div class="login-shell">
+                <div class="login-container modern-login">
+                    <div class="inputBox">
+                        <label>Nama Lengkap</label>
+                        <input type="text" id="namaLengkap" placeholder="Masukkan nama lengkap">
+                    </div>
 
-    <p style="margin-bottom:20px; color:#555;">
-        Silakan isi identitas kelompok sebelum memulai.
-    </p>
+                    <div class="inputBox">
+                        <label>Nama Kelompok</label>
+                        <input type="text" id="kelompokNama" placeholder="Misal: Kelompok Histogram 1">
+                    </div>
 
-    <div class="inputBox">
-        <label>Nama Kelompok</label>
-        <input type="text" id="kelompokNama" placeholder="Misal: Kelompok Histogram 1">
-    </div>
+                    <div class="inputBox">
+                        <label>Kelas / Rombel</label>
+                        <input type="text" id="kelompokKelas" placeholder="Misal: X-3">
+                    </div>
 
-    <div class="inputBox">
-        <label>Nama Anggota</label>
-        <textarea id="kelompokAnggota" placeholder="Contoh: Alya, Dinda, Daffa"></textarea>
-    </div>
+                    <div class="button landing-submit" onclick="mulai()">
+                        Masuk ke Beranda Belajar
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-    <div class="inputBox">
-        <label>Kelas / Rombel</label>
-        <input type="text" id="kelompokKelas" placeholder="Misal: XI IPA 3">
-    </div>
+    <script>
+        function mulai() {
+            let namaLengkap = document.getElementById("namaLengkap").value.trim();
+            let nama = document.getElementById("kelompokNama").value.trim();
+            let kelas = document.getElementById("kelompokKelas").value.trim();
 
-    <div class="button" onclick="mulai()">
-        ✔ Mulai Belajar
-    </div>
+            if (!namaLengkap || !nama || !kelas) {
+                alert("Semua data harus diisi ya!");
+                return;
+            }
 
-</div>
+            localStorage.setItem("namaLengkap", namaLengkap);
+            localStorage.setItem("kelompokNama", nama);
+            localStorage.setItem("kelompokKelas", kelas);
+            localStorage.setItem("login", "true");
 
-<script>
-function mulai() {
-    let nama = document.getElementById("kelompokNama").value.trim();
-    let anggota = document.getElementById("kelompokAnggota").value.trim();
-    let kelas = document.getElementById("kelompokKelas").value.trim();
-
-    if (!nama || !anggota || !kelas) {
-        alert("Semua data harus diisi ya!");
-        return;
-    }
-
-    localStorage.setItem("kelompokNama", nama);
-    localStorage.setItem("kelompokAnggota", anggota);
-    localStorage.setItem("kelompokKelas", kelas);
-
-    // redirect ke halaman utama
-    window.location.href = "index.html";
-}
-</script>
-
+            window.location.href = "beranda.html";
+        }
+    </script>
 </body>
 </html>

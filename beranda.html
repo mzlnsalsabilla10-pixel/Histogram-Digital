@@ -3,74 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Media Belajar Histogram – Deep Learning</title>
+    <title>Beranda Pembelajaran Histogram</title>
     <link rel="stylesheet" href="style.css">
 </head>
+<body class="dashboard-body" onload="cekLogin(); cekStatusAwal(); isiSapaan(); renderProgress();">
+    <header class="topbar dashboard-topbar">
+        <div class="brand-mark">
+            <span class="brand-dot"></span>
+            <div>
+                <strong>Histogram Digital</strong>
+                <p>Beranda pembelajaran</p>
+            </div>
+        </div>
 
-<body onload="cekStatusAwal()">
+        <nav class="topnav">
+            <a href="index.html#tentang-media">Tentang Media</a>
+            <a href="index.html#tujuan-pembelajaran">Tujuan Pembelajaran</a>
+            <a href="index.html#panduan-penggunaan">Panduan Penggunaan</a>
+            <a href="index.html#referensi">Referensi</a>
+            <a class="topnav-cta" href="beranda.html">Beranda Belajar</a>
+        </nav>
+    </header>
 
-<header>
-    <h1>Media Belajar Histogram<br><span>Pembelajaran Mendalam</span></h1>
-    <p class="subjudul" id="sapaan"></p>
-</header>
+    <main class="dashboard-main">
+        <section class="dashboard-hero">
+            <div>
+                <span class="eyebrow">Perjalanan Belajar Histogram</span>
+                <h1 id="sapaanJudul">Selamat datang!</h1>
+                <p class="hero-text">
+                    Mari lanjutkan perjalanan belajar histogram secara bertahap melalui aktivitas interaktif berikut.
+                </p>
+            </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    let namaK = localStorage.getItem("kelompokNama");
-    if (namaK) {
-        document.getElementById("sapaan").innerHTML =
-            "Selamat datang, <b>" + namaK + "</b>!";
-    }
-});
-</script>
+            <div class="hero-aside-card">
+                <p class="aside-label">Status belajar</p>
+                <strong id="progressText">0 dari 5 aktivitas selesai</strong>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </section>
 
-<section class="cards-container">
+        <section class="progress-panel">
+            <div class="section-heading compact">
+                <span class="section-kicker">Progres Belajar</span>
+                <h2>Tahap demi tahap menuju histogram digital</h2>
+            </div>
 
-    <!-- AKTIVITAS 1 (TERBUKA) -->
-    <div class="card" onclick="bukaHalaman('aktivitas1.html')">
-        <div class="badge purple">1</div>
-        <h3>Identifikasi Grafik</h3>
-        <p>Amati dua grafik dan temukan perbedaannya.</p>
-    </div>
+            <div class="step-indicator" id="stepIndicator"></div>
+        </section>
 
-    <!-- KODE AKSES AKTIVITAS 2 -->
-    <div class="kode-akses">
-        <p><b>Masukkan kode dari guru untuk membuka Aktivitas 2</b></p>
-        <input type="text" id="kodeAkt2" placeholder="Masukkan kode">
-        <button onclick="cekKodeAkt2()">Buka Aktivitas 2</button>
-    </div>
+        <section class="cards-section">
+            <div class="section-heading compact">
+                <span class="section-kicker">Aktivitas Pembelajaran</span>
+                <h2>Pilih tahap yang tersedia</h2>
+            </div>
 
-    <!-- AKTIVITAS 2 (TERKUNCI) -->
-    <div id="card2" class="card locked">
-        <div class="badge aqua">2</div>
-        <h3>Kumpulkan Data</h3>
-        <p>Input data mentah untuk membuat histogram.</p>
-    </div>
+            <div class="cards-container dashboard-cards">
+                <div class="card activity-card" id="card1" onclick="bukaHalaman('aktivitas1.html')">
+                    <div class="badge purple">1</div>
+                    <span class="card-status status-open">Siap</span>
+                    <h3>Eksplorasi Konsep Histogram</h3>
+                    <p>Mengamati video dan menjawab pertanyaan pemantik tentang perbedaan diagram batang dan histogram.</p>
+                </div>
 
-    <!-- AKTIVITAS 3 -->
-    <div id="card3" class="card locked">
-        <div class="badge yellow">3</div>
-        <h3>Tentukan Interval</h3>
-        <p>Buat kelas interval yang sesuai.</p>
-    </div>
+                <div class="checkpoint-card">
+                    <p class="checkpoint-tag">Checkpoint Penguatan Guru</p>
+                    <h3>Lanjutkan setelah penguatan bersama guru</h3>
+                    <p>
+                        Setelah menyelesaikan Aktivitas 1, murid mengikuti penguatan dari guru mengenai
+                        perbedaan diagram batang dan histogram. Masukkan kode akses dari guru untuk melanjutkan ke Aktivitas 2.
+                    </p>
+                    <input type="text" id="kodeAkt2" placeholder="Masukkan kode akses">
+                    <button onclick="cekKodeAkt2()">Buka Aktivitas 2</button>
+                </div>
 
-    <!-- AKTIVITAS 4 -->
-    <div id="card4" class="card locked">
-        <div class="badge blue">4</div>
-        <h3>Buat Histogram</h3>
-        <p>Bangun histogram dari data yang kamu buat.</p>
-    </div>
+                <div id="card2" class="card activity-card locked">
+                    <div class="badge aqua">2</div>
+                    <span class="card-status status-locked">Terkunci</span>
+                    <h3>Pengumpulan Data</h3>
+                    <p>Mengumpulkan data numerik kontinu dari konteks nyata untuk digunakan dalam penyusunan histogram.</p>
+                </div>
 
-    <!-- AKTIVITAS 5 -->
-    <div id="card5" class="card locked">
-        <div class="badge pink">5</div>
-        <h3>Analisis</h3>
-        <p>Berikan interpretasi dan kesimpulan.</p>
-    </div>
+                <div id="card3" class="card activity-card locked">
+                    <div class="badge yellow">3</div>
+                    <span class="card-status status-locked">Terkunci</span>
+                    <h3>Penyusunan Tabel Distribusi Frekuensi</h3>
+                    <p>Mengurutkan data, menentukan jangkauan, banyak kelas, dan interval kelas secara bertahap.</p>
+                </div>
 
-</section>
+                <div id="card4" class="card activity-card locked">
+                    <div class="badge blue">4</div>
+                    <span class="card-status status-locked">Terkunci</span>
+                    <h3>Pembuatan Histogram Digital</h3>
+                    <p>Menyusun histogram digital berdasarkan data dan tabel distribusi frekuensi yang telah dibuat.</p>
+                </div>
 
-<script src="script.js"></script>
+                <div id="card5" class="card activity-card locked">
+                    <div class="badge pink">5</div>
+                    <span class="card-status status-locked">Terkunci</span>
+                    <h3>Refleksi Pembelajaran</h3>
+                    <p>Merefleksikan strategi, pemahaman, dan hasil belajar yang telah diperoleh selama proses pembelajaran.</p>
+                </div>
+            </div>
+        </section>
+    </main>
 
+    <script src="script.js"></script>
+    <script>
+        function isiSapaan() {
+            const namaLengkap = localStorage.getItem("namaLengkap") || "Murid";
+            document.getElementById("sapaanJudul").innerHTML = `Selamat datang, <span>${namaLengkap}</span>!`;
+        }
+
+        function renderProgress() {
+            const langkah = [
+                { no: 1, label: "Eksplorasi Konsep", done: localStorage.getItem("aktivitas1") === "true" },
+                {
+                    no: 2,
+                    label: "Pengumpulan Data",
+                    done: localStorage.getItem("aktivitas2") === "true",
+                    unlocked: localStorage.getItem("aktivitas2_unlock") === "true"
+                },
+                { no: 3, label: "Penyusunan Tabel Distribusi Frekuensi", done: localStorage.getItem("aktivitas3") === "true" },
+                { no: 4, label: "Pembuatan Histogram", done: localStorage.getItem("aktivitas4") === "true" },
+                { no: 5, label: "Refleksi", done: localStorage.getItem("aktivitas5") === "true" }
+            ];
+
+            const selesai = langkah.filter((item) => item.done).length;
+            const persen = (selesai / langkah.length) * 100;
+            const wrap = document.getElementById("stepIndicator");
+
+            document.getElementById("progressText").innerText = `${selesai} dari 5 aktivitas selesai`;
+            document.getElementById("progressFill").style.width = `${persen}%`;
+
+            wrap.innerHTML = "";
+
+            langkah.forEach((item) => {
+                const step = document.createElement("div");
+                let statusClass = "is-locked";
+
+                if (item.done) {
+                    statusClass = "is-done";
+                } else if (item.no === 1 || item.unlocked || localStorage.getItem(`aktivitas${item.no - 1}`) === "true") {
+                    statusClass = "is-current";
+                }
+
+                step.className = `step-item ${statusClass}`;
+                step.innerHTML = `
+                    <div class="step-bullet">${item.done ? "&#10003;" : item.no}</div>
+                    <div class="step-copy">
+                        <strong>${item.label}</strong>
+                        <p>${item.done ? "Selesai" : statusClass === "is-current" ? "Tersedia" : "Terkunci"}</p>
+                    </div>
+                `;
+                wrap.appendChild(step);
+            });
+
+            syncCardStatuses();
+        }
+
+        function syncCardStatuses() {
+            for (let no = 1; no <= 5; no++) {
+                const card = document.getElementById(`card${no}`);
+                if (!card) continue;
+
+                const status = card.querySelector(".card-status");
+                const done = localStorage.getItem(`aktivitas${no}`) === "true";
+                const unlocked = no === 1
+                    ? true
+                    : no === 2
+                        ? localStorage.getItem("aktivitas2_unlock") === "true"
+                        : localStorage.getItem(`aktivitas${no - 1}`) === "true";
+
+                if (done || unlocked) {
+                    card.classList.remove("locked");
+                } else {
+                    card.classList.add("locked");
+                }
+
+                if (!status) continue;
+
+                status.classList.remove("status-open", "status-locked", "status-done");
+
+                if (done) {
+                    status.classList.add("status-done");
+                    status.textContent = "Selesai";
+                } else if (unlocked) {
+                    status.classList.add("status-open");
+                    status.textContent = no === 1 ? "Siap" : "Tersedia";
+                } else {
+                    status.classList.add("status-locked");
+                    status.textContent = "Terkunci";
+                }
+            }
+        }
+    </script>
 </body>
 </html>

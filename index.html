@@ -3,102 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Kelompok</title>
+    <title>Histogram Digital Berbasis Web</title>
     <link rel="stylesheet" href="style.css">
-
-    <style>
-        .login-container {
-            max-width: 450px;
-            margin: 40px auto;
-            background: white;
-            padding: 35px;
-            border-radius: 24px;
-            box-shadow: 0px 6px 18px rgba(0,0,0,0.08);
-            text-align: center;
-        }
-        .login-container h2 {
-            margin-bottom: 20px;
-            color: #553ad1;
-        }
-        .inputBox {
-            margin-bottom: 18px;
-            text-align: left;
-        }
-        .inputBox label {
-            font-weight: 600;
-            color: #333;
-        }
-        .inputBox input, .inputBox textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border-radius: 12px;
-            border: 1px solid #aaa;
-            margin-top: 6px;
-            font-size: 14px;
-        }
-        .inputBox textarea {
-            height: 80px;
-            resize: vertical;
-        }
-    </style>
 </head>
+<body class="landing-body">
+    <header class="topbar sticky-topbar">
+        <div class="brand-mark">
+            <span class="brand-dot"></span>
+            <div>
+                <strong>Histogram Digital</strong>
+                <p>Media pembelajaran interaktif</p>
+            </div>
+        </div>
 
-<body>
+        <nav class="topnav">
+            <a href="#tentang-media">Tentang Media</a>
+            <a href="#tujuan-pembelajaran">Tujuan Pembelajaran</a>
+            <a href="#panduan-penggunaan">Panduan Penggunaan</a>
+            <a href="#referensi">Referensi</a>
+            <a class="topnav-cta" id="navAction" href="login.html">Mulai Belajar</a>
+        </nav>
+    </header>
 
-<div class="login-container">
+    <main class="landing-main">
+        <section class="hero-panel">
+            <div class="hero-copy">
+                <span class="eyebrow">Statistika Kelas X SMA/MA</span>
+                <h1>Histogram Digital Berbasis Web</h1>
+                <p class="hero-text">
+                    Media pembelajaran interaktif untuk membantu murid memahami konsep histogram
+                    secara bertahap melalui eksplorasi, pengolahan data, visualisasi, dan refleksi pembelajaran.
+                </p>
 
-    <h2>Media Belajar Histogram<br><span style="font-size:16px; font-weight:400;">Pembelajaran Mendalam</span></h2>
+                <div class="hero-actions">
+                    <a class="hero-button primary" id="heroPrimaryAction" href="login.html">Mulai Belajar</a>
+                    <a class="hero-button secondary" href="#panduan-penggunaan">Lihat Panduan</a>
+                    <a class="hero-button tertiary hidden-action" id="heroReturnAction" href="beranda.html">Kembali ke Beranda</a>
+                </div>
+            </div>
 
-    <p style="margin-bottom:20px; color:#555;">
-        Silakan isi identitas kelompok sebelum memulai.
-    </p>
+            <div class="hero-visual" aria-hidden="true">
+                <div class="chart-card">
+                    <div class="mini-chart">
+                        <span style="height: 34%"></span>
+                        <span style="height: 52%"></span>
+                        <span style="height: 76%"></span>
+                        <span style="height: 88%"></span>
+                        <span style="height: 64%"></span>
+                        <span style="height: 42%"></span>
+                    </div>
+                    <div class="chart-caption">
+                        <strong>Belajar dari data nyata</strong>
+                        <p>Konsep, tabel distribusi, dan histogram saling terhubung dalam satu alur belajar.</p>
+                    </div>
+                </div>
 
-    <div class="inputBox">
-        <label>Nama Kelompok</label>
-        <input type="text" id="kelompokNama" placeholder="Misal: Kelompok Histogram 1">
-    </div>
+                <div class="floating-chip chip-one">Data</div>
+                <div class="floating-chip chip-two">Frekuensi</div>
+                <div class="floating-chip chip-three">Histogram</div>
+            </div>
+        </section>
 
-    <div class="inputBox">
-        <label>Nama Anggota</label>
-        <textarea id="kelompokAnggota" placeholder="Contoh: Alya, Dinda, Daffa"></textarea>
-    </div>
+        <section class="content-section" id="tentang-media">
+            <div class="section-heading">
+                <span class="section-kicker">Tentang Media</span>
+                <h2>Media pembelajaran yang terstruktur, interaktif, dan reflektif</h2>
+            </div>
 
-    <div class="inputBox">
-        <label>Kelas / Rombel</label>
-        <input type="text" id="kelompokKelas" placeholder="Misal: XI IPA 3">
-    </div>
+            <div class="info-grid">
+                <article class="info-card">
+                    <h3>Materi</h3>
+                    <p>Statistika pada topik histogram.</p>
+                </article>
+                <article class="info-card">
+                    <h3>Sasaran</h3>
+                    <p>Murid SMA/MA kelas X.</p>
+                </article>
+                <article class="info-card">
+                    <h3>Bentuk Media</h3>
+                    <p>Media pembelajaran interaktif berbasis web.</p>
+                </article>
+                <article class="info-card">
+                    <h3>Karakter Media</h3>
+                    <p>Bertahap, interaktif, dan mendukung refleksi pembelajaran.</p>
+                </article>
+            </div>
 
-    <div class="button" onclick="mulai()">
-        ✔ Mulai Belajar
-    </div>
+            <div class="text-panel">
+                <p>
+                    Media ini dirancang untuk mendampingi murid mempelajari histogram secara konseptual
+                    dan prosedural, mulai dari membedakan diagram batang dan histogram, mengumpulkan data nyata,
+                    menyusun tabel distribusi frekuensi, membuat histogram digital, hingga melakukan refleksi
+                    terhadap proses belajar.
+                </p>
+            </div>
+        </section>
 
-</div>
+        <section class="content-section" id="tujuan-pembelajaran">
+            <div class="section-heading">
+                <span class="section-kicker">Tujuan Pembelajaran</span>
+                <h2>Arah belajar yang jelas sejak awal</h2>
+            </div>
 
-<script>
-function mulai() {
-    let nama = document.getElementById("kelompokNama").value.trim();
-    let anggota = document.getElementById("kelompokAnggota").value.trim();
-    let kelas = document.getElementById("kelompokKelas").value.trim();
+            <div class="curriculum-panel">
+                <h3>Capaian Pembelajaran</h3>
+                <p>
+                    Di akhir fase E, murid dapat menentukan dan menggunakan box plot, histogram,
+                    dan dot plot sesuai dengan natur (karakteristik) data dan kebutuhan.
+                </p>
+            </div>
 
-    if (!nama || !anggota || !kelas) {
-        alert("Semua data harus diisi ya!");
-        return;
-    }
+            <div class="curriculum-panel">
+                <h3>Tujuan Pembelajaran</h3>
+                <ol class="goals-list">
+                    <li>Murid dapat mengidentifikasi perbedaan antara diagram batang dan histogram berdasarkan pengamatan video dan representasi grafik yang disajikan dengan menunjukkan konsep pemahaman yang tepat melalui jawaban dan alasan yang sesuai dengan konsep.</li>
+                    <li>Murid dapat mengumpulkan dan menyajikan minimal 25 data numerik kontinu melalui kegiatan pengumpulan data di lingkungan kelas menggunakan media pembelajaran digital berbasis web dengan tepat dan akurat.</li>
+                    <li>Murid dapat menentukan jangkauan data, banyak kelas, dan panjang interval serta menyusun tabel interval kelas secara mandiri melalui media pembelajaran berbasis web dan data hasil pengukuran yang telah dikumpulkan sebelumnya dengan tepat dan sesuai.</li>
+                    <li>Murid mampu menyusun, menganalisis, dan mengevaluasi histogram digital melalui penggunaan media web interaktif pembuat histogram berdasarkan tabel distribusi frekuensi dengan menyesuaikan frekuensi tiap kelas serta melengkapi komponen grafik (judul, sumbu, dan skala) secara tepat.</li>
+                    <li>Murid dapat memberikan refleksi logis dan relevan terkait proses pembuatan histogram dan pemahaman materi melalui form reflektif digital.</li>
+                </ol>
+            </div>
+        </section>
 
-    localStorage.setItem("kelompokNama", nama);
-    localStorage.setItem("kelompokAnggota", anggota);
-    localStorage.setItem("kelompokKelas", kelas);
-    localStorage.setItem("login", "true");
+        <section class="content-section" id="panduan-penggunaan">
+            <div class="section-heading">
+                <span class="section-kicker">Panduan Penggunaan</span>
+                <h2>Ikuti alur media secara bertahap</h2>
+            </div>
 
-    // PINDAH KE BERANDA
-    window.location.href = "beranda.html";
-}
-</script>
+            <div class="guide-steps">
+                <article class="guide-step">
+                    <span>01</span>
+                    <p>Baca informasi media dan tujuan pembelajaran terlebih dahulu.</p>
+                </article>
+                <article class="guide-step">
+                    <span>02</span>
+                    <p>Klik tombol mulai belajar, lalu isi identitas diri pada halaman login.</p>
+                </article>
+                <article class="guide-step">
+                    <span>03</span>
+                    <p>Pelajari aktivitas secara berurutan dari Aktivitas 1 sampai Aktivitas 5.</p>
+                </article>
+                <article class="guide-step">
+                    <span>04</span>
+                    <p>Setelah Aktivitas 1, murid menunggu penguatan dari guru sebelum membuka Aktivitas 2 dengan kode akses.</p>
+                </article>
+                <article class="guide-step">
+                    <span>05</span>
+                    <p>Gunakan data hasil pengamatan atau pengukuran nyata untuk menyusun histogram dan selesaikan refleksi akhir.</p>
+                </article>
+            </div>
+        </section>
 
+        <section class="content-section" id="referensi">
+            <div class="section-heading">
+                <span class="section-kicker">Referensi</span>
+                <h2>Sumber belajar dan pengembangan media</h2>
+            </div>
 
+            <div class="reference-list">
+                <article class="reference-card">
+                    <h3>Sumber Video</h3>
+                    <p>Video pembelajaran histogram yang digunakan pada aktivitas eksplorasi konsep.</p>
+                </article>
+                <article class="reference-card">
+                    <h3>Sumber Materi</h3>
+                    <p>Buku, modul, dan materi statistika yang mendukung pembelajaran histogram.</p>
+                </article>
+                <article class="reference-card">
+                    <h3>Referensi Pendukung</h3>
+                    <p>Sumber pengembangan media, visualisasi data, dan pembelajaran berbasis web.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const sudahLogin = localStorage.getItem("login") === "true";
+        const navAction = document.getElementById("navAction");
+        const heroPrimaryAction = document.getElementById("heroPrimaryAction");
+        const heroReturnAction = document.getElementById("heroReturnAction");
+
+        if (sudahLogin) {
+            navAction.textContent = "Kembali ke Beranda";
+            navAction.href = "beranda.html";
+            heroPrimaryAction.textContent = "Kembali ke Beranda";
+            heroPrimaryAction.href = "beranda.html";
+            heroReturnAction.classList.remove("hidden-action");
+        } else {
+            heroReturnAction.remove();
+        }
+    </script>
 </body>
 </html>
-
-
-
-

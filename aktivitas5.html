@@ -5,135 +5,409 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aktivitas 5 - Refleksi Pembelajaran</title>
     <link rel="stylesheet" href="style.css">
-
     <style>
-        .refleksi-container {
-            max-width: 800px;
-            margin: 40px auto;
-            background: white;
-            padding: 35px;
+        .reflection-wrap {
+            max-width: 1180px;
+            margin: 0 auto;
+            display: grid;
+            gap: 22px;
+        }
+
+        .reflection-hero,
+        .reflection-card,
+        .question-card,
+        .tips-card {
+            background: rgba(255,255,255,.94);
+            border: 1px solid rgba(86,99,164,.14);
+            border-radius: 30px;
+            box-shadow: 0 18px 50px rgba(49,84,215,.1);
+        }
+
+        .reflection-hero {
+            padding: 34px;
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+            gap: 22px;
+        }
+
+        .reflection-hero h1,
+        .reflection-card h2,
+        .question-card h3,
+        .tips-card h3 {
+            font-family: 'Sora', sans-serif;
+            color: #21358e;
+        }
+
+        .reflection-hero h1 {
+            font-size: clamp(2rem, 3vw, 3rem);
+            margin-bottom: 14px;
+        }
+
+        .reflection-hero p,
+        .reflection-card p,
+        .question-card p,
+        .tips-card p,
+        .tip-list li,
+        .journey-card p {
+            color: #5f678c;
+            line-height: 1.8;
+        }
+
+        .reflection-pill {
+            display: inline-flex;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: rgba(49,84,215,.08);
+            color: #3154d7;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .hero-side {
+            background: linear-gradient(135deg, rgba(49,84,215,.08), rgba(24,183,163,.14));
             border-radius: 24px;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+            padding: 24px;
         }
 
-        h2 {
-            color: #553AD1;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .soal {
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .petunjuk {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 15px;
-        }
-
-        textarea {
-            width: 100%;
-            border-radius: 14px;
-            border: 1px solid #aaa;
-            padding: 12px;
-            font-size: 14px;
-            height: 100px;
-            resize: vertical;
-            margin-bottom: 25px;
-        }
-
-        .btn-submit {
+        .hero-side ul {
             margin-top: 10px;
-            padding: 12px 24px;
-            background: #553AD1;
-            color: white;
-            border-radius: 12px;
-            cursor: pointer;
-            text-align: center;
-            display: inline-block;
+            padding-left: 20px;
+            color: #4d557d;
+            line-height: 1.8;
         }
 
-        .btn-submit:hover {
-            background: #4025ad;
+        .reflection-card {
+            padding: 28px;
+        }
+
+        .journey-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .journey-card {
+            padding: 18px;
+            border-radius: 22px;
+            background: #f8faff;
+            border: 1px solid rgba(86,99,164,.12);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+
+        .journey-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 26px rgba(49,84,215,.09);
+        }
+
+        .journey-no {
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(49,84,215,.12);
+            color: #3154d7;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .journey-card strong {
+            display: block;
+            color: #21358e;
+            margin-bottom: 8px;
+        }
+
+        .support-box {
+            margin-top: 18px;
+            padding: 18px 20px;
+            border-radius: 22px;
+            background: rgba(255,184,92,.12);
+            border: 1px solid rgba(255,184,92,.24);
+        }
+
+        .support-box strong {
+            display: block;
+            color: #8c5a00;
+            margin-bottom: 8px;
+        }
+
+        .question-layout {
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .question-stack {
+            display: grid;
+            gap: 18px;
+        }
+
+        .question-card {
+            padding: 22px;
+        }
+
+        .question-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            color: #3154d7;
+            font-weight: 700;
+        }
+
+        .question-label span {
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(49,84,215,.12);
+            color: #3154d7;
+            font-weight: 800;
+        }
+
+        .question-card textarea {
+            width: 100%;
+            min-height: 140px;
+            margin-top: 14px;
+            padding: 14px 16px;
+            border-radius: 18px;
+            border: 1px solid rgba(86,99,164,.18);
+            background: white;
+            resize: vertical;
+            font: inherit;
+            color: #31405f;
+        }
+
+        .question-card textarea:focus {
+            outline: none;
+            border-color: rgba(49,84,215,.45);
+            box-shadow: 0 0 0 4px rgba(49,84,215,.08);
+        }
+
+        .tips-card {
+            padding: 22px;
+            position: sticky;
+            top: 98px;
+        }
+
+        .tip-list {
+            margin: 14px 0 0;
+            padding-left: 18px;
+        }
+
+        .tip-list li {
+            margin-bottom: 10px;
+        }
+
+        .reflection-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            margin-top: 22px;
+            flex-wrap: wrap;
+        }
+
+        .reflection-note {
+            color: #5f678c;
+            line-height: 1.7;
+        }
+
+        .reflection-btn {
+            border: none;
+            border-radius: 16px;
+            padding: 14px 20px;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #3154d7, #5e7bff);
+            color: white;
+            box-shadow: 0 14px 28px rgba(49,84,215,.18);
+        }
+
+        .reflection-topbar {
+            position: sticky;
+            top: 12px;
+            z-index: 1000;
+        }
+
+        @media (max-width: 980px) {
+            .reflection-hero,
+            .question-layout,
+            .journey-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tips-card {
+                position: static;
+            }
+        }
+        @media (max-width: 640px) {
+            .reflection-hero,
+            .reflection-card,
+            .question-card,
+            .tips-card {
+                padding: 22px;
+                border-radius: 24px;
+            }
+
+            .journey-grid {
+                gap: 12px;
+            }
+
+            .journey-card {
+                padding: 16px;
+                border-radius: 20px;
+            }
+
+            .question-card textarea {
+                min-height: 120px;
+            }
         }
     </style>
 </head>
-
 <body onload="cekLogin(); cekAkses(5);">
+    <header class="topbar reflection-topbar">
+        <div class="brand-mark">
+            <span class="brand-dot"></span>
+            <div>
+                <strong>Histogram Digital</strong>
+                <p>Aktivitas 5</p>
+            </div>
+        </div>
+        <nav class="topnav">
+            <a href="index.html#panduan-penggunaan">Panduan Penggunaan</a>
+            <a href="beranda.html">Beranda Belajar</a>
+        </nav>
+    </header>
 
-<div class="refleksi-container">
-    <h2>Aktivitas 5 — Refleksi Pembelajaran</h2>
+    <main class="reflection-wrap">
+        <section class="reflection-hero">
+            <div>
+                <span class="reflection-pill">Aktivitas 5 - Refleksi Pembelajaran</span>
+                <h1>Meninjau kembali proses belajar membuat histogram</h1>
+                <p>Pada aktivitas ini, kamu diajak mengingat kembali perjalanan belajar yang telah dilalui, lalu menuliskan pemahaman, kesulitan, dan strategi yang kamu peroleh selama mempelajari histogram.</p>
+            </div>
+            <div class="hero-side">
+                <h3>Fokus aktivitas ini</h3>
+                <ul>
+                    <li>Mengingat kembali tahapan belajar dari konsep hingga pembuatan histogram.</li>
+                    <li>Menyadari bagian yang sudah dipahami dan bagian yang masih menantang.</li>
+                    <li>Menuliskan refleksi tanpa takut salah, karena tidak ada jawaban benar atau salah.</li>
+                </ul>
+            </div>
+        </section>
 
-    <p class="petunjuk">
-        Refleksi ini bertujuan untuk membantu kamu memahami kembali proses berpikir
-        yang telah kamu lakukan selama pembelajaran statistika, khususnya dalam
-        menyusun dan menganalisis histogram.
-    </p>
+        <section class="reflection-card">
+            <h2>Perjalanan belajar yang sudah kamu lalui</h2>
+            <p>Lihat kembali tahapan berikut sebagai pengingat sebelum menuliskan refleksi.</p>
 
-    <p class="soal">
-        1. Setelah menyelesaikan seluruh rangkaian aktivitas (Aktivitas 1–4),
-        pemahaman baru apa yang kamu peroleh tentang histogram dan fungsinya dalam
-        menyajikan data?
-    </p>
-    <textarea id="r1"></textarea>
+            <div class="journey-grid">
+                <div class="journey-card">
+                    <div class="journey-no">1</div>
+                    <strong>Eksplorasi Konsep</strong>
+                    <p>Membedakan diagram batang dan histogram melalui pengamatan dan diskusi.</p>
+                </div>
+                <div class="journey-card">
+                    <div class="journey-no">2</div>
+                    <strong>Pengumpulan Data</strong>
+                    <p>Mengumpulkan data numerik kontinu dari konteks nyata di sekitar kelas.</p>
+                </div>
+                <div class="journey-card">
+                    <div class="journey-no">3</div>
+                    <strong>Penyusunan Tabel</strong>
+                    <p>Menentukan jangkauan, banyak kelas, panjang interval, dan frekuensi.</p>
+                </div>
+                <div class="journey-card">
+                    <div class="journey-no">4</div>
+                    <strong>Pembuatan Histogram</strong>
+                    <p>Membangun histogram digital dari tabel distribusi frekuensi.</p>
+                </div>
+            </div>
 
-    <p class="soal">
-        2. Jelaskan proses berpikirmu saat mengubah data mentah menjadi tabel distribusi
-        frekuensi dan kemudian menjadi histogram. Langkah mana yang paling membantumu
-        memahami bentuk sebaran data? Mengapa?
-    </p>
-    <textarea id="r2"></textarea>
+            <div class="support-box">
+                <strong>Tidak ada jawaban benar atau salah.</strong>
+                <p>Jawablah sesuai pengalaman belajarmu sendiri. Fokuskan jawaban pada apa yang kamu pahami, bagian yang menantang, serta strategi yang akan kamu lakukan jika mengerjakan kembali.</p>
+            </div>
+        </section>
 
-    <p class="soal">
-        3. Pada Aktivitas 4, kamu membandingkan histogram buatanmu dengan histogram sistem.
-        Kesalahan atau perbedaan apa yang kamu temukan, dan apa penyebab utama kesalahan tersebut?
-    </p>
-    <textarea id="r3"></textarea>
+        <section class="question-layout">
+            <div class="question-stack">
+                <article class="question-card">
+                    <div class="question-label"><span>1</span>Pemahaman Konsep</div>
+                    <h3>Pemahaman baru apa yang kamu peroleh tentang histogram?</h3>
+                    <p>Setelah menyelesaikan seluruh rangkaian aktivitas, jelaskan pemahaman baru yang kamu peroleh tentang histogram dan fungsinya dalam menyajikan data.</p>
+                    <textarea id="r1" placeholder="Tuliskan pemahaman barumu tentang histogram di sini..."></textarea>
+                </article>
 
-    <p class="soal">
-        4. Jika kamu diminta mengulang kembali pembuatan histogram,
-        strategi atau langkah apa yang akan kamu perbaiki agar hasilnya lebih akurat?
-        Jelaskan alasanmu.
-    </p>
-    <textarea id="r4"></textarea>
+                <article class="question-card">
+                    <div class="question-label"><span>2</span>Proses Berpikir</div>
+                    <h3>Bagaimana proses berpikirmu saat mengolah data?</h3>
+                    <p>Jelaskan proses berpikirmu saat mengubah data mentah menjadi tabel distribusi frekuensi, lalu menjadi histogram. Bagian mana yang paling membantumu memahami sebaran data? Mengapa?</p>
+                    <textarea id="r2" placeholder="Ceritakan proses berpikirmu saat mengolah data di sini..."></textarea>
+                </article>
 
-    <div class="btn-submit" onclick="submitRefleksi()">Kirim Refleksi</div>
-</div>
+                <article class="question-card">
+                    <div class="question-label"><span>3</span>Evaluasi Hasil</div>
+                    <h3>Perbedaan apa yang kamu temukan saat memeriksa histogram?</h3>
+                    <p>Saat membandingkan histogram buatanmu dengan histogram acuan, perbedaan atau kesalahan apa yang kamu temukan? Menurutmu apa penyebab utamanya?</p>
+                    <textarea id="r3" placeholder="Tuliskan evaluasimu terhadap hasil histogram yang dibuat..."></textarea>
+                </article>
 
-<script src="script.js"></script>
+                <article class="question-card">
+                    <div class="question-label"><span>4</span>Perbaikan Strategi</div>
+                    <h3>Apa yang akan kamu perbaiki jika mengulang lagi?</h3>
+                    <p>Jika kamu diminta mengulang kembali pembuatan histogram, strategi atau langkah apa yang akan kamu perbaiki agar hasilnya lebih akurat? Jelaskan alasanmu.</p>
+                    <textarea id="r4" placeholder="Tuliskan strategi perbaikanmu di sini..."></textarea>
+                </article>
+            </div>
 
-<script>
-function submitRefleksi() {
-    let r1 = document.getElementById("r1").value.trim();
-    let r2 = document.getElementById("r2").value.trim();
-    let r3 = document.getElementById("r3").value.trim();
-    let r4 = document.getElementById("r4").value.trim();
+            <aside class="tips-card">
+                <h3>Tips menulis refleksi</h3>
+                <p>Gunakan bahasa sendiri dan tuliskan jawaban secara jujur berdasarkan pengalaman belajarmu.</p>
+                <ul class="tip-list">
+                    <li>Ceritakan bagian yang paling kamu pahami setelah belajar histogram.</li>
+                    <li>Sebutkan langkah yang menurutmu paling menantang.</li>
+                    <li>Jelaskan kesalahan yang sempat terjadi dan apa yang kamu pelajari darinya.</li>
+                    <li>Tuliskan strategi yang akan kamu gunakan jika mengulang kembali.</li>
+                </ul>
+            </aside>
+        </section>
 
-    let totalKosong = 0;
-    if (!r1) totalKosong++;
-    if (!r2) totalKosong++;
-    if (!r3) totalKosong++;
-    if (!r4) totalKosong++;
+        <section class="reflection-card">
+            <div class="reflection-actions">
+                <p class="reflection-note">Pastikan semua pertanyaan sudah terisi agar refleksimu tersimpan dengan lengkap sebagai penutup pembelajaran.</p>
+                <button class="reflection-btn" onclick="submitRefleksi()">Simpan Refleksi dan Selesaikan</button>
+            </div>
+        </section>
+    </main>
 
-    let skor = 100;
-    if (totalKosong === 1) skor = 75;
-    else if (totalKosong === 2) skor = 50;
-    else if (totalKosong === 3) skor = 25;
-    else if (totalKosong === 4) skor = 0;
+    <script src="script.js"></script>
+    <script>
+        function submitRefleksi() {
+            const r1 = document.getElementById("r1").value.trim();
+            const r2 = document.getElementById("r2").value.trim();
+            const r3 = document.getElementById("r3").value.trim();
+            const r4 = document.getElementById("r4").value.trim();
 
-    localStorage.setItem("refleksi_r1", r1);
-    localStorage.setItem("refleksi_r2", r2);
-    localStorage.setItem("refleksi_r3", r3);
-    localStorage.setItem("refleksi_r4", r4);
-    localStorage.setItem("nilai_refleksi", skor);
+            if (!r1 || !r2 || !r3 || !r4) {
+                alert("Lengkapi terlebih dahulu semua jawaban refleksi sebelum disimpan.");
+                return;
+            }
 
-    localStorage.setItem("aktivitas5", "true");
-    window.location.href = "final.html";
-}
-</script>
+            localStorage.setItem("refleksi_r1", r1);
+            localStorage.setItem("refleksi_r2", r2);
+            localStorage.setItem("refleksi_r3", r3);
+            localStorage.setItem("refleksi_r4", r4);
+            localStorage.setItem("status_refleksi", "lengkap");
+            localStorage.setItem("aktivitas5", "true");
 
+            window.location.href = "final.html";
+        }
+    </script>
 </body>
 </html>

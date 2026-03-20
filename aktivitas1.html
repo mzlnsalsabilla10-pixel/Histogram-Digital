@@ -5,211 +5,710 @@
     <title>Aktivitas 1 - Eksplorasi Histogram</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-
     <style>
-        .box {
-            max-width: 800px;
-            margin: 30px auto;
-            background: white;
-            padding: 30px;
+        .activity-stage {
+            max-width: 1180px;
+            margin: 0 auto;
+            display: grid;
+            gap: 22px;
+        }
+
+        .activity-hero,
+        .activity-card-wide,
+        .question-block {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(86, 99, 164, 0.16);
+            border-radius: 30px;
+            box-shadow: 0 18px 50px rgba(49, 84, 215, 0.1);
+        }
+
+        .activity-hero {
+            padding: 34px;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .activity-hero::after {
+            content: "";
+            position: absolute;
+            right: -80px;
+            bottom: -80px;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(49, 84, 215, 0.16), transparent 70%);
+        }
+
+        .activity-hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2rem, 3vw, 3rem);
+            color: #21358e;
+            margin-bottom: 14px;
+        }
+
+        .activity-hero p {
+            color: #5f678c;
+            line-height: 1.8;
+        }
+
+        .activity-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 999px;
+            padding: 10px 16px;
+            background: rgba(49, 84, 215, 0.08);
+            color: #3154d7;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .hero-mini-panel {
+            background: linear-gradient(135deg, rgba(49, 84, 215, 0.08), rgba(24, 183, 163, 0.12));
+            border-radius: 26px;
+            padding: 24px;
+            border: 1px solid rgba(86, 99, 164, 0.14);
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-mini-panel h3 {
+            color: #21358e;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .hero-mini-panel ul {
+            padding-left: 20px;
+            color: #5f678c;
+            line-height: 1.8;
+        }
+
+        .activity-card-wide {
+            padding: 28px;
+        }
+
+        .section-title {
+            margin-bottom: 18px;
+        }
+
+        .section-title .section-kicker {
+            margin-bottom: 10px;
+        }
+
+        .section-title h2 {
+            font-family: 'Sora', sans-serif;
+            color: #21358e;
+            font-size: clamp(1.4rem, 2vw, 2rem);
+        }
+
+        .section-title p {
+            color: #5f678c;
+            line-height: 1.8;
+            margin-top: 10px;
+        }
+
+        .focus-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .focus-card {
+            background: #f7f9ff;
+            border: 1px solid rgba(86, 99, 164, 0.12);
             border-radius: 22px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            padding: 18px;
         }
-        .hidden { display: none; }
 
-        textarea {
+        .focus-card span {
+            display: inline-flex;
+            width: 34px;
+            height: 34px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(49, 84, 215, 0.12);
+            color: #3154d7;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .focus-card p {
+            color: #4d557d;
+            line-height: 1.7;
+        }
+
+        .video-frame {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 22px;
+            background: #dfe6ff;
+        }
+
+        .video-frame iframe {
+            position: absolute;
+            inset: 0;
             width: 100%;
-            border-radius: 14px;
-            padding: 12px;
+            height: 100%;
+            border: 0;
+        }
+
+        .watch-note {
+            margin-top: 16px;
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: #fff8e8;
+            color: #7a5b17;
+            border: 1px solid rgba(255, 184, 92, 0.35);
+            line-height: 1.7;
+        }
+
+        .watch-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .video-fallback {
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .video-fallback a {
+            text-decoration: none;
+        }
+
+        .video-fallback p {
+            color: #6a7294;
             font-size: 14px;
-            margin-top: 8px;
         }
 
-.btn {
-    margin-top: 20px;
-    background: #553AD1;
-    color: white;
-    padding: 12px 22px;
-    border-radius: 12px;
-    cursor: pointer;
-    display: inline-block;
-    opacity: 1;
-    pointer-events: auto;
-}
-
-
-        .btn.active {
-            opacity: 1;
-            pointer-events: auto;
+        .watch-actions .button {
+            margin-top: 0;
         }
 
-        .opsi label {
-            display: block;
-            margin: 8px 0;
+        .watch-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 16px;
+            background: rgba(24, 183, 163, 0.12);
+            color: #0b7f72;
+            font-weight: 700;
         }
 
-        .disclaimer {
-            background: #f5f3ff;
-            border-left: 5px solid #553AD1;
-            padding: 12px;
-            margin-bottom: 15px;
-            font-size: 14px;
+        .reflect-box textarea,
+        .question-block textarea {
+            width: 100%;
+            min-height: 110px;
+            border-radius: 18px;
+            border: 1px solid rgba(86, 99, 164, 0.18);
+            padding: 14px 16px;
+            margin-top: 12px;
+            background: #f8faff;
+            resize: vertical;
+        }
+
+        .drag-grid {
+            display: grid;
+            grid-template-columns: 0.95fr 1.05fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        .drag-bank {
+            background: #f7f9ff;
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid rgba(86, 99, 164, 0.12);
+        }
+
+        .drag-bank h3,
+        .drop-zone h3,
+        .question-block h3 {
+            color: #21358e;
+            margin-bottom: 12px;
+        }
+
+        .drag-items {
+            display: grid;
+            gap: 12px;
+        }
+
+        .drag-item {
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: white;
+            border: 1px solid rgba(86, 99, 164, 0.18);
+            box-shadow: 0 8px 18px rgba(49, 84, 215, 0.06);
+            cursor: grab;
+            color: #3c446f;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        .drag-item.dragging {
+            opacity: 0.55;
+        }
+
+        .drop-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .drop-zone {
+            min-height: 320px;
+            border-radius: 24px;
+            padding: 20px;
+            border: 2px dashed rgba(86, 99, 164, 0.22);
+            background: rgba(248, 250, 255, 0.9);
+        }
+
+        .drop-zone.drag-over {
+            border-color: #3154d7;
+            background: rgba(49, 84, 215, 0.08);
+        }
+
+        .drop-zone.correct-zone {
+            background: rgba(24, 183, 163, 0.08);
+        }
+
+        .drop-zone.wrong-zone {
+            background: rgba(244, 126, 182, 0.08);
+        }
+
+        .drop-zone p {
+            color: #5f678c;
+            line-height: 1.7;
+            margin-bottom: 14px;
+        }
+
+        .drop-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .feedback-box {
+            margin-top: 18px;
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: #eef4ff;
+            color: #3154d7;
+            font-weight: 700;
+            display: none;
+        }
+
+        .question-stack {
+            display: grid;
+            gap: 18px;
+        }
+
+        .question-block {
+            padding: 22px;
+        }
+
+        .question-block .opsi {
+            display: grid;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .question-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(86, 99, 164, 0.16);
+            background: #fbfcff;
+        }
+
+        .submit-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .submit-hint {
+            color: #5f678c;
+            line-height: 1.7;
+        }
+
+        .activity-topbar {
+            position: sticky;
+            top: 12px;
+            z-index: 1000;
+        }
+
+        @media (max-width: 960px) {
+            .activity-hero,
+            .drag-grid,
+            .drop-columns {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
+<body onload="cekLogin(); cekAkses(1); siapkanAktivitas1();">
+    <header class="topbar activity-topbar">
+        <div class="brand-mark">
+            <span class="brand-dot"></span>
+            <div>
+                <strong>Histogram Digital</strong>
+                <p>Aktivitas 1</p>
+            </div>
+        </div>
 
-<body onload="cekLogin(); cekAkses(1);">
+        <nav class="topnav">
+            <a href="index.html#tentang-media">Tentang Media</a>
+            <a href="beranda.html">Beranda Belajar</a>
+        </nav>
+    </header>
 
-<!-- ================= VIDEO ================= -->
-<div class="box" id="videoSection">
-    <h2>Eksplorasi Awal</h2>
+    <main class="activity-stage">
+        <section class="activity-hero">
+            <div>
+                <span class="activity-pill">Aktivitas 1 - Eksplorasi Konsep Histogram</span>
+                <h1>Pahami perbedaan diagram batang dan histogram</h1>
+                <p>
+                    Pada aktivitas ini, murid akan mengamati video, mengenali ciri-ciri histogram,
+                    membedakannya dari diagram batang, lalu menuliskan alasan berdasarkan pemahaman konsep.
+                </p>
+            </div>
 
-    <div class="disclaimer">
-        ⚠️ <b>Perhatian:</b> Video ini hanya dapat ditonton satu kali.
-        Pastikan peserta didik menyimak dengan baik sebelum melanjutkan.
-    </div>
+            <div class="hero-mini-panel">
+                <h3>Tujuan aktivitas ini</h3>
+                <ul>
+                    <li>Mengamati ciri visual diagram batang dan histogram.</li>
+                    <li>Mengidentifikasi perbedaan konsep dari dua jenis grafik tersebut.</li>
+                    <li>Menyampaikan alasan secara logis berdasarkan hasil pengamatan.</li>
+                </ul>
+            </div>
+        </section>
 
-  <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:16px;">
- <iframe
-  id="videoEksplorasi"
-  width="560"
-  height="315"
-  src="https://www.youtube.com/embed/JsEwJD1mYpU?si=g58JsVW0i4FvGPoN?enablejsapi=1"
-  frameborder="0"
-  allowfullscreen>
-</iframe>
-</div>
+        <section class="activity-card-wide">
+            <div class="section-title">
+                <span class="section-kicker">Fokus Pengamatan</span>
+                <h2>Perhatikan tiga hal penting sebelum menonton video</h2>
+                <p>Catat temuan kelompokmu berdasarkan ciri batang, jenis data, dan makna lebar batang.</p>
+            </div>
 
+            <div class="focus-grid">
+                <article class="focus-card">
+                    <span>1</span>
+                    <p>Perhatikan apakah batang pada grafik saling menempel atau memiliki jarak.</p>
+                </article>
+                <article class="focus-card">
+                    <span>2</span>
+                    <p>Perhatikan jenis data yang disajikan, apakah berupa kategori atau data numerik kontinu.</p>
+                </article>
+                <article class="focus-card">
+                    <span>3</span>
+                    <p>Perhatikan apa yang ditunjukkan oleh lebar batang pada histogram.</p>
+                </article>
+            </div>
+        </section>
 
+        <section class="activity-card-wide">
+            <div class="section-title">
+                <span class="section-kicker">Eksplorasi Video</span>
+                <h2>Tonton video pembelajaran dengan saksama</h2>
+                <p>Gunakan video ini untuk membangun pemahaman awal sebelum masuk ke aktivitas interaktif.</p>
+            </div>
 
-    <div id="btnTonton" class="btn">Saya sudah menonton</div>
-</div>
+            <div class="video-frame">
+                <iframe
+                    id="videoEksplorasi"
+                    src="https://www.youtube-nocookie.com/embed/JsEwJD1mYpU?rel=0&modestbranding=1"
+                    title="Video pembelajaran histogram"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allowfullscreen>
+                </iframe>
+            </div>
 
-<!-- ================= CHECKPOINT ================= -->
-<div class="box hidden" id="checkpointSection">
-    <h3>Pertanyaan Pemantik</h3>
-    <p>
-        Berdasarkan video yang telah ditonton, menurut kelompokmu
-        apa perbedaan paling penting antara diagram batang dan histogram?
-    </p>
+            <div class="video-fallback">
+                <a class="button" href="https://www.youtube.com/watch?v=JsEwJD1mYpU" target="_blank" rel="noopener noreferrer">Buka Video di YouTube</a>
+                <p>Jika video tidak dapat diputar di dalam web, buka melalui YouTube.</p>
+            </div>
 
-    <textarea id="checkpointJawaban"></textarea>
-    <div class="btn active" onclick="lanjutSoal1()">Lanjut</div>
-</div>
+            <div class="watch-note">
+                Video ini dirancang untuk ditonton satu kali sebagai bagian dari pembelajaran berkesadaran.
+                Setelah selesai menonton, klik tombol konfirmasi lalu lanjutkan ke tahap berikutnya.
+            </div>
 
-<!-- ================= SOAL 1 ================= -->
-<div class="box hidden" id="soal1">
-    <h3>Soal 1</h3>
-    <p>Grafik manakah yang merupakan histogram?</p>
-    <img src="grafik1.png" width="100%">
+            <div class="watch-actions">
+                <div class="button" id="btnTontonSelesai" onclick="konfirmasiVideo()">Saya sudah menonton video</div>
+                <div class="watch-status" id="watchStatus" style="display:none;">Video sudah dikonfirmasi</div>
+            </div>
+        </section>
 
-    <div class="opsi">
-        <label><input type="radio" name="s1" value="A"> Grafik A</label>
-        <label><input type="radio" name="s1" value="B"> Grafik B</label>
-    </div>
+        <section class="activity-card-wide reflect-box">
+            <div class="section-title">
+                <span class="section-kicker">Catatan Awal Kelompok</span>
+                <h2>Tuliskan dugaan awal kelompokmu</h2>
+                <p>
+                    Menurut kelompokmu, apa perbedaan paling penting antara diagram batang dan histogram
+                    setelah mengamati video?
+                </p>
+            </div>
 
-    <p>Alasan:</p>
-    <textarea id="alasan1"></textarea>
+            <textarea id="checkpointJawaban" placeholder="Tuliskan hasil pengamatan awal kelompokmu di sini..."></textarea>
+        </section>
 
-    <div class="btn active" onclick="lanjutSoal2()">Next</div>
-</div>
+        <section class="activity-card-wide">
+            <div class="section-title">
+                <span class="section-kicker">Interaksi Konsep</span>
+                <h2>Cocokkan ciri-ciri berikut ke grafik yang tepat</h2>
+                <p>
+                    Seret setiap kartu ke kotak <b>Diagram Batang</b> atau <b>Histogram</b> sesuai dengan konsep yang benar.
+                </p>
+            </div>
 
-<!-- ================= SOAL 2 ================= -->
-<div class="box hidden" id="soal2">
-    <h3>Soal 2</h3>
-    <p>Apa makna lebar batang pada histogram?</p>
+            <div class="drag-grid">
+                <div class="drag-bank">
+                    <h3>Kartu Ciri-ciri</h3>
+                    <div class="drag-items" id="dragItems">
+                        <div class="drag-item" draggable="true" data-target="batang">Digunakan untuk data kategorik</div>
+                        <div class="drag-item" draggable="true" data-target="histogram">Batangnya saling menempel</div>
+                        <div class="drag-item" draggable="true" data-target="histogram">Lebar batang menunjukkan interval kelas</div>
+                        <div class="drag-item" draggable="true" data-target="batang">Biasanya terdapat jarak antarbatang</div>
+                        <div class="drag-item" draggable="true" data-target="histogram">Digunakan untuk data kontinu</div>
+                        <div class="drag-item" draggable="true" data-target="batang">Setiap batang mewakili kategori</div>
+                    </div>
+                </div>
 
-    <div class="opsi">
-        <label><input type="radio" name="s2" value="A"> Menunjukkan kelas interval</label>
-        <label><input type="radio" name="s2" value="B"> Menunjukkan warna grafik</label>
-    </div>
+                <div class="drop-columns">
+                    <div class="drop-zone" data-zone="batang">
+                        <h3>Diagram Batang</h3>
+                        <p>Letakkan ciri-ciri yang sesuai dengan diagram batang pada area ini.</p>
+                        <div class="drop-list" id="dropBatang"></div>
+                    </div>
+                    <div class="drop-zone" data-zone="histogram">
+                        <h3>Histogram</h3>
+                        <p>Letakkan ciri-ciri yang sesuai dengan histogram pada area ini.</p>
+                        <div class="drop-list" id="dropHistogram"></div>
+                    </div>
+                </div>
+            </div>
 
-    <p>Alasan:</p>
-    <textarea id="alasan2"></textarea>
+            <div class="feedback-box" id="dragFeedback"></div>
+        </section>
 
-    <div class="btn active" onclick="lanjutSoal3()">Next</div>
-</div>
+        <section class="activity-card-wide">
+            <div class="section-title">
+                <span class="section-kicker">Pemahaman Konsep</span>
+                <h2>Jawab pertanyaan berikut berdasarkan hasil eksplorasi</h2>
+                <p>Semua jawaban ditulis dalam satu halaman agar alur belajar terasa lebih utuh dan nyaman.</p>
+            </div>
 
-<!-- ================= SOAL 3 ================= -->
-<div class="box hidden" id="soal3">
-    <h3>Soal 3</h3>
-    <p>Mengapa batang pada histogram tidak memiliki jarak?</p>
+            <div class="question-stack">
+                <div class="question-block">
+                    <h3>Soal 1</h3>
+                    <p>Grafik manakah yang merupakan histogram?</p>
+                    <img src="grafik1.png" width="100%" style="border-radius:20px; margin-top:14px;">
 
-    <div class="opsi">
-        <label><input type="radio" name="s3" value="A"> Karena datanya kontinu</label>
-        <label><input type="radio" name="s3" value="B"> Karena desain grafik</label>
-    </div>
+                    <div class="opsi">
+                        <label class="question-option"><input type="radio" name="s1" value="A"> Grafik A</label>
+                        <label class="question-option"><input type="radio" name="s1" value="B"> Grafik B</label>
+                    </div>
 
-    <p>Alasan:</p>
-    <textarea id="alasan3"></textarea>
+                    <textarea id="alasan1" placeholder="Tuliskan alasan kelompokmu..."></textarea>
+                </div>
 
-    <div class="btn active" onclick="submitAktivitas1()">Kirim Jawaban</div>
-</div>
+                <div class="question-block">
+                    <h3>Soal 2</h3>
+                    <p>Apa makna lebar batang pada histogram?</p>
 
-<script src="script.js"></script>
+                    <div class="opsi">
+                        <label class="question-option"><input type="radio" name="s2" value="A"> Menunjukkan kelas interval</label>
+                        <label class="question-option"><input type="radio" name="s2" value="B"> Menunjukkan warna grafik</label>
+                    </div>
 
-<script>
-document.getElementById("btnTonton").addEventListener("click", () => {
-    document.getElementById("videoSection").classList.add("hidden");
-    document.getElementById("checkpointSection").classList.remove("hidden");
-});
+                    <textarea id="alasan2" placeholder="Tuliskan alasan kelompokmu..."></textarea>
+                </div>
 
-function lanjutSoal1() {
-    if (!checkpointJawaban.value.trim()) {
-        alert("Jawaban checkpoint harus diisi.");
-        return;
-    }
-    document.getElementById("checkpointSection").classList.add("hidden");
-    document.getElementById("soal1").classList.remove("hidden");
-}
+                <div class="question-block">
+                    <h3>Soal 3</h3>
+                    <p>Mengapa batang pada histogram tidak memiliki jarak?</p>
 
-function lanjutSoal2() {
-    if (!document.querySelector('input[name="s1"]:checked') ||
-        !alasan1.value.trim()) {
-        alert("Jawaban dan alasan harus diisi.");
-        return;
-    }
-    document.getElementById("soal1").classList.add("hidden");
-    document.getElementById("soal2").classList.remove("hidden");
-}
+                    <div class="opsi">
+                        <label class="question-option"><input type="radio" name="s3" value="A"> Karena datanya kontinu</label>
+                        <label class="question-option"><input type="radio" name="s3" value="B"> Karena desain grafik</label>
+                    </div>
 
-function lanjutSoal3() {
-    if (!document.querySelector('input[name="s2"]:checked') ||
-        !alasan2.value.trim()) {
-        alert("Jawaban dan alasan harus diisi.");
-        return;
-    }
-    document.getElementById("soal2").classList.add("hidden");
-    document.getElementById("soal3").classList.remove("hidden");
-}
+                    <textarea id="alasan3" placeholder="Tuliskan alasan kelompokmu..."></textarea>
+                </div>
+            </div>
+        </section>
 
-function submitAktivitas1() {
-    if (!document.querySelector('input[name="s3"]:checked') ||
-        !alasan3.value.trim()) {
-        alert("Jawaban dan alasan harus diisi.");
-        return;
-    }
+        <section class="activity-card-wide">
+            <div class="submit-wrap">
+                <p class="submit-hint">
+                    Pastikan video sudah dikonfirmasi, catatan awal telah diisi, kartu konsep sudah dicocokkan,
+                    dan seluruh soal pemahaman telah dijawab.
+                </p>
+                <div class="button" onclick="submitAktivitas1()">Kirim Jawaban Aktivitas 1</div>
+            </div>
+        </section>
+    </main>
 
-    localStorage.setItem("checkpoint1", checkpointJawaban.value);
-    localStorage.setItem("a1", document.querySelector('input[name="s1"]:checked').value);
-    localStorage.setItem("alasan1", alasan1.value);
-    localStorage.setItem("a2", document.querySelector('input[name="s2"]:checked').value);
-    localStorage.setItem("alasan2", alasan2.value);
-    localStorage.setItem("a3", document.querySelector('input[name="s3"]:checked').value);
-    localStorage.setItem("alasan3", alasan3.value);
+    <script src="script.js"></script>
+    <script>
+        let videoSudahDikonfirmasi = false;
+        let draggedItem = null;
 
-    localStorage.setItem("aktivitas1", "true");
+        function siapkanAktivitas1() {
+            const items = document.querySelectorAll(".drag-item");
+            const zones = document.querySelectorAll(".drop-zone");
 
-    alert("Jawaban kelompokmu telah dikirim.\nSelanjutnya akan dibahas bersama guru.");
-    window.location.href = "beranda.html";
-}
-</script>
+            items.forEach((item) => {
+                item.addEventListener("dragstart", () => {
+                    draggedItem = item;
+                    item.classList.add("dragging");
+                });
 
+                item.addEventListener("dragend", () => {
+                    item.classList.remove("dragging");
+                });
+            });
+
+            zones.forEach((zone) => {
+                zone.addEventListener("dragover", (event) => {
+                    event.preventDefault();
+                    zone.classList.add("drag-over");
+                });
+
+                zone.addEventListener("dragleave", () => {
+                    zone.classList.remove("drag-over");
+                });
+
+                zone.addEventListener("drop", (event) => {
+                    event.preventDefault();
+                    zone.classList.remove("drag-over");
+
+                    if (!draggedItem) return;
+
+                    zone.querySelector(".drop-list").appendChild(draggedItem);
+                    cekDragDrop();
+                });
+            });
+        }
+
+        function konfirmasiVideo() {
+            videoSudahDikonfirmasi = true;
+            document.getElementById("btnTontonSelesai").style.display = "none";
+            document.getElementById("watchStatus").style.display = "inline-flex";
+        }
+
+        function cekDragDrop() {
+            const semuaItem = document.querySelectorAll(".drag-item");
+            const feedback = document.getElementById("dragFeedback");
+
+            let jumlahBenar = 0;
+            let sudahDitempatkan = 0;
+
+            document.querySelectorAll(".drop-zone").forEach((zone) => {
+                zone.classList.remove("correct-zone", "wrong-zone");
+                zone.querySelectorAll(".drag-item").forEach((item) => {
+                    sudahDitempatkan++;
+                    const cocok = item.dataset.target === zone.dataset.zone;
+                    if (cocok) {
+                        jumlahBenar++;
+                        zone.classList.add("correct-zone");
+                    } else {
+                        zone.classList.add("wrong-zone");
+                    }
+                });
+            });
+
+            if (sudahDitempatkan === semuaItem.length) {
+                feedback.style.display = "block";
+                if (jumlahBenar === semuaItem.length) {
+                    feedback.textContent = "Bagus. Semua ciri berhasil dicocokkan dengan benar.";
+                } else {
+                    feedback.textContent = "Masih ada beberapa kartu yang belum tepat. Coba cek kembali ciri diagram batang dan histogram.";
+                }
+            } else {
+                feedback.style.display = "none";
+            }
+        }
+
+        function semuaKartuSudahDipindah() {
+            const sisaDiBank = document.getElementById("dragItems").querySelectorAll(".drag-item").length;
+            return sisaDiBank === 0;
+        }
+
+        function semuaKartuBenar() {
+            const semuaDiZona = document.querySelectorAll(".drop-zone .drag-item");
+            if (semuaDiZona.length !== 6) return false;
+
+            return Array.from(semuaDiZona).every((item) => {
+                return item.dataset.target === item.closest(".drop-zone").dataset.zone;
+            });
+        }
+
+        function submitAktivitas1() {
+            if (!videoSudahDikonfirmasi) {
+                alert("Konfirmasikan terlebih dahulu bahwa video sudah ditonton.");
+                return;
+            }
+
+            if (!checkpointJawaban.value.trim()) {
+                alert("Catatan awal kelompok harus diisi.");
+                return;
+            }
+
+            if (!semuaKartuSudahDipindah()) {
+                alert("Selesaikan terlebih dahulu aktivitas drag and drop.");
+                return;
+            }
+
+            if (!semuaKartuBenar()) {
+                alert("Periksa kembali hasil drag and drop. Masih ada kartu yang belum ditempatkan dengan tepat.");
+                return;
+            }
+
+            if (!document.querySelector('input[name="s1"]:checked') || !alasan1.value.trim()) {
+                alert("Soal 1 dan alasannya harus diisi.");
+                return;
+            }
+
+            if (!document.querySelector('input[name="s2"]:checked') || !alasan2.value.trim()) {
+                alert("Soal 2 dan alasannya harus diisi.");
+                return;
+            }
+
+            if (!document.querySelector('input[name="s3"]:checked') || !alasan3.value.trim()) {
+                alert("Soal 3 dan alasannya harus diisi.");
+                return;
+            }
+
+            localStorage.setItem("checkpoint1", checkpointJawaban.value);
+            localStorage.setItem("a1", document.querySelector('input[name="s1"]:checked').value);
+            localStorage.setItem("alasan1", alasan1.value);
+            localStorage.setItem("a2", document.querySelector('input[name="s2"]:checked').value);
+            localStorage.setItem("alasan2", alasan2.value);
+            localStorage.setItem("a3", document.querySelector('input[name="s3"]:checked').value);
+            localStorage.setItem("alasan3", alasan3.value);
+            localStorage.setItem("aktivitas1", "true");
+
+            alert("Jawaban Aktivitas 1 berhasil disimpan. Selanjutnya akan ada penguatan dari guru sebelum membuka Aktivitas 2.");
+            window.location.href = "beranda.html";
+        }
+    </script>
 </body>
 </html>
-
-
-
-
-
-

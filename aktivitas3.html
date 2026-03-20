@@ -2,286 +2,501 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Aktivitas 3 - Menentukan Interval Histogram</title>
+    <title>Aktivitas 3 - Tabel Distribusi Frekuensi</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-
     <style>
-        .box {
-            max-width: 900px;
-            margin: 30px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 22px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        .a3-wrap { max-width: 1180px; margin: 0 auto; display: grid; gap: 22px; }
+        .a3-card, .a3-hero { background: rgba(255,255,255,.92); border: 1px solid rgba(86,99,164,.16); border-radius: 30px; box-shadow: 0 18px 50px rgba(49,84,215,.1); }
+        .a3-hero { padding: 34px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 22px; }
+        .a3-hero h1, .a3-title h2, .concept h3, .calc h3 { font-family: 'Sora', sans-serif; color: #21358e; }
+        .a3-hero h1 { font-size: clamp(2rem,3vw,3rem); margin-bottom: 14px; }
+        .a3-hero p, .a3-title p, .concept p, .calc p, .summary p, .step-card p { color: #5f678c; line-height: 1.8; }
+        .pill { display: inline-flex; padding: 10px 16px; border-radius: 999px; background: rgba(49,84,215,.08); color: #3154d7; font-weight: 700; margin-bottom: 16px; }
+        .hero-side { background: linear-gradient(135deg, rgba(49,84,215,.08), rgba(24,183,163,.14)); border-radius: 24px; padding: 24px; }
+        .hero-side ul { margin-top: 10px; padding-left: 20px; color: #4d557d; line-height: 1.8; }
+        .steps { padding: 24px; display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+        .step-card { padding: 16px; border-radius: 22px; border: 1px solid rgba(86,99,164,.14); background: #f8faff; transition: .3s ease; }
+        .step-card.active { background: rgba(49,84,215,.08); transform: translateY(-3px); }
+        .step-card.done { background: rgba(24,183,163,.1); }
+        .step-no { width: 38px; height: 38px; border-radius: 14px; display: flex; align-items: center; justify-content: center; background: rgba(49,84,215,.12); color: #3154d7; font-weight: 800; margin-bottom: 12px; }
+        .step-card.done .step-no { background: rgba(24,183,163,.16); color: #0b7f72; }
+        .step-panel { display: none; animation: fadeUp .4s ease; }
+        .step-panel.active { display: block; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(14px);} to { opacity: 1; transform: translateY(0);} }
+        .a3-card { padding: 28px; }
+        .kicker { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #3154d7; margin-bottom: 10px; }
+        .concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 26px; }
+        .video-box, .note-box, .concept-list, .data-box, .calc-box { background: #f8faff; border: 1px solid rgba(86,99,164,.14); border-radius: 24px; padding: 20px; }
+        .video-frame { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 20px; background: #dfe6ff; margin-top: 14px; }
+        .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+        .video-fallback { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+        .video-fallback a { text-decoration: none; }
+        .video-fallback p { color: #6a7294; font-size: 14px; }
+        textarea, input { width: 100%; padding: 12px 14px; border-radius: 16px; border: 1px solid rgba(86,99,164,.18); background: white; }
+        textarea { min-height: 140px; resize: vertical; }
+        .concept-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 18px; margin-top: 24px; }
+        .concept { background: white; border: 1px solid rgba(86,99,164,.14); border-radius: 20px; padding: 16px; }
+        .formula { display: inline-flex; margin-top: 10px; padding: 8px 12px; border-radius: 14px; background: rgba(49,84,215,.08); color: #3154d7; font-weight: 700; }
+        .example { margin-top: 10px; padding: 10px 12px; border-radius: 14px; background: rgba(255,184,92,.14); color: #765716; line-height: 1.7; }
+        .main-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 28px; margin-top: 26px; }
+        .chip-wrap { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+        .chip { padding: 10px 14px; border-radius: 999px; background: white; border: 1px solid rgba(86,99,164,.16); font-weight: 700; color: #3f476f; animation: chipIn .35s ease both; }
+        .chip.min { background: rgba(24,183,163,.16); color: #0b7f72; }
+        .chip.max { background: rgba(255,184,92,.18); color: #7a5b17; }
+        @keyframes chipIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
+        .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 16px; }
+        .stat { background: white; border: 1px solid rgba(86,99,164,.14); border-radius: 18px; padding: 14px; }
+        .stat span { display: block; font-size: 13px; color: #6a7294; margin-bottom: 8px; }
+        .stat strong { color: #21358e; font-size: 24px; }
+        .calc-stack { display: grid; gap: 14px; }
+        .calc { background: white; border: 1px solid rgba(86,99,164,.14); border-radius: 20px; padding: 16px; }
+        .helper { margin-top: 8px; font-size: 13px; color: #6a7294; }
+        .helper.ok { color: #0b7f72; font-weight: 700; }
+        .btn-row, .nav-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-top: 20px; }
+        .btn-lite { border: 1px solid rgba(49,84,215,.16); background: rgba(49,84,215,.08); color: #3154d7; }
+        .a3-btn { border: none; border-radius: 16px; padding: 13px 18px; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, #3154d7, #5e7bff); color: white; }
+        .a3-btn.btn-lite { background: rgba(49,84,215,.14); color: #21358e; border: 1px solid rgba(49,84,215,.2); }
+        .a3-btn:disabled { opacity: .45; cursor: not-allowed; }
+        .table-shell { margin-top: 18px; border-radius: 24px; overflow-x: auto; overflow-y: hidden; border: 1px solid rgba(86,99,164,.14); background: white; display: none; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 14px 12px; text-align: center; border-bottom: 1px solid rgba(86,99,164,.12); }
+        th { background: #f3f6ff; color: #21358e; }
+        td input { background: #f8faff; }
+        .freq-pill { display: inline-flex; min-width: 42px; justify-content: center; padding: 8px 12px; border-radius: 999px; background: rgba(24,183,163,.14); color: #0b7f72; font-weight: 800; animation: popIn .3s ease; }
+        @keyframes popIn { from { opacity: 0; transform: scale(.82);} to { opacity: 1; transform: scale(1);} }
+        .feedback { margin-top: 16px; padding: 16px 18px; border-radius: 18px; background: #eef4ff; color: #3154d7; font-weight: 700; display: none; }
+        .summary-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 18px; }
+        .summary-stat { background: #f8faff; border: 1px solid rgba(86,99,164,.14); border-radius: 20px; padding: 16px; }
+        .summary-stat span { display: block; font-size: 13px; color: #6a7294; margin-bottom: 8px; }
+        .summary-stat strong { color: #21358e; font-size: 24px; }
+        .summary-table { margin-top: 18px; border-radius: 24px; overflow-x: auto; overflow-y: hidden; border: 1px solid rgba(86,99,164,.14); background: white; }
+        .a3-topbar { position: sticky; top: 12px; z-index: 1000; }
+        @media (max-width: 980px) {
+            .a3-hero, .concept-grid, .main-grid { grid-template-columns: 1fr; }
+            .steps, .stats, .summary-grid { grid-template-columns: 1fr; }
         }
-        .hidden { display: none; }
-        .btn {
-            background: #6C4DDC;
-            color: white;
-            padding: 12px 22px;
-            border-radius: 14px;
-            cursor: pointer;
-            display: inline-block;
-            margin-top: 20px;
-        }
-        .btn:hover { background: #5940b7; }
-        .alert {
-            background: #FFF3CD;
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 20px;
-            color: #664d03;
-            font-weight: 500;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
-            text-align: center;
-        }
-        input {
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid #aaa;
-            width: 100%;
-        }
-        .rumus-box {
-            background: #f4f6ff;
-            padding: 20px;
-            border-radius: 16px;
-            margin: 20px 0;
+        @media (max-width: 640px) {
+            .a3-card, .a3-hero { padding: 22px; border-radius: 24px; }
+            .a3-hero h1, .a3-title h2 { line-height: 1.2; }
+            .steps { padding: 18px; }
+            .concept-grid, .main-grid { gap: 18px; margin-top: 18px; }
+            .concept-list { gap: 14px; margin-top: 18px; }
+            th, td { padding: 12px 10px; font-size: 13px; }
         }
     </style>
 </head>
+<body onload="cekAkses(3); muatData(); initA3();">
+    <header class="topbar a3-topbar">
+        <div class="brand-mark">
+            <span class="brand-dot"></span>
+            <div>
+                <strong>Histogram Digital</strong>
+                <p>Aktivitas 3</p>
+            </div>
+        </div>
+        <nav class="topnav">
+            <a href="index.html#tujuan-pembelajaran">Tujuan Pembelajaran</a>
+            <a href="beranda.html">Beranda Belajar</a>
+        </nav>
+    </header>
 
-<body onload="cekAkses(3); muatData();">
+    <main class="a3-wrap">
+        <section class="a3-hero">
+            <div>
+                <span class="pill">Aktivitas 3 - Tabel Distribusi Frekuensi</span>
+                <h1>Olah data sampai siap dibuat histogram</h1>
+                <p>Pada aktivitas ini, murid memahami unsur penting tabel distribusi frekuensi lalu mengolah data hasil Aktivitas 2 menjadi interval kelas dan frekuensi.</p>
+            </div>
+            <div class="hero-side">
+                <h3>Fokus belajar</h3>
+                <ul>
+                    <li>Memahami minimum, maksimum, jangkauan, kelas, interval, dan frekuensi.</li>
+                    <li>Menggunakan data sendiri untuk membangun tabel distribusi frekuensi.</li>
+                    <li>Menyiapkan hasil akhir untuk Aktivitas 4.</li>
+                </ul>
+            </div>
+        </section>
 
+        <section class="a3-card steps">
+            <div class="step-card active" id="stepCard1"><div class="step-no">1</div><strong>Pahami Konsep</strong><p>Pelajari materi inti dan tulis catatanmu.</p></div>
+            <div class="step-card" id="stepCard2"><div class="step-no">2</div><strong>Olah Data dan Susun Tabel</strong><p>Hitung unsur data lalu bentuk interval dan frekuensi.</p></div>
+            <div class="step-card" id="stepCard3"><div class="step-no">3</div><strong>Ringkasan</strong><p>Periksa hasil akhir sebelum lanjut ke histogram.</p></div>
+        </section>
 
-<!-- ================= PART 1 : MATERI ================= -->
-<div class="box" id="materiSection">
-    <h2>Langkah Menyusun Interval Histogram</h2>
-    <p>
-        Untuk membuat histogram, data yang telah kamu kumpulkan tidak bisa langsung
-        digambar begitu saja. Data tersebut perlu diolah terlebih dahulu melalui
-        beberapa langkah berikut agar histogram yang dihasilkan tepat dan mudah dibaca.
-    </p>
+        <section class="step-panel active" id="step1">
+            <div class="a3-card">
+                <div class="a3-title">
+                    <span class="kicker">Materi Konsep</span>
+                    <h2>Pahami unsur penting sebelum mengolah data</h2>
+                    <p>Baca konsep singkat berikut, tonton video penguat, lalu tuliskan catatan pentingmu sebelum lanjut ke pengolahan data.</p>
+                </div>
 
-    <h3>1. Mengurutkan data</h3>
-    <p>
-        Urutkan data hasil pengukuran dari nilai terkecil ke nilai terbesar.
-        Pengurutan data memudahkan kamu menentukan nilai minimum dan maksimum
-        secara tepat, serta membantu melihat sebaran data secara keseluruhan.
-    </p>
+                <div class="concept-grid">
+                    <div class="video-box">
+                        <h3>Video Penguat Materi</h3>
+                        <p>Video ini dapat digunakan sebagai referensi tambahan untuk memahami tabel distribusi frekuensi.</p>
+                        <div class="video-frame">
+                            <iframe src="https://www.youtube-nocookie.com/embed/zT4Pk6m0KtQ?rel=0&modestbranding=1" title="Video tabel distribusi frekuensi" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-fallback">
+                            <a class="a3-btn btn-lite" href="https://www.youtube.com/watch?v=zT4Pk6m0KtQ" target="_blank" rel="noopener noreferrer">Buka Video di YouTube</a>
+                            <p>Gunakan tautan ini jika video tidak bisa diputar langsung di dalam web.</p>
+                        </div>
+                    </div>
+                    <div class="note-box">
+                        <h3>Catatan Inti</h3>
+                        <p>Tuliskan hal penting yang kamu pahami dari materi atau video, misalnya arti jangkauan, banyak kelas, atau frekuensi.</p>
+                        <textarea id="catatanKonsep" placeholder="Tuliskan catatan pentingmu di sini..."></textarea>
+                    </div>
+                </div>
 
-    <h3>2. Menentukan nilai minimum dan maksimum</h3>
-    <ul>
-        <li><b>Nilai minimum</b> adalah data terkecil dari seluruh data yang dikumpulkan.</li>
-        <li><b>Nilai maksimum</b> adalah data terbesar dari seluruh data yang dikumpulkan.</li>
-    </ul>
-    <p>
-        Nilai minimum dan maksimum digunakan sebagai dasar untuk menghitung jangkauan data.
-    </p>
+                <div class="concept-list">
+                    <article class="concept"><h3>Data Terurut</h3><p>Data disusun dari nilai terkecil ke terbesar agar lebih mudah dianalisis.</p><div class="example">Contoh: 150, 152, 154, 156, 160</div></article>
+                    <article class="concept"><h3>Minimum dan Maksimum</h3><p>Minimum adalah data terkecil, maksimum adalah data terbesar.</p><div class="example">Keduanya menjadi batas awal untuk menghitung jangkauan.</div></article>
+                    <article class="concept"><h3>Jangkauan</h3><p>Jangkauan menunjukkan lebar sebaran data.</p><div class="formula">R = maksimum - minimum</div></article>
+                    <article class="concept"><h3>Banyak Kelas</h3><p>Banyak kelas menunjukkan berapa kelompok interval yang akan dipakai.</p><div class="formula">k = 1 + 3,3 log n</div></article>
+                    <article class="concept"><h3>Panjang Interval</h3><p>Panjang interval adalah lebar setiap kelas.</p><div class="formula">i = R / k</div></article>
+                    <article class="concept"><h3>Frekuensi</h3><p>Frekuensi adalah banyaknya data yang masuk ke dalam suatu kelas.</p><div class="example">Semakin banyak data dalam kelas, semakin besar frekuensinya.</div></article>
+                </div>
 
-    <h3>3. Menghitung jangkauan data</h3>
-    <p>
-        Jangkauan (range) menunjukkan seberapa lebar penyebaran data.
-        Jangkauan diperoleh dari selisih antara nilai maksimum dan nilai minimum.
-    </p>
-    <p><b>Rumus:</b></p>
-    <p>Jangkauan (R) = Nilai maksimum − Nilai minimum</p>
+                <div class="nav-row">
+                    <span></span>
+                    <button class="a3-btn" onclick="goStep(2)">Lanjut ke Pengolahan Data</button>
+                </div>
+            </div>
+        </section>
 
-    <h3>4. Menentukan banyak kelas</h3>
-    <p>
-        Banyak kelas menunjukkan berapa kelompok interval yang akan digunakan
-        dalam histogram. Untuk menentukan banyak kelas, digunakan
-        <b>Aturan Sturges</b>, yang mempertimbangkan jumlah data yang dimiliki.
-    </p>
-    <p><b>Rumus (Aturan Sturges):</b></p>
-    <p>Banyak kelas (k) = 1 + 3,3 log n</p>
-    <p>
-        dengan <i>n</i> adalah banyaknya data.
-    </p>
+        <section class="step-panel" id="step2">
+            <div class="a3-card">
+                <div class="a3-title">
+                    <span class="kicker">Pengolahan Data</span>
+                    <h2>Gunakan data hasil Aktivitas 2 untuk menyusun tabel</h2>
+                    <p>Amati data yang sudah diurutkan, hitung unsur pentingnya, lalu bentuk interval kelas agar tabel distribusi frekuensi dapat dibuat.</p>
+                </div>
 
-    <h3>5. Menghitung panjang interval</h3>
-    <p>
-        Panjang interval menunjukkan lebar setiap kelas pada histogram.
-        Panjang interval diperoleh dengan membagi jangkauan data dengan banyak kelas.
-    </p>
-    <p><b>Rumus:</b></p>
-    <p>Panjang interval (i) = Jangkauan (R) ÷ Banyak kelas (k)</p>
+                <div class="main-grid">
+                    <div class="data-box">
+                        <h3>Data yang Akan Diolah</h3>
+                        <p><b id="judulData"></b></p>
+                        <div class="chip-wrap" id="dataChips"></div>
+                        <div class="stats">
+                            <div class="stat"><span>Nilai minimum</span><strong id="autoMin">-</strong></div>
+                            <div class="stat"><span>Nilai maksimum</span><strong id="autoMax">-</strong></div>
+                            <div class="stat"><span>Jumlah data</span><strong id="autoN">-</strong></div>
+                        </div>
+                    </div>
 
-    <div class="rumus-box">
-        <h3>Contoh singkat</h3>
-        <p>Data: 40, 42, 45, 47, 50</p>
-        <ul>
-            <li>Minimum = 40</li>
-            <li>Maksimum = 50</li>
-            <li>Jangkauan = 50 − 40 = 10</li>
-            <li>Jumlah data (n) = 5 → k ≈ 1 + 3,3 log 5 ≈ 4</li>
-            <li>Panjang interval = 10 ÷ 4 ≈ 2,5</li>
-        </ul>
-    </div>
+                    <div class="calc-box">
+                        <div class="calc-stack">
+                            <div class="calc">
+                                <h3>1. Hitung Jangkauan</h3>
+                                <p>Masukkan selisih antara nilai maksimum dan nilai minimum.</p>
+                                <input type="number" id="inputRange" placeholder="Masukkan jangkauan data">
+                                <div class="helper" id="helperRange">Gunakan rumus: maksimum - minimum.</div>
+                            </div>
+                            <div class="calc">
+                                <h3>2. Tentukan Banyak Kelas</h3>
+                                <p>Masukkan banyak kelas yang akan digunakan berdasarkan aturan Sturges.</p>
+                                <input type="number" id="inputKelas" placeholder="Masukkan banyak kelas">
+                                <div class="helper" id="helperKelas">Gunakan aturan Sturges sebagai acuan.</div>
+                            </div>
+                            <div class="calc">
+                                <h3>3. Tentukan Panjang Interval</h3>
+                                <p>Masukkan panjang interval yang akan dipakai untuk membentuk kelas.</p>
+                                <input type="number" id="inputInterval" placeholder="Masukkan panjang interval">
+                                <div class="helper" id="helperInterval">Gunakan jangkauan dibagi banyak kelas.</div>
+                            </div>
+                        </div>
 
-  <div class="box" style="background:#fff7d6;">
-        ⚠️ <b>Perhatian:</b>  
-        Halaman ini tidak dapat dibuka kembali.  
-        Pastikan kamu memahami dan mencatat langkah-langkah penting sebelum melanjutkan.
-    </div>
+                        <div class="btn-row">
+                            <button class="a3-btn btn-lite" onclick="cekHitung()">Cek Perhitungan</button>
+                            <button class="a3-btn" id="btnBuatTabel" onclick="buatTabel()" disabled>Bentuk Tabel Interval</button>
+                        </div>
+                    </div>
+                </div>
 
-    <div class="button" onclick="lanjutKeHitung()">
-        Saya paham, lanjut ke perhitungan
-    </div>
-</div>
+                <div class="table-shell" id="tableShell">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Kelas</th>
+                                <th>Batas Bawah</th>
+                                <th>Batas Atas</th>
+                                <th>Frekuensi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelInterval"></tbody>
+                    </table>
+                </div>
 
+                <div class="btn-row" id="tableActions" style="display:none;">
+                    <div class="helper" id="intervalHint" style="margin-top:0;"></div>
+                    <button class="a3-btn" onclick="cekTabel()">Cek Tabel dan Lanjut</button>
+                </div>
 
-<!-- ================= PART 2 & 3 : PERHITUNGAN & TABEL ================= -->
-<div class="activity-container" id="praktikSection" style="display:none;">
+                <div class="feedback" id="feedbackBox"></div>
 
-    <h2>Perhitungan Interval Kelas</h2>
+                <div class="nav-row">
+                    <button class="a3-btn btn-lite" onclick="goStep(1)">Kembali ke Materi</button>
+                    <button class="a3-btn" id="btnKeRingkasan" onclick="keRingkasan()" disabled>Lanjut ke Ringkasan</button>
+                </div>
+            </div>
+        </section>
 
-    <p><b>Data:</b> <span id="judulData"></span></p>
+        <section class="step-panel" id="step3">
+            <div class="a3-card summary">
+                <div class="a3-title">
+                    <span class="kicker">Ringkasan Akhir</span>
+                    <h2>Tabel distribusi frekuensi siap digunakan</h2>
+                    <p>Periksa kembali hasil pengolahan data berikut sebelum melanjutkan ke Aktivitas 4 untuk membuat histogram.</p>
+                </div>
 
-    <div class="box">
-        <p><b>Data terurut:</b></p>
-        <p id="dataUrut"></p>
-    </div>
+                <div class="summary-grid">
+                    <div class="summary-stat"><span>Jangkauan</span><strong id="sumRange">-</strong></div>
+                    <div class="summary-stat"><span>Banyak kelas</span><strong id="sumKelas">-</strong></div>
+                    <div class="summary-stat"><span>Panjang interval</span><strong id="sumInterval">-</strong></div>
+                </div>
 
-    <h3>1. Hitung nilai dasar</h3>
+                <div class="summary-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Kelas</th>
+                                <th>Interval Kelas</th>
+                                <th>Frekuensi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summaryBody"></tbody>
+                    </table>
+                </div>
 
-    <label>Nilai minimum:</label>
-    <input type="number" id="min" class="dataInput">
+                <div class="nav-row">
+                    <button class="a3-btn btn-lite" onclick="goStep(2)">Kembali ke Pengolahan Data</button>
+                    <button class="a3-btn" onclick="submitAktivitas3()">Simpan dan Lanjutkan</button>
+                </div>
+            </div>
+        </section>
+    </main>
 
-    <label>Nilai maksimum:</label>
-    <input type="number" id="max" class="dataInput">
+    <script src="script.js"></script>
+    <script>
+        let data = [];
+        let minVal = 0;
+        let maxVal = 0;
+        let rangeVal = 0;
+        let kelasVal = 0;
+        let intervalVal = 0;
+        let intervalKelas = [];
+        let frekuensiBenar = [];
+        let hitungSudahBenar = false;
+        let tabelSudahBenar = false;
 
-    <label>Jangkauan (R):</label>
-    <input type="number" id="range" class="dataInput">
+        function initA3() {
+            setStep(1);
+        }
 
-<label>Banyak kelas (k):</label>
-<input type="number" id="kelas" class="dataInput" onchange="buatTabelInterval()">
+        function muatData() {
+            const raw = localStorage.getItem("dataAktivitas2");
+            if (!raw) {
+                alert("Data belum ditemukan. Silakan selesaikan Aktivitas 2 terlebih dahulu.");
+                window.location.href = "beranda.html";
+                return;
+            }
 
+            const parsed = JSON.parse(raw);
+            if (!Array.isArray(parsed) || parsed.length < 25) {
+                alert("Data belum lengkap. Pastikan kamu sudah memasukkan minimal 25 data pada Aktivitas 2.");
+                window.location.href = "beranda.html";
+                return;
+            }
 
-    <label>Panjang interval (i):</label>
-    <input type="number" id="interval" class="dataInput">
+            data = parsed.slice().sort((a, b) => a - b);
+            minVal = data[0];
+            maxVal = data[data.length - 1];
+            rangeVal = maxVal - minVal;
+            kelasVal = Math.max(2, Math.round(1 + 3.3 * Math.log10(data.length)));
+            intervalVal = Math.max(1, Math.ceil(rangeVal / kelasVal));
 
-    <br><br>
+            const nama = localStorage.getItem("namaData") || "Data Pengukuran";
+            const satuan = localStorage.getItem("satuanData") || "";
+            document.getElementById("judulData").innerText = satuan ? `${nama} (${satuan})` : nama;
+            document.getElementById("autoMin").innerText = minVal;
+            document.getElementById("autoMax").innerText = maxVal;
+            document.getElementById("autoN").innerText = data.length;
 
-    <h3>2. Buat tabel interval</h3>
+            const wrap = document.getElementById("dataChips");
+            wrap.innerHTML = "";
+            data.forEach((item, index) => {
+                const el = document.createElement("div");
+                let cls = "chip";
+                if (index === 0) cls += " min";
+                if (index === data.length - 1) cls += " max";
+                el.className = cls;
+                el.textContent = item;
+                el.style.animationDelay = `${index * 0.02}s`;
+                wrap.appendChild(el);
+            });
+        }
 
-    <table width="100%" border="1" cellpadding="6">
-        <tr>
-            <th>Kelas</th>
-            <th>Batas Bawah</th>
-            <th>Batas Atas</th>
-        </tr>
-        <tbody id="tabelInterval"></tbody>
-    </table>
+        function setStep(no) {
+            document.querySelectorAll(".step-panel").forEach((panel) => panel.classList.remove("active"));
+            document.querySelectorAll(".step-card").forEach((card) => card.classList.remove("active", "done"));
+            document.getElementById(`step${no}`).classList.add("active");
+            for (let i = 1; i <= 3; i++) {
+                if (i < no) document.getElementById(`stepCard${i}`).classList.add("done");
+                if (i === no) document.getElementById(`stepCard${i}`).classList.add("active");
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
 
-    <br>
-    <div class="button" onclick="submitAktivitas3()">✔ Simpan & Lanjutkan</div>
+        function goStep(no) {
+            if (no === 2) {
+                const catatan = document.getElementById("catatanKonsep").value.trim();
+                if (!catatan) {
+                    alert("Tuliskan terlebih dahulu catatan inti sebelum lanjut ke pengolahan data.");
+                    return;
+                }
+            }
+            setStep(no);
+        }
 
-</div>
+        function cekHitung() {
+            const inputRange = Number(document.getElementById("inputRange").value);
+            const inputKelas = Number(document.getElementById("inputKelas").value);
+            const inputInterval = Number(document.getElementById("inputInterval").value);
 
-<script src="script.js"></script>
+            const helperRange = document.getElementById("helperRange");
+            const helperKelas = document.getElementById("helperKelas");
+            const helperInterval = document.getElementById("helperInterval");
 
-<script>
-let data = [];
+            helperRange.className = inputRange === rangeVal ? "helper ok" : "helper";
+            helperRange.innerText = inputRange === rangeVal ? "Jangkauan sudah tepat." : `Coba lagi. Jangkauan data yang digunakan di sini adalah ${rangeVal}.`;
 
-function muatData() {
-    const raw = localStorage.getItem("dataAktivitas2");
+            helperKelas.className = inputKelas === kelasVal ? "helper ok" : "helper";
+            helperKelas.innerText = inputKelas === kelasVal ? "Banyak kelas sudah sesuai." : `Gunakan aturan Sturges. Banyak kelas yang digunakan di sini adalah ${kelasVal}.`;
 
-    if (!raw) {
-        alert("Data belum ditemukan. Silakan selesaikan Aktivitas 2 terlebih dahulu.");
-        window.location.href = "index.html";
-        return;
-    }
+            helperInterval.className = inputInterval === intervalVal ? "helper ok" : "helper";
+            helperInterval.innerText = inputInterval === intervalVal ? "Panjang interval sudah sesuai." : `Panjang interval yang digunakan di sini adalah ${intervalVal}.`;
 
-    const parsed = JSON.parse(raw);
+            hitungSudahBenar = inputRange === rangeVal && inputKelas === kelasVal && inputInterval === intervalVal;
+            document.getElementById("btnBuatTabel").disabled = !hitungSudahBenar;
+        }
 
-    if (!Array.isArray(parsed) || parsed.length < 25) {
-        alert("Data belum lengkap.\nPastikan kamu sudah memasukkan minimal 25 data pada Aktivitas 2.");
-        window.location.href = "index.html";
-        return;
-    }
+        function buatTabel() {
+            const k = Number(document.getElementById("inputKelas").value);
+            const i = Number(document.getElementById("inputInterval").value);
+            const r = Number(document.getElementById("inputRange").value);
 
-    data = parsed.sort((a, b) => a - b);
+            if (!hitungSudahBenar) {
+                alert("Tekan cek perhitungan terlebih dahulu dan pastikan ketiga jawaban benar sebelum membentuk tabel.");
+                return;
+            }
 
-    const nama = localStorage.getItem("namaData") || "Data Pengukuran";
-    const satuan = localStorage.getItem("satuanData") || "";
+            const tbody = document.getElementById("tabelInterval");
+            tbody.innerHTML = "";
+            tabelSudahBenar = false;
+            document.getElementById("btnKeRingkasan").disabled = true;
+            for (let idx = 1; idx <= k; idx++) {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>K${idx}</td>
+                    <td><input type="number" class="bawah"></td>
+                    <td><input type="number" class="atas"></td>
+                    <td><input type="number" class="frekuensi-input" placeholder="f"></td>
+                `;
+                tbody.appendChild(row);
+            }
+            document.getElementById("tableShell").style.display = "block";
+            document.getElementById("tableActions").style.display = "flex";
+            document.getElementById("intervalHint").innerText =
+                `Petunjuk: batas bawah kelas pertama dimulai dari ${minVal}, dan batas atas kelas terakhir sebaiknya mencapai ${maxVal}.`;
+            showFeedback("Tabel interval sudah dibentuk. Susun interval kelasmu sendiri dengan memperhatikan batas awal dan batas akhir data.");
+        }
 
-    document.getElementById("judulData").innerText =
-        satuan ? `${nama} (${satuan})` : nama;
+        function cekTabel() {
+            const rows = document.querySelectorAll("#tabelInterval tr");
+            const k = Number(document.getElementById("inputKelas").value);
+            const i = Number(document.getElementById("inputInterval").value);
+            if (rows.length === 0) {
+                alert("Bentuk tabel interval terlebih dahulu.");
+                return;
+            }
 
-    document.getElementById("dataUrut").innerText =
-        data.join(", ");
-}
+            intervalKelas = [];
+            frekuensiBenar = [];
+            let valid = true;
+            let nextBawah = null;
 
-function lanjutKeHitung() {
-    document.getElementById("materiSection").style.display = "none";
-    document.getElementById("praktikSection").style.display = "block";
+            rows.forEach((row) => {
+                const bawah = Number(row.querySelector(".bawah").value);
+                const atas = Number(row.querySelector(".atas").value);
+                const frekuensiInput = Number(row.querySelector(".frekuensi-input").value);
+                if (Number.isNaN(bawah) || Number.isNaN(atas) || bawah > atas) valid = false;
+                if (nextBawah !== null && bawah !== nextBawah) valid = false;
+                if ((atas - bawah + 1) !== i) valid = false;
 
-    document.getElementById("dataUrut").innerText = data.join(", ");
-}
+                const f = data.filter((x) => x >= bawah && x <= atas).length;
+                if (Number.isNaN(frekuensiInput) || frekuensiInput !== f) valid = false;
+                intervalKelas.push(`${bawah}-${atas}`);
+                frekuensiBenar.push(f);
+                nextBawah = atas + 1;
+            });
 
+            if (!valid || intervalKelas.length !== k) {
+                tabelSudahBenar = false;
+                document.getElementById("btnKeRingkasan").disabled = true;
+                showFeedback("Masih ada interval yang belum tepat. Periksa kembali urutan kelas, batas bawah, batas atas, dan lebar interval.", true);
+                return;
+            }
 
-function buatTabelInterval() {
-    const k = parseInt(document.getElementById("kelas").value);
-    const tbody = document.getElementById("tabelInterval");
+            tabelSudahBenar = true;
+            document.getElementById("btnKeRingkasan").disabled = false;
+            showFeedback("Bagus. Interval kelas dan frekuensi yang kamu isi sudah sesuai.");
+        }
 
-    tbody.innerHTML = ""; // reset tabel
+        function keRingkasan() {
+            if (!tabelSudahBenar || !intervalKelas.length || !frekuensiBenar.length) {
+                alert("Cek tabel distribusi frekuensi terlebih dahulu sebelum lanjut ke ringkasan.");
+                return;
+            }
 
-    if (!k || k <= 0) {
-        alert("Masukkan banyak kelas terlebih dahulu.");
-        return;
-    }
+            document.getElementById("sumRange").innerText = rangeVal;
+            document.getElementById("sumKelas").innerText = document.getElementById("inputKelas").value || kelasVal;
+            document.getElementById("sumInterval").innerText = document.getElementById("inputInterval").value || intervalVal;
 
-    for (let i = 1; i <= k; i++) {
-        const row = document.createElement("tr");
+            const body = document.getElementById("summaryBody");
+            body.innerHTML = "";
+            intervalKelas.forEach((interval, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>K${index + 1}</td><td>${interval}</td><td>${frekuensiBenar[index]}</td>`;
+                body.appendChild(row);
+            });
 
-        row.innerHTML = `
-            <td>K${i}</td>
-<td><input type="number" class="bawah"></td>
-<td><input type="number" class="atas"></td>
+            setStep(3);
+        }
 
-        `;
+        function showFeedback(text, isError = false) {
+            const box = document.getElementById("feedbackBox");
+            box.style.display = "block";
+            box.style.background = isError ? "#fff1f2" : "#eef4ff";
+            box.style.color = isError ? "#b42318" : "#3154d7";
+            box.textContent = text;
+        }
 
-        tbody.appendChild(row);
-    }
-}
+        function submitAktivitas3() {
+            if (!intervalKelas.length || !frekuensiBenar.length) {
+                alert("Lengkapi terlebih dahulu tabel distribusi frekuensi.");
+                return;
+            }
 
-function submitAktivitas3() {
+            localStorage.setItem("intervalKelas", JSON.stringify(intervalKelas));
+            localStorage.setItem("frekuensiBenar", JSON.stringify(frekuensiBenar));
+            localStorage.setItem("aktivitas3", "true");
 
-  const rows = document.querySelectorAll("#tabelInterval tr");
-
-  let intervalKelas = [];
-  let frekuensiBenar = [];
-
-  rows.forEach(row => {
-    const bawah = row.children[1].querySelector("input").value;
-    const atas  = row.children[2].querySelector("input").value;
-
-    intervalKelas.push(`${bawah}–${atas}`);
-
-    // hitung frekuensi sistem
-    let f = data.filter(x => x >= bawah && x <= atas).length;
-    frekuensiBenar.push(f);
-  });
-
-  localStorage.setItem("intervalKelas", JSON.stringify(intervalKelas));
-  localStorage.setItem("frekuensiBenar", JSON.stringify(frekuensiBenar));
-  localStorage.setItem("aktivitas3", "true");
-
-  alert("Aktivitas 3 selesai. Lanjut ke Aktivitas 4.");
-  window.location.href = "beranda.html";
-}
-
-</script>
-
+            alert("Aktivitas 3 selesai. Lanjut ke Aktivitas 4.");
+            window.location.href = "beranda.html";
+        }
+    </script>
 </body>
-
 </html>

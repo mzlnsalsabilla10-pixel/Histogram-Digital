@@ -3,88 +3,650 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akhir Kegiatan</title>
+    <title>Final - Laporan Hasil Belajar</title>
     <link rel="stylesheet" href="style.css">
-
     <style>
-        .final-container {
-            max-width: 700px;
-            margin: 50px auto;
-            background: white;
-            padding: 40px;
+        .final-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            gap: 22px;
+        }
+
+        .final-hero,
+        .final-card,
+        .status-card,
+        .action-card {
+            background: rgba(255,255,255,.94);
+            border: 1px solid rgba(86,99,164,.14);
+            border-radius: 30px;
+            box-shadow: 0 18px 50px rgba(49,84,215,.1);
+        }
+
+        .final-hero {
+            padding: 34px;
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+            gap: 22px;
+        }
+
+        .final-hero h1,
+        .final-card h2,
+        .status-card h3,
+        .action-card h3 {
+            font-family: 'Sora', sans-serif;
+            color: #21358e;
+        }
+
+        .final-hero h1 {
+            font-size: clamp(2rem, 3vw, 3rem);
+            margin-bottom: 14px;
+        }
+
+        .final-hero p,
+        .final-card p,
+        .status-card p,
+        .action-card p,
+        .identity-item span,
+        .report-note {
+            color: #5f678c;
+            line-height: 1.8;
+        }
+
+        .final-pill {
+            display: inline-flex;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: rgba(49,84,215,.08);
+            color: #3154d7;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .hero-side {
+            background: linear-gradient(135deg, rgba(49,84,215,.08), rgba(24,183,163,.14));
             border-radius: 24px;
-            box-shadow: 0px 8px 20px rgba(0,0,0,0.08);
-            text-align: center;
+            padding: 24px;
         }
-        .final-container h2 {
-            color: #553AD1;
-            margin-bottom: 10px;
+
+        .hero-side ul {
+            margin-top: 10px;
+            padding-left: 20px;
+            color: #4d557d;
+            line-height: 1.8;
         }
-        .final-container p {
-            color: #444;
-            font-size: 16px;
-            line-height: 1.6;
+
+        .final-card,
+        .action-card {
+            padding: 28px;
         }
-        .btn-area {
-            margin-top: 30px;
+
+        .identity-grid,
+        .status-grid {
+            display: grid;
+            gap: 16px;
+            margin-top: 18px;
         }
-        .btn-final {
-            padding: 12px 22px;
-            background: #553AD1;
-            color: white;
-            border-radius: 12px;
-            margin: 6px;
+
+        .identity-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .identity-item {
+            padding: 18px;
+            border-radius: 22px;
+            background: #f8faff;
+            border: 1px solid rgba(86,99,164,.12);
+            min-width: 0;
+        }
+
+        .identity-item strong {
+            display: block;
+            color: #21358e;
+            margin-bottom: 8px;
+        }
+
+        .status-grid {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+
+        .status-card {
+            padding: 18px;
+            background: #f8faff;
+            min-width: 0;
+        }
+
+        .identity-item span,
+        .status-card p {
+            display: block;
+            word-break: break-word;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(24,183,163,.14);
+            color: #0b7f72;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .status-badge.pending {
+            background: rgba(255,184,92,.18);
+            color: #8c5a00;
+        }
+
+        .action-card {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .final-btn {
+            border: none;
+            border-radius: 16px;
+            padding: 14px 20px;
+            font-weight: 700;
             cursor: pointer;
-            display: inline-block;
-            transition: 0.2s ease;
+            transition: .2s ease;
         }
-        .btn-final:hover {
-            background: #4025ad;
+
+        .final-btn.primary {
+            background: linear-gradient(135deg, #3154d7, #5e7bff);
+            color: white;
+            box-shadow: 0 14px 28px rgba(49,84,215,.18);
+        }
+
+        .final-btn.secondary {
+            background: rgba(49,84,215,.12);
+            color: #21358e;
+            border: 1px solid rgba(49,84,215,.18);
+        }
+
+        .final-topbar {
+            position: sticky;
+            top: 12px;
+            z-index: 1000;
+        }
+
+        @media (max-width: 980px) {
+            .final-hero,
+            .identity-grid,
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 640px) {
+            .final-hero,
+            .final-card,
+            .status-card,
+            .action-card {
+                padding: 22px;
+                border-radius: 24px;
+            }
+
+            .action-card {
+                align-items: stretch;
+            }
+
+            .action-buttons {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .final-btn {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
+<body onload="cekLogin(); initFinalPage();">
+    <header class="topbar final-topbar">
+        <div class="brand-mark">
+            <span class="brand-dot"></span>
+            <div>
+                <strong>Histogram Digital</strong>
+                <p>Final</p>
+            </div>
+        </div>
+        <nav class="topnav">
+            <a href="index.html#tentang-media">Tentang Media</a>
+            <a href="index.html#referensi">Referensi</a>
+        </nav>
+    </header>
 
-<body onload="cekLogin(); isiNamaKelompok();">
+    <main class="final-wrap">
+        <section class="final-hero">
+            <div>
+                <span class="final-pill">Laporan Hasil Belajar</span>
+                <h1 id="finalGreeting">Selamat!</h1>
+                <p id="finalIntro">Kamu telah menyelesaikan seluruh rangkaian pembelajaran histogram berbasis web. Halaman ini merangkum hasil pekerjaanmu dari awal sampai akhir.</p>
+            </div>
+            <div class="hero-side">
+                <h3>Hal yang bisa kamu lakukan di halaman ini</h3>
+                <ul>
+                    <li>Melihat kembali identitas dan hasil belajar yang sudah dikerjakan.</li>
+                    <li>Mengunduh laporan hasil belajar untuk dibaca kembali.</li>
+                    <li>Menyelesaikan sesi belajar dan keluar dari web.</li>
+                </ul>
+            </div>
+        </section>
 
-<div class="final-container">
+        <section class="final-card">
+            <h2>Identitas Hasil Belajar</h2>
+            <p>Data berikut akan menjadi bagian dari laporan hasil belajar murid.</p>
+            <div class="identity-grid">
+                <div class="identity-item">
+                    <strong>Nama Lengkap</strong>
+                    <span id="identitasNamaLengkap">-</span>
+                </div>
+                <div class="identity-item">
+                    <strong>Nama Kelompok</strong>
+                    <span id="identitasKelompok">-</span>
+                </div>
+                <div class="identity-item">
+                    <strong>Kelas / Rombel</strong>
+                    <span id="identitasKelas">-</span>
+                </div>
+            </div>
+        </section>
 
-    <h2>🎉 Selamat! 🎉</h2>
-    <p id="ucapan"></p>
+        <section class="final-card">
+            <h2>Ringkasan Penyelesaian Aktivitas</h2>
+            <p>Status berikut menunjukkan bahwa seluruh aktivitas pembelajaran telah diselesaikan.</p>
+            <div class="status-grid" id="statusGrid"></div>
+        </section>
 
-    <p>
-        Kamu telah menyelesaikan *seluruh rangkaian Aktivitas Pembelajaran Deep Learning*  
-        untuk materi <b>Histogram</b>.  
-        Terima kasih atas kerja keras, kolaborasi, dan proses berpikir mendalam yang telah dilakukan oleh kelompokmu!
-    </p>
+        <section class="action-card">
+            <div>
+                <h3>Unduh atau akhiri sesi belajar</h3>
+                <p class="report-note">Unduh laporan untuk membaca kembali seluruh hasil pekerjaan dari Aktivitas 1 sampai Aktivitas 5. Laporan akan dibuka dalam format siap cetak sehingga bisa langsung disimpan sebagai PDF dari browser.</p>
+            </div>
+            <div class="action-buttons">
+                <button class="final-btn primary" onclick="downloadReport()">Unduh / Simpan Laporan PDF</button>
+                <button class="final-btn secondary" onclick="selesaiDanKeluar()">Selesai dan Keluar</button>
+            </div>
+        </section>
+    </main>
 
-    <div class="btn-area">
-        <div class="btn-final" onclick="downloadReport()">⬇ Download Report</div>
-        <div class="btn-final" onclick="kembaliHome()">🏠 Kembali ke Halaman Utama</div>
+    <script src="script.js"></script>
+    <script>
+        let finalData = {};
+
+        function readJSON(key, fallback) {
+            const raw = localStorage.getItem(key);
+            if (!raw) return fallback;
+            try {
+                return JSON.parse(raw);
+            } catch (error) {
+                return fallback;
+            }
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function initFinalPage() {
+            finalData = collectFinalData();
+            renderHero();
+            renderIdentity();
+            renderStatus();
+        }
+
+        function collectFinalData() {
+            return {
+                identitas: {
+                    namaLengkap: localStorage.getItem("namaLengkap") || "Peserta Didik",
+                    kelompokNama: localStorage.getItem("kelompokNama") || "-",
+                    kelompokKelas: localStorage.getItem("kelompokKelas") || "-",
+                    namaData: localStorage.getItem("namaData") || "-",
+                    satuanData: localStorage.getItem("satuanData") || "-"
+                },
+                aktivitas: {
+                    a1: localStorage.getItem("aktivitas1") === "true",
+                    a2: localStorage.getItem("aktivitas2") === "true",
+                    a3: localStorage.getItem("aktivitas3") === "true",
+                    a4: localStorage.getItem("aktivitas4") === "true",
+                    a5: localStorage.getItem("aktivitas5") === "true"
+                },
+                aktivitas1: {
+                    checkpoint: localStorage.getItem("checkpoint1") || "-",
+                    jawaban1: localStorage.getItem("a1") || "-",
+                    alasan1: localStorage.getItem("alasan1") || "-",
+                    jawaban2: localStorage.getItem("a2") || "-",
+                    alasan2: localStorage.getItem("alasan2") || "-",
+                    jawaban3: localStorage.getItem("a3") || "-",
+                    alasan3: localStorage.getItem("alasan3") || "-"
+                },
+                aktivitas2: {
+                    data: readJSON("dataAktivitas2", []),
+                    refleksi: localStorage.getItem("refleksiAktivitas2") || "-"
+                },
+                aktivitas3: {
+                    intervalKelas: readJSON("intervalKelas", []),
+                    frekuensiBenar: readJSON("frekuensiBenar", [])
+                },
+                aktivitas4: readJSON("hasilAktivitas4", {}),
+                aktivitas5: {
+                    r1: localStorage.getItem("refleksi_r1") || "-",
+                    r2: localStorage.getItem("refleksi_r2") || "-",
+                    r3: localStorage.getItem("refleksi_r3") || "-",
+                    r4: localStorage.getItem("refleksi_r4") || "-",
+                    status: localStorage.getItem("status_refleksi") || "belum lengkap"
+                }
+            };
+        }
+
+        function renderHero() {
+            document.getElementById("finalGreeting").innerText = `Selamat, ${finalData.identitas.namaLengkap}!`;
+            document.getElementById("finalIntro").innerText =
+                `Kamu dari ${finalData.identitas.kelompokNama} kelas ${finalData.identitas.kelompokKelas} telah menyelesaikan seluruh rangkaian pembelajaran histogram berbasis web. Halaman ini merangkum hasil pekerjaanmu dari awal sampai akhir.`;
+        }
+
+        function renderIdentity() {
+            document.getElementById("identitasNamaLengkap").innerText = finalData.identitas.namaLengkap;
+            document.getElementById("identitasKelompok").innerText = finalData.identitas.kelompokNama;
+            document.getElementById("identitasKelas").innerText = finalData.identitas.kelompokKelas;
+        }
+
+        function renderStatus() {
+            const statusGrid = document.getElementById("statusGrid");
+            const daftar = [
+                ["Aktivitas 1", "Eksplorasi konsep histogram", finalData.aktivitas.a1],
+                ["Aktivitas 2", "Pengumpulan data numerik kontinu", finalData.aktivitas.a2],
+                ["Aktivitas 3", "Penyusunan tabel distribusi frekuensi", finalData.aktivitas.a3],
+                ["Aktivitas 4", "Pembuatan histogram digital", finalData.aktivitas.a4],
+                ["Aktivitas 5", "Refleksi pembelajaran", finalData.aktivitas.a5]
+            ];
+
+            statusGrid.innerHTML = daftar.map(([judul, desc, selesai]) => `
+                <article class="status-card">
+                    <div class="status-badge ${selesai ? "" : "pending"}">${selesai ? "Selesai" : "Belum"}</div>
+                    <h3>${escapeHtml(judul)}</h3>
+                    <p>${escapeHtml(desc)}</p>
+                </article>
+            `).join("");
+        }
+
+        function buildReportHtml() {
+            const hasil4 = finalData.aktivitas4 || {};
+            const frekuensiRows = finalData.aktivitas3.intervalKelas.length
+                ? finalData.aktivitas3.intervalKelas.map((item, index) => `
+                    <tr>
+                        <td style="padding:8px;border:1px solid #cfd7ff;">K${index + 1}</td>
+                        <td style="padding:8px;border:1px solid #cfd7ff;">${escapeHtml(item)}</td>
+                        <td style="padding:8px;border:1px solid #cfd7ff;">${finalData.aktivitas3.frekuensiBenar[index] ?? "-"}</td>
+                    </tr>
+                `).join("")
+                : `<tr><td colspan="3" style="padding:8px;border:1px solid #cfd7ff;">Data belum tersedia.</td></tr>`;
+
+            const dataList = finalData.aktivitas2.data.length ? finalData.aktivitas2.data.join(", ") : "-";
+            const jumlahData = finalData.aktivitas2.data.length;
+            const minData = jumlahData ? Math.min(...finalData.aktivitas2.data) : "-";
+            const maxData = jumlahData ? Math.max(...finalData.aktivitas2.data) : "-";
+            const rangeValue = minData !== "-" && maxData !== "-" ? maxData - minData : "-";
+            const jumlahKelas = finalData.aktivitas3.intervalKelas.length || "-";
+            const intervalPertama = finalData.aktivitas3.intervalKelas[0] || "";
+            const panjangInterval = intervalPertama
+                ? (() => {
+                    const match = intervalPertama.match(/-?\d+(?:\.\d+)?/g) || [];
+                    if (match.length < 2) return "-";
+                    return Number(match[1]) - Number(match[0]) + 1;
+                })()
+                : "-";
+            const svgHistogram = buildHistogramSvg(
+                hasil4.frekuensiBenar || finalData.aktivitas3.frekuensiBenar,
+                finalData.aktivitas3.intervalKelas,
+                hasil4.labelX || "Tepi Kelas",
+                hasil4.labelY || "Frekuensi",
+                hasil4.judulGrafik || `Histogram ${finalData.identitas.namaData}`
+            );
+
+            return `
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Laporan Hasil Belajar Histogram</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #24315e; padding: 32px; }
+        h1, h2 { color: #21358e; }
+        .section { margin-bottom: 28px; }
+        .card { border: 1px solid #d9e1ff; border-radius: 18px; padding: 18px; background: #f8faff; margin-top: 12px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th { background: #eef2ff; }
+        th, td { text-align: left; border: 1px solid #cfd7ff; padding: 8px; }
+        ul { padding-left: 20px; }
+        .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .meta-grid div { border: 1px solid #d9e1ff; border-radius: 12px; padding: 10px 12px; background: white; }
+        .chart-box { margin-top: 14px; padding: 16px; border: 1px solid #d9e1ff; border-radius: 18px; background: white; }
+        @media print { body { padding: 12px; } }
+    </style>
+</head>
+<body>
+    <h1>Laporan Hasil Belajar Histogram</h1>
+    <p>Laporan ini memuat identitas dan hasil pekerjaan murid dari Aktivitas 1 sampai Aktivitas 5.</p>
+
+    <div class="section">
+        <h2>Identitas Murid</h2>
+        <div class="card">
+            <p><strong>Nama Lengkap:</strong> ${escapeHtml(finalData.identitas.namaLengkap)}</p>
+            <p><strong>Nama Kelompok:</strong> ${escapeHtml(finalData.identitas.kelompokNama)}</p>
+            <p><strong>Kelas / Rombel:</strong> ${escapeHtml(finalData.identitas.kelompokKelas)}</p>
+            <p><strong>Data yang Digunakan:</strong> ${escapeHtml(finalData.identitas.namaData)}</p>
+            <p><strong>Satuan:</strong> ${escapeHtml(finalData.identitas.satuanData)}</p>
+        </div>
     </div>
 
-</div>
+    <div class="section">
+        <h2>Aktivitas 1 - Eksplorasi Konsep Histogram</h2>
+        <div class="card">
+            <p><strong>Catatan awal:</strong> ${escapeHtml(finalData.aktivitas1.checkpoint)}</p>
+            <div class="card" style="background:#ffffff;">
+                <p><strong>Soal 1:</strong> Grafik manakah yang menunjukkan histogram?</p>
+                <p><strong>Jawaban murid:</strong> ${escapeHtml(finalData.aktivitas1.jawaban1)}</p>
+                <p><strong>Alasan:</strong> ${escapeHtml(finalData.aktivitas1.alasan1)}</p>
+            </div>
+            <div class="card" style="background:#ffffff;">
+                <p><strong>Soal 2:</strong> Apa makna lebar batang pada histogram?</p>
+                <p><strong>Jawaban murid:</strong> ${escapeHtml(finalData.aktivitas1.jawaban2)}</p>
+                <p><strong>Alasan:</strong> ${escapeHtml(finalData.aktivitas1.alasan2)}</p>
+            </div>
+            <div class="card" style="background:#ffffff;">
+                <p><strong>Soal 3:</strong> Mengapa batang-batang pada histogram saling menempel?</p>
+                <p><strong>Jawaban murid:</strong> ${escapeHtml(finalData.aktivitas1.jawaban3)}</p>
+                <p><strong>Alasan:</strong> ${escapeHtml(finalData.aktivitas1.alasan3)}</p>
+            </div>
+        </div>
+    </div>
 
-<script src="script.js"></script>
+    <div class="section">
+        <h2>Aktivitas 2 - Pengumpulan Data</h2>
+        <div class="card">
+            <p><strong>Nama data:</strong> ${escapeHtml(finalData.identitas.namaData)}</p>
+            <p><strong>Satuan:</strong> ${escapeHtml(finalData.identitas.satuanData)}</p>
+            <p><strong>Data yang terkumpul:</strong> ${escapeHtml(dataList)}</p>
+            <p><strong>Refleksi Aktivitas 2:</strong> ${escapeHtml(finalData.aktivitas2.refleksi)}</p>
+        </div>
+    </div>
 
-<script>
-function isiNamaKelompok() {
-    let nama = localStorage.getItem("kelompokNama");
-    if (!nama) nama = "Kelompok";
+    <div class="section">
+        <h2>Aktivitas 3 - Tabel Distribusi Frekuensi</h2>
+        <div class="card">
+            <div class="meta-grid">
+                <div><strong>Jangkauan:</strong> ${rangeValue}</div>
+                <div><strong>Jumlah kelas:</strong> ${jumlahKelas}</div>
+                <div><strong>Panjang interval:</strong> ${panjangInterval}</div>
+                <div><strong>Nilai minimum - maksimum:</strong> ${minData} - ${maxData}</div>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Kelas</th>
+                    <th>Interval Kelas</th>
+                    <th>Frekuensi</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${frekuensiRows}
+            </tbody>
+        </table>
+    </div>
 
-    document.getElementById("ucapan").innerHTML =
-        "Terima kasih, <b>" + nama + "</b>!";
-}
+    <div class="section">
+        <h2>Aktivitas 4 - Pembuatan Histogram Digital</h2>
+        <div class="card">
+            <p><strong>Judul histogram:</strong> ${escapeHtml(hasil4.judulGrafik || "-")}</p>
+            <p><strong>Label sumbu X:</strong> ${escapeHtml(hasil4.labelX || "-")}</p>
+            <p><strong>Label sumbu Y:</strong> ${escapeHtml(hasil4.labelY || "-")}</p>
+            <p><strong>Frekuensi yang diisi murid:</strong> ${escapeHtml((hasil4.frekuensiUser || []).join(", "))}</p>
+            <p><strong>Frekuensi acuan:</strong> ${escapeHtml((hasil4.frekuensiBenar || []).join(", "))}</p>
+            <p><strong>Tingkat kecocokan:</strong> ${hasil4.kecocokan ?? "-"}${hasil4.kecocokan !== undefined ? "%" : ""}</p>
+            <p><strong>Interpretasi histogram:</strong> ${escapeHtml(hasil4.refleksi || "-")}</p>
+            <div class="chart-box">
+                ${svgHistogram}
+            </div>
+        </div>
+    </div>
 
-function kembaliHome() {
-    window.location.href = "beranda.html";
-}
+    <div class="section">
+        <h2>Aktivitas 5 - Refleksi Pembelajaran</h2>
+        <div class="card">
+            <div class="card" style="background:#ffffff;">
+                <p><strong>Pertanyaan 1:</strong> Setelah menyelesaikan seluruh rangkaian aktivitas, pemahaman baru apa yang kamu peroleh tentang histogram dan fungsinya dalam menyajikan data?</p>
+                <p><strong>Jawaban murid:</strong> ${escapeHtml(finalData.aktivitas5.r1)}</p>
+            </div>
+            <div class="card" style="background:#ffffff;">
+                <p><strong>Pertanyaan 2:</strong> Jelaskan proses berpikirmu saat mengubah data mentah menjadi tabel distribusi frekuensi, lalu menjadi histogram. Bagian mana yang paling membantumu memahami bentuk sebaran data? Mengapa?</p>
+                <p><strong>Jawaban murid:</strong> ${escapeHtml(finalData.aktivitas5.r2)}</p>
+            </div>
+            <div class="card" style="background:#ffffff;">
+                <p><strong>Pertanyaan 3:</strong> Saat membandingkan histogram buatanmu dengan histogram acuan, perbedaan atau kesalahan apa yang kamu temukan? Menurutmu apa penyebab utamanya?</p>
+                <p><strong>Jawaban murid:</strong> ${escapeHtml(finalData.aktivitas5.r3)}</p>
+            </div>
+            <div class="card" style="background:#ffffff;">
+                <p><strong>Pertanyaan 4:</strong> Jika kamu diminta mengulang kembali pembuatan histogram, strategi atau langkah apa yang akan kamu perbaiki agar hasilnya lebih akurat? Jelaskan alasanmu.</p>
+                <p><strong>Jawaban murid:</strong> ${escapeHtml(finalData.aktivitas5.r4)}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>`;
+        }
 
-// sementara, tombol report belum ada fungsinya
-function downloadReport() {
-    alert("Fitur download report akan diaktifkan setelah aktivitas final dirapikan. 😊");
-}
-</script>
+        function buildHistogramSvg(frequencies, intervals, labelX, labelY, title) {
+            if (!frequencies || !frequencies.length || !intervals || !intervals.length) {
+                return "<p>Histogram belum tersedia.</p>";
+            }
 
+            const width = 760;
+            const height = 420;
+            const left = 72;
+            const right = 32;
+            const top = 44;
+            const bottom = 88;
+            const chartWidth = width - left - right;
+            const chartHeight = height - top - bottom;
+            const maxFreq = Math.max(...frequencies, 1);
+            const boundaries = (() => {
+                const parsed = intervals.map((item) => {
+                    const match = item.match(/-?\d+(?:\.\d+)?/g) || [];
+                    return { bawah: Number(match[0] || 0), atas: Number(match[1] || 0) };
+                });
+                const hasil = [parsed[0].bawah - 0.5];
+                parsed.forEach((item) => hasil.push(item.atas + 0.5));
+                return hasil;
+            })();
+            const barWidth = chartWidth / frequencies.length;
+            const tickCount = 5;
+            const gridLines = Array.from({ length: tickCount + 1 }, (_, idx) => {
+                const value = Math.round((maxFreq / tickCount) * (tickCount - idx));
+                const y = top + (chartHeight / tickCount) * idx;
+                return `
+                    <line x1="${left}" y1="${y}" x2="${width - right}" y2="${y}" stroke="#d8def8" stroke-width="1" />
+                    <text x="${left - 12}" y="${y + 4}" font-size="12" text-anchor="end" fill="#5f678c">${value}</text>
+                `;
+            }).join("");
+            const bars = frequencies.map((freq, index) => {
+                const barHeight = (freq / maxFreq) * chartHeight;
+                const x = left + index * barWidth;
+                const y = top + chartHeight - barHeight;
+                return `
+                    <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" fill="url(#barGrad)" />
+                    <text x="${x + barWidth / 2}" y="${y + 18}" font-size="14" font-weight="700" text-anchor="middle" fill="#ffffff">${freq}</text>
+                `;
+            }).join("");
+            const boundaryLabels = boundaries.map((boundary, index) => {
+                const x = left + (chartWidth / (boundaries.length - 1)) * index;
+                return `
+                    <line x1="${x}" y1="${top + chartHeight}" x2="${x}" y2="${top + chartHeight + 10}" stroke="#8c97c8" stroke-width="1.5" />
+                    <text x="${x}" y="${top + chartHeight + 28}" font-size="12" text-anchor="middle" fill="#5f678c">${Math.abs(boundary)}</text>
+                `;
+            }).join("");
+
+            return `
+                <svg viewBox="0 0 ${width} ${height}" width="100%" role="img" aria-label="Histogram">
+                    <defs>
+                        <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#8fa8ff"></stop>
+                            <stop offset="100%" stop-color="#3154d7"></stop>
+                        </linearGradient>
+                    </defs>
+                    <text x="${width / 2}" y="24" font-size="18" font-weight="700" text-anchor="middle" fill="#21358e">${escapeHtml(title)}</text>
+                    ${gridLines}
+                    <line x1="${left}" y1="${top}" x2="${left}" y2="${top + chartHeight}" stroke="#21358e" stroke-width="3" />
+                    <line x1="${left}" y1="${top + chartHeight}" x2="${width - right}" y2="${top + chartHeight}" stroke="#21358e" stroke-width="3" />
+                    ${bars}
+                    ${boundaryLabels}
+                    <text x="${width / 2}" y="${height - 16}" font-size="14" font-weight="700" text-anchor="middle" fill="#21358e">${escapeHtml(labelX)}</text>
+                    <text x="24" y="${height / 2}" font-size="14" font-weight="700" text-anchor="middle" fill="#21358e" transform="rotate(-90 24 ${height / 2})">${escapeHtml(labelY)}</text>
+                </svg>
+            `;
+        }
+
+        function downloadReport() {
+            const reportHtml = buildReportHtml();
+            const reportWindow = window.open("", "_blank", "width=980,height=820");
+            if (!reportWindow) {
+                alert("Popup diblokir browser. Izinkan popup agar laporan bisa dibuka dan disimpan sebagai PDF.");
+                return;
+            }
+
+            reportWindow.document.open();
+            reportWindow.document.write(reportHtml);
+            reportWindow.document.close();
+            reportWindow.focus();
+            setTimeout(() => {
+                reportWindow.print();
+            }, 500);
+        }
+
+        function selesaiDanKeluar() {
+            const yakin = confirm("Setelah keluar, sesi belajar akan ditutup dan data lokal pada browser ini akan dibersihkan. Apakah kamu yakin ingin keluar?");
+            if (!yakin) return;
+
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
 </body>
 </html>
-

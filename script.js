@@ -1,17 +1,15 @@
 /* ============================================================
-   CEK LOGIN — WAJIB SEBELUM MASUK WEB
+   CEK LOGIN - WAJIB SEBELUM MASUK WEB
    ============================================================ */
 function cekLogin() {
-    if (!localStorage.getItem("kelompokNama")) {
+    if (!localStorage.getItem("namaLengkap") || !localStorage.getItem("kelompokNama") || !localStorage.getItem("kelompokKelas")) {
         window.location.href = "login.html";
     }
 }
 
-
 /* ============================================================
    SYSTEM LOCK / UNLOCK (Aktivitas Berurutan)
    ============================================================ */
-
 function cekStatusAwal() {
     if (localStorage.getItem("aktivitas2_unlock") === "true") unlock(2);
     if (localStorage.getItem("aktivitas1") === "true") unlock(1);
@@ -30,6 +28,14 @@ function unlock(no) {
         if (overlay) overlay.remove();
 
         card.onclick = () => bukaHalaman(`aktivitas${no}.html`);
+
+        const status = card.querySelector(".card-status");
+        if (status) {
+            const done = localStorage.getItem(`aktivitas${no}`) === "true";
+            status.classList.remove("status-locked");
+            status.classList.add(done ? "status-done" : "status-open");
+            status.textContent = done ? "Selesai" : "Tersedia";
+        }
     }
 }
 
@@ -37,40 +43,33 @@ function bukaHalaman(file) {
     window.location.href = file;
 }
 
-
 /* ============================================================
    CEK IZIN AKSES (Agar tidak lompat aktivitas)
    ============================================================ */
-
 function cekAkses(noAktivitas) {
-    // tidak boleh masuk halaman aktivitas jika belum login
     cekLogin();
 
     if (noAktivitas > 1) {
         const prev = noAktivitas - 1;
         if (localStorage.getItem(`aktivitas${prev}`) !== "true") {
             alert("Aktivitas ini belum bisa dibuka.\nSelesaikan aktivitas sebelumnya dulu ya!");
-            window.location.href = "index.html";
+            window.location.href = "beranda.html";
         }
     }
 }
 
-
 /* ============================================================
    SELESAIKAN AKTIVITAS
    ============================================================ */
-
 function selesaiAktivitas(no) {
     localStorage.setItem(`aktivitas${no}`, "true");
     alert("Aktivitas selesai! Kamu bisa lanjut ke aktivitas berikutnya.");
-    window.location.href = "index.html";
+    window.location.href = "beranda.html";
 }
 
-
 /* ============================================================
-   HOTSPOT — AKTIVITAS 1
+   HOTSPOT - AKTIVITAS 1
    ============================================================ */
-
 let benar = 0;
 const targetBenar = 3;
 
@@ -89,16 +88,13 @@ function klikHotspot(el, status) {
     }
 }
 
-
 /* ============================================================
    KIRIM DATA KE SPREADSHEET (NANTI)
    ============================================================ */
-
-// masukkan URL Google Apps Script ke sini nanti
-const ENDPOINT = ""; 
+const ENDPOINT = "";
 
 async function saveResult(payload) {
-    if (!ENDPOINT) return; // kalau belum ada endpoint, skip dulu
+    if (!ENDPOINT) return;
 
     try {
         await fetch(ENDPOINT, {
@@ -119,7 +115,7 @@ function cekKodeAkt2() {
     if (kode === "HISTO2") {
         localStorage.setItem("aktivitas2_unlock", "true");
         alert("Aktivitas 2 berhasil dibuka. Silakan lanjutkan.");
-        unlock(2); // buka card aktivitas 2
+        unlock(2);
     } else {
         alert("Kode salah. Silakan periksa kembali kode dari guru.");
     }

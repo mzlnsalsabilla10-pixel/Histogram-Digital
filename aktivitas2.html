@@ -3,129 +3,664 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aktivitas 2 - Mengumpulkan Data</title>
+    <title>Aktivitas 2 - Pengumpulan Data</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .data-stage {
+            max-width: 1180px;
+            margin: 0 auto;
+            display: grid;
+            gap: 22px;
+        }
+
+        .data-hero,
+        .data-card,
+        .summary-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            border: 1px solid rgba(86, 99, 164, 0.16);
+            box-shadow: 0 18px 50px rgba(49, 84, 215, 0.1);
+        }
+
+        .data-hero {
+            padding: 34px;
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            gap: 22px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-hero::after {
+            content: "";
+            position: absolute;
+            left: -70px;
+            bottom: -90px;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(24, 183, 163, 0.16), transparent 70%);
+        }
+
+        .data-hero h1 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(2rem, 3vw, 3rem);
+            color: #21358e;
+            margin-bottom: 14px;
+        }
+
+        .data-hero p,
+        .data-card p,
+        .summary-card p {
+            color: #5f678c;
+            line-height: 1.8;
+        }
+
+        .data-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 999px;
+            padding: 10px 16px;
+            background: rgba(24, 183, 163, 0.12);
+            color: #0b7f72;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .data-side-card {
+            background: linear-gradient(135deg, rgba(49, 84, 215, 0.08), rgba(24, 183, 163, 0.14));
+            border-radius: 26px;
+            padding: 24px;
+            border: 1px solid rgba(86, 99, 164, 0.14);
+            position: relative;
+            z-index: 1;
+        }
+
+        .data-side-card h3,
+        .context-card h3,
+        .data-card h2,
+        .summary-card h2 {
+            color: #21358e;
+        }
+
+        .data-side-card ul {
+            padding-left: 20px;
+            line-height: 1.8;
+            color: #4d557d;
+            margin-top: 10px;
+        }
+
+        .data-card,
+        .summary-card {
+            padding: 28px;
+        }
+
+        .section-head {
+            margin-bottom: 18px;
+        }
+
+        .section-head h2 {
+            font-family: 'Sora', sans-serif;
+            font-size: clamp(1.4rem, 2vw, 2rem);
+            margin-top: 6px;
+        }
+
+        .context-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .context-card {
+            border-radius: 22px;
+            border: 1px solid rgba(86, 99, 164, 0.14);
+            background: #f8faff;
+            padding: 18px;
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+
+        .context-card:hover,
+        .context-card.active {
+            transform: translateY(-4px);
+            border-color: rgba(49, 84, 215, 0.34);
+            background: rgba(49, 84, 215, 0.08);
+        }
+
+        .context-card p {
+            margin-top: 8px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 18px;
+        }
+
+        .field-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #21358e;
+        }
+
+        .field-group input {
+            width: 100%;
+            padding: 13px 15px;
+            border-radius: 16px;
+            border: 1px solid rgba(86, 99, 164, 0.18);
+            background: #f8faff;
+        }
+
+        .helper-text {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #6a7294;
+        }
+
+        .collector-grid {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 22px;
+            align-items: start;
+        }
+
+        .input-panel,
+        .preview-panel {
+            background: #f8faff;
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid rgba(86, 99, 164, 0.14);
+        }
+
+        .single-input-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+        }
+
+        .single-input-row input {
+            padding: 13px 15px;
+            border-radius: 16px;
+            border: 1px solid rgba(86, 99, 164, 0.18);
+        }
+
+        .single-input-row button,
+        .secondary-action {
+            border: none;
+            border-radius: 16px;
+            padding: 13px 18px;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #3154d7, #5e7bff);
+            color: white;
+        }
+
+        .mini-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .secondary-action.soft {
+            background: rgba(49, 84, 215, 0.08);
+            color: #3154d7;
+            border: 1px solid rgba(49, 84, 215, 0.16);
+        }
+
+        .progress-info {
+            margin-top: 18px;
+            padding: 18px;
+            border-radius: 20px;
+            background: rgba(255, 184, 92, 0.12);
+            border: 1px solid rgba(255, 184, 92, 0.28);
+        }
+
+        .progress-info strong {
+            display: block;
+            margin-bottom: 10px;
+            color: #7a5b17;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            border-radius: 999px;
+            background: rgba(49, 84, 215, 0.12);
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-bar span {
+            display: block;
+            height: 100%;
+            width: 0;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #18b7a3, #3154d7);
+        }
+
+        .data-chip-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .data-chip {
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: white;
+            border: 1px solid rgba(86, 99, 164, 0.16);
+            color: #3f476f;
+            font-weight: 700;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-top: 18px;
+        }
+
+        .summary-stat {
+            border-radius: 22px;
+            padding: 18px;
+            background: #f8faff;
+            border: 1px solid rgba(86, 99, 164, 0.14);
+        }
+
+        .summary-stat span {
+            display: block;
+            font-size: 13px;
+            color: #6a7294;
+            margin-bottom: 8px;
+        }
+
+        .summary-stat strong {
+            color: #21358e;
+            font-size: 24px;
+        }
+
+        .summary-list {
+            margin-top: 18px;
+            padding: 18px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, rgba(49, 84, 215, 0.06), rgba(24, 183, 163, 0.08));
+            border: 1px solid rgba(86, 99, 164, 0.12);
+        }
+
+        .summary-list p {
+            color: #4d557d;
+        }
+
+        .summary-list code {
+            display: block;
+            margin-top: 12px;
+            padding: 14px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.84);
+            color: #21358e;
+            white-space: pre-wrap;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .reflection-box textarea {
+            width: 100%;
+            min-height: 120px;
+            border-radius: 18px;
+            border: 1px solid rgba(86, 99, 164, 0.18);
+            padding: 14px 16px;
+            margin-top: 14px;
+            background: #f8faff;
+            resize: vertical;
+        }
+
+        .submit-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .submit-panel p {
+            color: #5f678c;
+            line-height: 1.7;
+        }
+
+        .data-topbar {
+            position: sticky;
+            top: 12px;
+            z-index: 1000;
+        }
+
+        @media (max-width: 960px) {
+            .data-hero,
+            .collector-grid,
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
+<body onload="cekAkses(2); siapkanAktivitas2();">
+    <header class="topbar data-topbar">
+        <div class="brand-mark">
+            <span class="brand-dot"></span>
+            <div>
+                <strong>Histogram Digital</strong>
+                <p>Aktivitas 2</p>
+            </div>
+        </div>
 
-<body onload="cekAkses(2)">
+        <nav class="topnav">
+            <a href="index.html#tentang-media">Tentang Media</a>
+            <a href="beranda.html">Beranda Belajar</a>
+        </nav>
+    </header>
 
-<div class="activity-container">
+    <main class="data-stage">
+        <section class="data-hero">
+            <div>
+                <span class="data-pill">Aktivitas 2 - Pengumpulan Data</span>
+                <h1>Kumpulkan data nyata untuk membuat histogram</h1>
+                <p>
+                    Pada aktivitas ini, murid mengumpulkan data numerik kontinu dari konteks nyata,
+                    lalu menyiapkannya untuk digunakan dalam penyusunan tabel distribusi frekuensi dan histogram digital.
+                </p>
+            </div>
 
-    <h2>Aktivitas 2 — Mengumpulkan Data</h2>
+            <div class="data-side-card">
+                <h3>Hal penting yang perlu diperhatikan</h3>
+                <ul>
+                    <li>Pilih data yang bersifat numerik kontinu.</li>
+                    <li>Gunakan data dari konteks nyata di lingkungan sekitar.</li>
+                    <li>Kumpulkan minimal 25 data agar cukup untuk dianalisis.</li>
+                    <li>Data yang dikumpulkan akan dipakai pada aktivitas berikutnya.</li>
+                </ul>
+            </div>
+        </section>
 
-    <p>
-        Masukkan <b>minimal 25 data numerik</b> hasil pengukuran atau observasi di kelas.
-        Data ini akan digunakan untuk menyusun histogram pada aktivitas berikutnya.
-    </p>
+        <section class="data-card">
+            <div class="section-head">
+                <span class="section-kicker">Konteks Data</span>
+                <h2>Pilih contoh konteks data atau tentukan konteksmu sendiri</h2>
+                <p>Pilihan ini membantu kelompokmu membayangkan data yang cocok untuk disajikan dalam histogram.</p>
+            </div>
 
-    <hr><br>
+            <div class="context-grid">
+                <article class="context-card" onclick="pilihKonteks('Tinggi badan murid', 'cm', this)">
+                    <h3>Tinggi badan</h3>
+                    <p>Contoh data pengukuran tinggi badan murid dalam satuan cm.</p>
+                </article>
+                <article class="context-card" onclick="pilihKonteks('Lama perjalanan ke sekolah', 'menit', this)">
+                    <h3>Lama perjalanan</h3>
+                    <p>Contoh data waktu tempuh dari rumah ke sekolah dalam satuan menit.</p>
+                </article>
+                <article class="context-card" onclick="pilihKonteks('Panjang langkah', 'cm', this)">
+                    <h3>Panjang langkah</h3>
+                    <p>Contoh data hasil pengukuran panjang langkah murid.</p>
+                </article>
+                <article class="context-card" onclick="pilihKonteks('Denyut nadi setelah aktivitas ringan', 'kali/menit', this)">
+                    <h3>Denyut nadi</h3>
+                    <p>Contoh data denyut nadi setelah aktivitas ringan dalam satuan kali per menit.</p>
+                </article>
+                <article class="context-card" onclick="pilihKonteks('Waktu menyelesaikan tugas sederhana', 'detik', this)">
+                    <h3>Waktu menyelesaikan tugas</h3>
+                    <p>Contoh data waktu yang dibutuhkan murid menyelesaikan tugas sederhana.</p>
+                </article>
+            </div>
+        </section>
 
-    <!-- IDENTITAS DATA -->
-    <p><b>Identitas Data</b></p>
+        <section class="data-card">
+            <div class="section-head">
+                <span class="section-kicker">Identitas Data</span>
+                <h2>Tentukan variabel dan satuan data</h2>
+                <p>Isilah identitas data sebelum mulai menambahkan angka hasil pengukuran atau observasi.</p>
+            </div>
 
-    <label>Nama data / variabel:</label><br>
-    <input type="text" id="namaData" placeholder="Contoh: Tinggi badan peserta didik"
-        style="width:100%; padding:10px; border-radius:10px; border:1px solid #aaa; margin-bottom:10px;">
+            <div class="form-grid">
+                <div class="field-group">
+                    <label>Nama data / variabel</label>
+                    <input type="text" id="namaData" placeholder="Contoh: Tinggi badan murid">
+                    <p class="helper-text">Gunakan nama variabel yang jelas dan mudah dipahami.</p>
+                </div>
 
-    <label>Satuan data:</label><br>
-    <input type="text" id="satuanData" placeholder="Contoh: cm / menit / kg"
-        style="width:100%; padding:10px; border-radius:10px; border:1px solid #aaa;">
+                <div class="field-group">
+                    <label>Satuan data</label>
+                    <input type="text" id="satuanData" placeholder="Contoh: cm / menit / kg">
+                    <p class="helper-text">Satuan membantu data dibaca dengan tepat pada tahap berikutnya.</p>
+                </div>
+            </div>
+        </section>
 
-    <br><br><hr><br>
+        <section class="data-card">
+            <div class="section-head">
+                <span class="section-kicker">Pengumpulan Data</span>
+                <h2>Tambahkan data satu per satu secara bertahap</h2>
+                <p>
+                    Masukkan data numerik yang sudah kalian kumpulkan. Setiap data yang ditambahkan akan tampil
+                    sebagai kartu angka agar lebih mudah dibaca.
+                </p>
+            </div>
 
-    <!-- INPUT DATA -->
-    <p><b>Masukkan data numerik:</b></p>
+            <div class="collector-grid">
+                <div class="input-panel">
+                    <div class="single-input-row">
+                        <input type="number" id="singleDataInput" placeholder="Masukkan satu data angka">
+                        <button onclick="tambahData()">Tambahkan Data</button>
+                    </div>
 
-    <div id="inputArea"></div>
+                    <div class="mini-actions">
+                        <button class="secondary-action soft" onclick="hapusDataTerakhir()">Hapus Data Terakhir</button>
+                        <button class="secondary-action soft" onclick="resetData()">Reset Data</button>
+                    </div>
 
-    <div class="button" onclick="tambahBaris()">+ Tambah Data</div>
-    <br>
-    <div class="button" onclick="cekData()">✔ Simpan Data</div>
+                    <div class="progress-info">
+                        <strong id="progressCount">0 dari 25 data terkumpul</strong>
+                        <p id="progressMessage">
+                            Mulailah menambahkan data hasil pengukuran atau observasi kelompokmu.
+                        </p>
+                        <div class="progress-bar">
+                            <span id="progressBarFill"></span>
+                        </div>
+                    </div>
+                </div>
 
-    <br><br>
+                <div class="preview-panel">
+                    <h3>Data yang sudah terkumpul</h3>
+                    <p>Setiap angka yang ditambahkan akan muncul di area ini.</p>
+                    <div class="data-chip-wrap" id="dataChipWrap"></div>
+                </div>
+            </div>
+        </section>
 
-    <!-- REFLEKSI -->
-    <div id="refleksiSection" style="display:none;">
-        <hr><br>
-        <h3>Refleksi Singkat</h3>
-        <p>
-            Menurut kelompokmu, mengapa data yang telah dikumpulkan lebih sesuai
-            disajikan dalam bentuk <b>histogram</b> dibandingkan diagram batang?
-        </p>
+        <section class="summary-card">
+            <div class="section-head">
+                <span class="section-kicker">Ringkasan Data</span>
+                <h2>Lihat data sebelum lanjut ke aktivitas berikutnya</h2>
+                <p>Ringkasan ini membantu kelompokmu memahami data yang sudah dikumpulkan.</p>
+            </div>
 
-        <textarea id="refleksiAkt2"
-            style="width:100%; min-height:120px; border-radius:12px; padding:12px;"></textarea>
+            <div class="summary-grid">
+                <div class="summary-stat">
+                    <span>Jumlah data</span>
+                    <strong id="jumlahData">0</strong>
+                </div>
+                <div class="summary-stat">
+                    <span>Nilai terkecil</span>
+                    <strong id="nilaiMin">-</strong>
+                </div>
+                <div class="summary-stat">
+                    <span>Nilai terbesar</span>
+                    <strong id="nilaiMax">-</strong>
+                </div>
+            </div>
 
-        <br>
-        <div class="button" onclick="selesaiAktivitas2()">✔ Selesai & Lanjutkan</div>
-    </div>
+            <div class="summary-list">
+                <p>Pratinjau data terkumpul:</p>
+                <code id="previewDataText">Belum ada data yang dimasukkan.</code>
+            </div>
+        </section>
 
-</div>
+        <section class="data-card reflection-box">
+            <div class="section-head">
+                <span class="section-kicker">Refleksi Singkat</span>
+                <h2>Pikirkan hubungan data dan histogram</h2>
+                <p>
+                    Setelah melihat data yang terkumpul, jelaskan mengapa data tersebut lebih sesuai disajikan
+                    dalam bentuk histogram dibandingkan diagram batang.
+                </p>
+            </div>
 
-<script src="script.js"></script>
+            <textarea id="refleksiAkt2" placeholder="Tuliskan refleksi kelompokmu di sini..."></textarea>
+        </section>
 
-<script>
-// buat input awal (25 baris)
-for (let i = 0; i < 25; i++) tambahBaris();
+        <section class="data-card">
+            <div class="submit-panel">
+                <p>
+                    Pastikan identitas data telah diisi, minimal 25 data sudah terkumpul, dan refleksi singkat
+                    sudah dituliskan sebelum melanjutkan.
+                </p>
+                <div class="button" onclick="selesaiAktivitas2()">Simpan Data dan Lanjutkan</div>
+            </div>
+        </section>
+    </main>
 
-function tambahBaris() {
-    const div = document.createElement('div');
-    div.style.marginBottom = "8px";
-    div.innerHTML = `
-        <input type="number" class="dataInput"
-               placeholder="Masukkan angka"
-               style="padding:8px; width:180px; border-radius:8px; border:1px solid #aaa;">
-    `;
-    document.getElementById("inputArea").appendChild(div);
-}
+    <script src="script.js"></script>
+    <script>
+        let dataAktivitas = [];
 
-function cekData() {
-    const namaData = document.getElementById("namaData").value.trim();
-    const satuanData = document.getElementById("satuanData").value.trim();
-    const inputs = document.querySelectorAll(".dataInput");
-    let data = [];
+        function siapkanAktivitas2() {
+            updateTampilanData();
+            document.getElementById("singleDataInput").addEventListener("keydown", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    tambahData();
+                }
+            });
+        }
 
-    if (!namaData || !satuanData) {
-        alert("Nama data dan satuan harus diisi terlebih dahulu.");
-        return;
-    }
+        function pilihKonteks(nama, satuan, elemen) {
+            document.getElementById("namaData").value = nama;
+            document.getElementById("satuanData").value = satuan;
 
-    inputs.forEach(i => {
-        let val = i.value.trim();
-        if (val !== "" && !isNaN(val)) data.push(Number(val));
-    });
+            document.querySelectorAll(".context-card").forEach((card) => card.classList.remove("active"));
+            elemen.classList.add("active");
+        }
 
-    if (data.length < 25) {
-        alert("Minimal harus ada 25 data yang valid.");
-        return;
-    }
+        function tambahData() {
+            const input = document.getElementById("singleDataInput");
+            const nilai = input.value.trim();
 
-    // simpan ke localStorage
-    localStorage.setItem("namaData", namaData);
-    localStorage.setItem("satuanData", satuanData);
-    localStorage.setItem("dataAktivitas2", JSON.stringify(data));
+            if (nilai === "" || isNaN(nilai)) {
+                alert("Masukkan satu data numerik yang valid.");
+                return;
+            }
 
-    alert("Data berhasil disimpan. Lanjutkan ke refleksi.");
+            dataAktivitas.push(Number(nilai));
+            input.value = "";
+            input.focus();
+            updateTampilanData();
+        }
 
-    document.getElementById("refleksiSection").style.display = "block";
-}
+        function hapusDataTerakhir() {
+            if (dataAktivitas.length === 0) {
+                alert("Belum ada data yang bisa dihapus.");
+                return;
+            }
 
-function selesaiAktivitas2() {
-    const refleksi = document.getElementById("refleksiAkt2").value.trim();
+            dataAktivitas.pop();
+            updateTampilanData();
+        }
 
-    if (!refleksi) {
-        alert("Refleksi harus diisi.");
-        return;
-    }
+        function resetData() {
+            if (dataAktivitas.length === 0) return;
 
-    localStorage.setItem("refleksiAktivitas2", refleksi);
-    localStorage.setItem("aktivitas2", "true");
+            const yakin = confirm("Apakah kamu yakin ingin menghapus semua data yang sudah dimasukkan?");
+            if (!yakin) return;
 
-    alert("Aktivitas 2 selesai. Lanjut ke Aktivitas 3.");
-    window.location.href = "beranda.html";
-}
-</script>
+            dataAktivitas = [];
+            updateTampilanData();
+        }
 
+        function updateTampilanData() {
+            const wrap = document.getElementById("dataChipWrap");
+            const progressCount = document.getElementById("progressCount");
+            const progressMessage = document.getElementById("progressMessage");
+            const progressBarFill = document.getElementById("progressBarFill");
+            const jumlahData = document.getElementById("jumlahData");
+            const nilaiMin = document.getElementById("nilaiMin");
+            const nilaiMax = document.getElementById("nilaiMax");
+            const previewDataText = document.getElementById("previewDataText");
+
+            wrap.innerHTML = "";
+
+            if (dataAktivitas.length === 0) {
+                wrap.innerHTML = "<p style='color:#6a7294;'>Belum ada data yang ditambahkan.</p>";
+                previewDataText.textContent = "Belum ada data yang dimasukkan.";
+                nilaiMin.textContent = "-";
+                nilaiMax.textContent = "-";
+            } else {
+                dataAktivitas.forEach((nilai) => {
+                    const chip = document.createElement("div");
+                    chip.className = "data-chip";
+                    chip.textContent = nilai;
+                    wrap.appendChild(chip);
+                });
+
+                previewDataText.textContent = dataAktivitas.join(", ");
+                nilaiMin.textContent = Math.min(...dataAktivitas);
+                nilaiMax.textContent = Math.max(...dataAktivitas);
+            }
+
+            jumlahData.textContent = dataAktivitas.length;
+            progressCount.textContent = `${dataAktivitas.length} dari 25 data terkumpul`;
+
+            const persen = Math.min((dataAktivitas.length / 25) * 100, 100);
+            progressBarFill.style.width = `${persen}%`;
+
+            if (dataAktivitas.length === 0) {
+                progressMessage.textContent = "Mulailah menambahkan data hasil pengukuran atau observasi kelompokmu.";
+            } else if (dataAktivitas.length < 25) {
+                progressMessage.textContent = "Data sudah mulai terkumpul. Lanjutkan sampai minimal 25 data.";
+            } else {
+                progressMessage.textContent = "Target minimal data sudah tercapai. Kamu masih bisa menambahkan data jika diperlukan.";
+            }
+        }
+
+        function selesaiAktivitas2() {
+            const namaData = document.getElementById("namaData").value.trim();
+            const satuanData = document.getElementById("satuanData").value.trim();
+            const refleksi = document.getElementById("refleksiAkt2").value.trim();
+
+            if (!namaData || !satuanData) {
+                alert("Nama data dan satuan harus diisi terlebih dahulu.");
+                return;
+            }
+
+            if (dataAktivitas.length < 25) {
+                alert("Minimal harus ada 25 data yang valid.");
+                return;
+            }
+
+            if (!refleksi) {
+                alert("Refleksi harus diisi.");
+                return;
+            }
+
+            localStorage.setItem("namaData", namaData);
+            localStorage.setItem("satuanData", satuanData);
+            localStorage.setItem("dataAktivitas2", JSON.stringify(dataAktivitas));
+            localStorage.setItem("refleksiAktivitas2", refleksi);
+            localStorage.setItem("aktivitas2", "true");
+
+            alert("Aktivitas 2 selesai. Lanjut ke Aktivitas 3.");
+            window.location.href = "beranda.html";
+        }
+    </script>
 </body>
 </html>
-

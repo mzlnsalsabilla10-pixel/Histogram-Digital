@@ -1,362 +1,635 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Aktivitas 4 - Histogram</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body { font-family: Arial, sans-serif; background:#f4f6ff; }
-
-.box{
-  max-width:950px;
-  margin:30px auto;
-  background:white;
-  padding:30px;
-  border-radius:20px;
-  box-shadow:0 8px 20px rgba(0,0,0,.08);
-}
-
-.slider-box{margin:10px 0}
-
-.histogram-wrapper{
-  position:relative;
-  padding:30px;
-}
-
-.axis-x, .axis-y{
-  position:absolute;
-  font-weight:bold;
-}
-
-.axis-x{bottom:0; left:50%; transform:translateX(-50%);}
-.axis-y{top:50%; left:-40px; transform:rotate(-90deg) translateY(-50%);}
-
-.histogram-area{
-  display:flex;
-  align-items:flex-end;
-  height:260px;
-  border-left:3px solid black;
-  border-bottom:3px solid black;
-  padding-left:5px;
-  gap:0;
-}
-
-.bar-wrap{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:stretch;
-}
-
-.bar{
-  width:100%;
-  background:#6C4DDC;
-  color:white;
-  font-size:12px;
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  border-right:1px solid #f4f6ff;
-}
-
-.bar-label{
-  font-size:12px;
-  margin-top:6px;
-  text-align:center;
-  padding:0 4px;
-  word-break:break-word;
-}
-
-.bar-label{font-size:12px; margin-top:6px}
-
-.btn{
-  background:#6C4DDC;
-  color:white;
-  padding:12px 22px;
-  border-radius:14px;
-  cursor:pointer;
-  display:inline-block;
-  margin-top:20px;
-}
-.btn:hover{background:#5940b7}
-
-textarea{width:100%;padding:12px;border-radius:12px}
-</style>
+    <meta charset="UTF-8">
+    <title>Aktivitas 4 - Studio Histogram Digital</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .studio-wrap { max-width: 1240px; margin: 0 auto; display: grid; gap: 22px; }
+        .studio-hero, .studio-card { background: rgba(255,255,255,.92); border: 1px solid rgba(86,99,164,.16); border-radius: 30px; box-shadow: 0 18px 50px rgba(49,84,215,.1); }
+        .studio-hero { padding: 34px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 22px; }
+        .studio-hero h1, .studio-title h2, .guide-card h3, .panel-card h3, .chart-shell h3 { font-family: 'Sora', sans-serif; color: #21358e; }
+        .studio-hero h1 { font-size: clamp(2rem,3vw,3rem); margin-bottom: 14px; }
+        .studio-hero p, .studio-title p, .guide-card p, .panel-card p, .hint-box p, .result-box p, .reflection-card p { color: #5f678c; line-height: 1.8; }
+        .studio-pill { display: inline-flex; padding: 10px 16px; border-radius: 999px; background: rgba(49,84,215,.08); color: #3154d7; font-weight: 700; margin-bottom: 16px; }
+        .hero-side { background: linear-gradient(135deg, rgba(49,84,215,.08), rgba(24,183,163,.14)); border-radius: 24px; padding: 24px; }
+        .hero-side ul { margin-top: 10px; padding-left: 20px; color: #4d557d; line-height: 1.8; }
+        .steps { padding: 24px; display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+        .step-card { padding: 16px; border-radius: 22px; border: 1px solid rgba(86,99,164,.14); background: #f8faff; transition: .3s ease; }
+        .step-card.active { background: rgba(49,84,215,.08); transform: translateY(-3px); }
+        .step-card.done { background: rgba(24,183,163,.1); }
+        .step-no { width: 38px; height: 38px; border-radius: 14px; display: flex; align-items: center; justify-content: center; background: rgba(49,84,215,.12); color: #3154d7; font-weight: 800; margin-bottom: 12px; }
+        .step-card.done .step-no { background: rgba(24,183,163,.16); color: #0b7f72; }
+        .studio-card { padding: 28px; }
+        .step-panel { display: none; animation: fadeUp .4s ease; }
+        .step-panel.active { display: block; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(14px);} to { opacity: 1; transform: translateY(0);} }
+        .kicker { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #3154d7; margin-bottom: 10px; }
+        .guide-grid, .build-grid, .check-grid { display: grid; gap: 20px; }
+        .guide-grid { grid-template-columns: 1fr 1fr; margin-top: 24px; }
+        .video-box, .guide-card, .panel-card, .form-card, .result-box, .reflection-card { background: #f8faff; border: 1px solid rgba(86,99,164,.14); border-radius: 24px; padding: 20px; }
+        .reference-shell { margin-top: 20px; }
+        .video-frame { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 20px; background: #dfe6ff; margin-top: 14px; }
+        .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+        .video-fallback { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+        .video-fallback a { text-decoration: none; }
+        .video-fallback p { color: #6a7294; font-size: 14px; }
+        .guide-list { display: grid; gap: 14px; margin-top: 16px; }
+        .guide-item { background: white; border: 1px solid rgba(86,99,164,.14); border-radius: 18px; padding: 14px 16px; }
+        .guide-item strong { color: #21358e; display: block; margin-bottom: 6px; }
+        .build-grid { grid-template-columns: .95fr 1.05fr; margin-top: 24px; }
+        .data-table-shell { margin-top: 14px; border-radius: 20px; overflow-x: auto; overflow-y: hidden; border: 1px solid rgba(86,99,164,.14); background: white; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 14px 12px; text-align: center; border-bottom: 1px solid rgba(86,99,164,.12); }
+        th { background: #f3f6ff; color: #21358e; }
+        .chart-settings { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+        .field label { display: block; margin-bottom: 8px; font-weight: 700; color: #21358e; }
+        .field input { width: 100%; padding: 12px 14px; border-radius: 16px; border: 1px solid rgba(86,99,164,.18); background: white; }
+        .hint-box { margin-top: 16px; padding: 16px 18px; border-radius: 18px; background: rgba(255,184,92,.12); border: 1px solid rgba(255,184,92,.28); }
+        .studio-actions, .nav-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-top: 20px; }
+        .studio-btn { border: none; border-radius: 16px; padding: 13px 18px; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, #3154d7, #5e7bff); color: white; }
+        .studio-btn.secondary { background: rgba(49,84,215,.14); color: #21358e; border: 1px solid rgba(49,84,215,.2); }
+        .studio-btn:disabled { opacity: .45; cursor: not-allowed; }
+        .chart-shell { background: white; border: 1px solid rgba(86,99,164,.14); border-radius: 24px; padding: 22px; }
+        .chart-meta { display: grid; gap: 6px; margin-bottom: 18px; text-align: center; }
+        .chart-meta strong { color: #21358e; font-size: 20px; }
+        .chart-meta span { color: #5f678c; }
+        .histogram-stage { position: relative; padding: 18px 18px 72px 52px; border-radius: 22px; background: linear-gradient(180deg, rgba(247,249,255,.96), rgba(255,255,255,.98)); border: 1px solid rgba(86,99,164,.12); overflow: hidden; }
+        .y-label { position: absolute; left: 8px; top: 50%; transform: rotate(-90deg) translateY(-50%); transform-origin: left top; color: #21358e; font-weight: 700; }
+        .x-label { text-align: center; margin-top: 12px; color: #21358e; font-weight: 700; }
+        .chart-grid { position: absolute; inset: 18px 18px 72px 52px; pointer-events: none; background-image: linear-gradient(to top, rgba(49,84,215,.12) 1px, transparent 1px), linear-gradient(to right, rgba(49,84,215,.05) 1px, transparent 1px); background-size: 100% 20%, 14.285% 100%; }
+        .bars-area { position: relative; z-index: 1; height: 360px; display: flex; align-items: flex-end; gap: 0; border-left: 3px solid #21358e; border-bottom: 3px solid #21358e; background: linear-gradient(180deg, rgba(49,84,215,.03), rgba(49,84,215,.01)); }
+        .bar-group { flex: 1 1 0; min-width: 0; height: 100%; display: flex; align-items: flex-end; justify-content: stretch; }
+        .bar { width: 100%; min-width: 0; border-radius: 0; background: linear-gradient(180deg, #8fa8ff 0%, #5877ee 48%, #3154d7 100%); display: flex; align-items: flex-start; justify-content: center; color: white; font-size: 13px; font-weight: 700; padding-top: 8px; box-sizing: border-box; transition: height .45s ease, background .3s ease; box-shadow: inset 0 1px 0 rgba(255,255,255,.35); }
+        .bar-group:first-child .bar { border-top-left-radius: 10px; }
+        .bar-group:last-child .bar { border-top-right-radius: 10px; }
+        .axis-ticks { position: absolute; left: 16px; top: 18px; bottom: 72px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; color: #6a7294; font-size: 12px; }
+        .axis-ticks div { position: relative; padding-right: 6px; }
+        .x-boundaries { position: absolute; left: 52px; right: 18px; bottom: 18px; height: 32px; color: #4d557d; font-size: 12px; }
+        .boundary-tick { position: absolute; bottom: 0; text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateX(-50%); }
+        .boundary-tick.edge-start { transform: translateX(0); }
+        .boundary-tick.edge-end { transform: translateX(-100%); }
+        .boundary-tick::before { content: ""; position: absolute; top: -16px; left: 50%; transform: translateX(-50%); width: 2px; height: 10px; border-radius: 999px; background: rgba(33,53,142,.28); }
+        .freq-input-grid { display: grid; gap: 12px; margin-top: 16px; }
+        .freq-input-row { display: grid; grid-template-columns: 1fr 120px; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 18px; background: white; border: 1px solid rgba(86,99,164,.14); }
+        .freq-input-row strong { color: #21358e; }
+        .freq-input-row input { width: 100%; padding: 10px 12px; border-radius: 14px; border: 1px solid rgba(86,99,164,.18); background: #f8faff; }
+        .system-chart { display: none; }
+        .feedback-list { margin-top: 12px; padding-left: 18px; color: #4d557d; line-height: 1.8; }
+        .result-pill { display: inline-flex; margin-top: 12px; padding: 10px 14px; border-radius: 999px; background: rgba(24,183,163,.14); color: #0b7f72; font-weight: 800; }
+        .reflection-card textarea { width: 100%; min-height: 140px; margin-top: 14px; padding: 14px 16px; border-radius: 18px; border: 1px solid rgba(86,99,164,.18); background: white; resize: vertical; }
+        .studio-topbar { position: sticky; top: 12px; z-index: 1000; }
+        @media (max-width: 980px) {
+            .studio-hero, .guide-grid, .build-grid, .check-grid, .chart-settings { grid-template-columns: 1fr; }
+            .steps { grid-template-columns: 1fr; }
+            .bars-area { height: 300px; }
+            .freq-input-row { grid-template-columns: 1fr; }
+            .x-boundaries { font-size: 10px; }
+            .boundary-tick { white-space: normal; line-height: 1.25; }
+            .histogram-stage { padding-left: 44px; padding-right: 12px; }
+            .chart-grid { inset: 18px 12px 72px 44px; }
+            .bars-area { border-left-width: 2px; border-bottom-width: 2px; }
+            .axis-ticks { left: 8px; }
+            .x-boundaries { left: 44px; right: 12px; }
+        }
+        @media (max-width: 640px) {
+            .studio-hero, .studio-card { padding: 22px; border-radius: 24px; }
+            .steps { padding: 18px; }
+            .chart-shell, .panel-card, .form-card, .result-box, .reflection-card { padding: 18px; border-radius: 20px; }
+            .chart-meta strong { font-size: 18px; }
+            .histogram-stage { padding: 16px 10px 82px 42px; }
+            .chart-grid { inset: 16px 10px 82px 42px; }
+            .bars-area { height: 240px; }
+            .axis-ticks { font-size: 11px; top: 16px; bottom: 82px; }
+            .y-label { left: 4px; font-size: 12px; }
+            .x-boundaries { left: 42px; right: 10px; bottom: 14px; font-size: 9px; height: 42px; }
+            .boundary-tick::before { top: -13px; height: 8px; }
+        }
+    </style>
 </head>
+<body onload="cekAkses(4); muatStudio(); initStudio();">
+    <header class="topbar studio-topbar">
+        <div class="brand-mark">
+            <span class="brand-dot"></span>
+            <div>
+                <strong>Histogram Digital</strong>
+                <p>Aktivitas 4</p>
+            </div>
+        </div>
+        <nav class="topnav">
+            <a href="index.html#tujuan-pembelajaran">Tujuan Pembelajaran</a>
+            <a href="beranda.html">Beranda Belajar</a>
+        </nav>
+    </header>
 
-<body onload="muatData()">
+    <main class="studio-wrap">
+        <section class="studio-hero">
+            <div>
+                <span class="studio-pill">Aktivitas 4 - Studio Histogram Digital</span>
+                <h1>Bangun histogram dari tabel distribusi frekuensi</h1>
+                <p>Pada aktivitas ini, murid mempelajari cara membuat histogram, lalu membangun histogram digital berdasarkan tabel distribusi frekuensi yang sudah disusun pada Aktivitas 3.</p>
+            </div>
+            <div class="hero-side">
+                <h3>Fokus aktivitas ini</h3>
+                <ul>
+                    <li>Memahami langkah membuat histogram dari tabel distribusi frekuensi.</li>
+                    <li>Menyusun komponen grafik: judul, sumbu, dan skala.</li>
+                    <li>Menginterpretasikan histogram yang telah dibuat.</li>
+                </ul>
+            </div>
+        </section>
 
-<div class="box">
-    <h2>Aktivitas 4 — Membuat Histogram</h2>
+        <section class="studio-card steps">
+            <div class="step-card active" id="stepCard1"><div class="step-no">1</div><strong>Pahami Cara Membuat Histogram</strong><p>Tonton tutorial dan pahami elemen penting histogram.</p></div>
+            <div class="step-card" id="stepCard2"><div class="step-no">2</div><strong>Siapkan Komponen Grafik</strong><p>Tentukan judul, sumbu, dan acuan tabel frekuensi.</p></div>
+            <div class="step-card" id="stepCard3"><div class="step-no">3</div><strong>Bangun Histogram</strong><p>Isi frekuensi lalu bangun histogram digital.</p></div>
+            <div class="step-card" id="stepCard4"><div class="step-no">4</div><strong>Cek dan Interpretasi</strong><p>Bandingkan hasil dan tuliskan interpretasi histogram.</p></div>
+        </section>
 
-    <p>
-        Pada aktivitas ini, kamu akan menggunakan tabel distribusi frekuensi
-        untuk menyusun histogram dan membandingkannya dengan histogram sistem.
-    </p>
+        <section class="step-panel active" id="step1">
+            <div class="studio-card">
+                <div class="studio-title">
+                    <span class="kicker">Tutorial Histogram</span>
+                    <h2>Pahami langkah membuat histogram sebelum mulai</h2>
+                    <p>Video dan panduan singkat berikut membantu kamu memahami hubungan antara tabel distribusi frekuensi dan histogram.</p>
+                </div>
+                <div class="guide-grid">
+                    <div class="video-box">
+                        <h3>Video Referensi</h3>
+                        <p>Tonton video singkat ini sebagai panduan tambahan sebelum membuat histogram.</p>
+                        <div class="video-frame">
+                            <iframe src="https://www.youtube-nocookie.com/embed/UqWLcTirNjU?rel=0&modestbranding=1" title="Tutorial membuat histogram" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-fallback">
+                            <a class="studio-btn secondary" href="https://www.youtube.com/watch?v=UqWLcTirNjU" target="_blank" rel="noopener noreferrer">Buka Video di YouTube</a>
+                            <p>Gunakan tautan ini jika video tidak dapat diputar langsung di dalam web.</p>
+                        </div>
+                    </div>
+                    <div class="guide-card">
+                        <h3>Langkah Membuat Histogram</h3>
+                        <div class="guide-list">
+                            <div class="guide-item"><strong>1. Baca tabel distribusi frekuensi</strong><p>Perhatikan interval kelas dan frekuensi pada setiap kelas.</p></div>
+                            <div class="guide-item"><strong>2. Siapkan sumbu grafik</strong><p>Sumbu X memuat jenis data yang diukur beserta satuannya, sedangkan sumbu Y memuat frekuensi.</p></div>
+                            <div class="guide-item"><strong>3. Buat batang histogram</strong><p>Tinggi batang mengikuti frekuensi, dan antarbatang saling menempel.</p></div>
+                            <div class="guide-item"><strong>4. Lengkapi komponen grafik</strong><p>Tuliskan judul grafik, label sumbu, dan gunakan skala yang sesuai.</p></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-row">
+                    <span></span>
+                    <button class="studio-btn" onclick="goStudioStep(2)">Lanjut ke Komponen Grafik</button>
+                </div>
+            </div>
+        </section>
 
-    <h3>Tujuan Aktivitas</h3>
-    <ol>
-        <li>Menggunakan data terurut dari Aktivitas 2 sebagai dasar pembuatan histogram.</li>
-        <li>Menyesuaikan frekuensi tiap kelas berdasarkan tabel distribusi frekuensi.</li>
-        <li>Mengamati perubahan bentuk histogram akibat perubahan frekuensi.</li>
-        <li>Membandingkan histogram buatanmu dengan histogram sistem.</li>
-    </ol>
-    <p id="judulData"></p>
-<h3>Data Terurut (hasil Aktivitas 2)</h3>
-<p>
-    Data berikut merupakan data yang kamu kumpulkan pada Aktivitas 2,
-    kemudian diurutkan dari nilai terkecil ke terbesar.
-</p>
-<p id="dataTerurut"></p>
-</div>
+        <section class="step-panel" id="step2">
+            <div class="studio-card">
+                <div class="studio-title">
+                    <span class="kicker">Komponen Grafik</span>
+                    <h2>Siapkan informasi dasar histogram</h2>
+                    <p>Lengkapi komponen grafik dan perhatikan tabel distribusi frekuensi sebagai dasar pembuatan histogram.</p>
+                </div>
 
+                <div class="build-grid">
+                    <div class="panel-card">
+                        <h3>Tabel Distribusi Frekuensi</h3>
+                        <p>Gunakan tabel ini sebagai acuan untuk membangun histogram.</p>
+                        <div class="data-table-shell">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Kelas</th>
+                                        <th>Interval Kelas</th>
+                                        <th>Frekuensi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableAcuanBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
 
-<div class="box">
-<h3>Atur Frekuensi Kelas</h3>
-<p>
-    Geser nilai frekuensi pada setiap kelas sesuai dengan hasil perhitungan
-    pada tabel distribusi frekuensi di Aktivitas 3.
-</p>
-<p>
-    ⚠️ Perubahan nilai frekuensi akan langsung memengaruhi
-    tinggi batang histogram di bawah.
-</p>
-<table border="1" width="100%" cellpadding="8" style="border-collapse:collapse">
-  <thead>
-    <tr>
-      <th>Kelas</th>
-      <th>Interval Kelas</th>
-      <th>Frekuensi (Geser)</th>
-      <th>Nilai</th>
-    </tr>
-  </thead>
-  <tbody id="tabelFrekuensiUser"></tbody>
-</table>
+                    <div class="form-card">
+                        <h3>Komponen Grafik</h3>
+                        <div class="chart-settings">
+                            <div class="field">
+                                <label>Judul Histogram</label>
+                                <input type="text" id="judulGrafikInput" placeholder="Contoh: Histogram Tinggi Badan">
+                            </div>
+                            <div class="field">
+                                <label>Label Sumbu X</label>
+                                <input type="text" id="labelXInput" placeholder="Contoh: Tinggi Badan (cm)">
+                            </div>
+                            <div class="field">
+                                <label>Label Sumbu Y</label>
+                                <input type="text" id="labelYInput" placeholder="Contoh: Frekuensi">
+                            </div>
+                            <div class="field">
+                                <label>Skala Maksimum Sumbu Y</label>
+                                <input type="number" id="maxYInput" placeholder="Contoh: 10">
+                            </div>
+                        </div>
+                        <div class="hint-box">
+                            <p>Gunakan skala sumbu Y yang sedikit lebih besar atau sama dengan frekuensi tertinggi agar batang histogram terlihat jelas.</p>
+                        </div>
+                    </div>
+                </div>
 
-</div>
+                <div class="nav-row">
+                    <button class="studio-btn secondary" onclick="goStudioStep(1)">Kembali ke Tutorial</button>
+                    <button class="studio-btn" onclick="cekKomponenGrafik()">Lanjut ke Studio Histogram</button>
+                </div>
+            </div>
+        </section>
 
-<div class="box">
-<h3 id="judulGrafikUser"></h3>
+        <section class="step-panel" id="step3">
+            <div class="studio-card">
+                <div class="studio-title">
+                    <span class="kicker">Studio Histogram</span>
+                    <h2>Bangun histogram digitalmu</h2>
+                    <p>Isi frekuensi pada setiap interval sesuai tabel distribusi frekuensi, lalu amati bagaimana histogram terbentuk secara dinamis.</p>
+                </div>
 
-<div class="histogram-wrapper">
-<div class="axis-y">Frekuensi ↑</div>
-<div class="axis-x">Kelas Interval →</div>
+                <div class="build-grid">
+                    <div class="panel-card">
+                        <h3>Isi Frekuensi Histogram</h3>
+                        <p>Masukkan frekuensi setiap kelas sesuai tabel distribusi frekuensi.</p>
+                        <div class="freq-input-grid" id="freqInputGrid"></div>
+                    </div>
 
-<div class="histogram-area" id="histogramUser"></div>
-</div>
+                    <div class="chart-shell">
+                        <h3>Histogram Digital</h3>
+                        <div class="chart-meta">
+                            <strong id="displayJudulGrafik">Histogram</strong>
+                        </div>
 
-<div class="btn" onclick="tampilkanHistogramSistem()">Bandingkan dengan Histogram Sistem</div>
-</div>
+                        <div class="histogram-stage">
+                            <div class="axis-ticks" id="axisTicks"></div>
+                            <div class="chart-grid"></div>
+                            <div class="y-label" id="displayLabelY">Frekuensi</div>
+                            <div class="bars-area" id="barsArea"></div>
+                            <div class="x-boundaries" id="xBoundaries"></div>
+                        </div>
+                        <div class="x-label" id="displayLabelX">Tepi Kelas</div>
+                    </div>
+                </div>
 
-<div class="box" id="systemBox" style="display:none">
-<h3 id="judulGrafikSistem"></h3>
+                <div class="nav-row">
+                    <button class="studio-btn secondary" onclick="goStudioStep(2)">Kembali ke Komponen Grafik</button>
+                    <button class="studio-btn" id="btnCekHistogram" onclick="cekHistogram()">Periksa Histogram</button>
+                </div>
+            </div>
+        </section>
 
-<div class="histogram-wrapper">
-<div class="axis-y">Frekuensi ↑</div>
-<div class="axis-x">Kelas Interval →</div>
+        <section class="step-panel" id="step4">
+            <div class="studio-card">
+                <div class="studio-title">
+                    <span class="kicker">Cek dan Interpretasi</span>
+                    <h2>Periksa hasil histogram dan tuliskan interpretasimu</h2>
+                    <p>Bandingkan histogram yang kamu buat dengan data acuan, lalu jelaskan hal penting yang kamu temukan dari histogram tersebut.</p>
+                </div>
 
-<div class="histogram-area" id="histogramSystem"></div>
-</div>
-</div>
+                <div class="check-grid">
+                    <div class="result-box">
+                        <h3>Hasil Pemeriksaan</h3>
+                        <p id="hasilPemeriksaanText">Histogram belum diperiksa.</p>
+                        <span class="result-pill" id="resultPill" style="display:none;">0%</span>
+                        <ul class="feedback-list" id="feedbackList"></ul>
+                    </div>
+                </div>
 
-<div class="box" id="hasilKecocokan" style="display:none;">
-    <h3>Hasil Kecocokan</h3>
-    <p id="persenCocok"></p>
-    <ul id="detailSalah"></ul>
-</div>
+                <div class="chart-shell reference-shell">
+                    <h3>Histogram Acuan yang Benar</h3>
+                    <p>Lihat kembali histogram acuan ini saat menuliskan refleksi dan interpretasimu.</p>
+                    <div class="chart-meta">
+                        <strong id="referenceJudulGrafik">Histogram Acuan</strong>
+                    </div>
 
-<div class="box" id="refleksiBox" style="display:none">
-<h3>Pertanyaan</h3>
-<p>Jawablah pertanyaan berikut berdasarkan hasil yang kamu peroleh.</p>
-<ol>
-    <li>Apa perbedaan utama antara histogram yang kamu buat dan histogram sistem?</li>
-    <li>Menurutmu, kesalahan apa yang paling berpengaruh terhadap perbedaan tersebut?</li>
-    <li>Jika kamu mengulang aktivitas ini, bagian mana yang akan kamu perbaiki terlebih dahulu?</li>
-    <li>Apa hubungan antara tabel distribusi frekuensi dan bentuk histogram?</li>
-</ol>
-<textarea id="refleksi"></textarea>
-</div>
+                    <div class="histogram-stage">
+                        <div class="axis-ticks" id="referenceAxisTicks"></div>
+                        <div class="chart-grid"></div>
+                        <div class="y-label" id="referenceLabelY">Frekuensi</div>
+                        <div class="bars-area" id="referenceBarsArea"></div>
+                        <div class="x-boundaries" id="referenceXBoundaries"></div>
+                    </div>
+                    <div class="x-label" id="referenceLabelX">Tepi Kelas</div>
+                </div>
 
-<div class="btn" onclick="submitAktivitas4()">
-  ✔ Submit & Simpan Pekerjaan
-</div>
+                <div class="reflection-card reference-shell">
+                    <h3>Refleksi dan Interpretasi</h3>
+                    <p>Tuliskan interpretasimu terhadap histogram yang telah dibuat. Kamu bisa membahas kelas dengan frekuensi tertinggi, frekuensi terendah, atau pola sebaran data.</p>
+                    <textarea id="refleksi" placeholder="Tuliskan interpretasimu terhadap histogram di sini..."></textarea>
+                </div>
 
+                <div class="nav-row">
+                    <button class="studio-btn secondary" onclick="goStudioStep(3)">Kembali ke Studio Histogram</button>
+                    <button class="studio-btn" onclick="submitAktivitas4()">Simpan dan Lanjutkan</button>
+                </div>
+            </div>
+        </section>
+    </main>
 
-<script>
-let intervalKelas=[], frekuensiBenar=[], sliderValues=[], lebarKelas=[];
-const tinggiMaksBar = 240;
+    <script src="script.js"></script>
+    <script>
+        let intervalKelas = [];
+        let frekuensiBenar = [];
+        let frekuensiUser = [];
+        let namaData = "";
+        let satuanData = "";
+        let skorKecocokan = 0;
 
-function muatData(){␊
-  const data=JSON.parse(localStorage.getItem("dataAktivitas2"));␊
-  intervalKelas=JSON.parse(localStorage.getItem("intervalKelas"));␊
-  frekuensiBenar=JSON.parse(localStorage.getItem("frekuensiBenar"));␊
-  const nama=localStorage.getItem("namaData")||"Data Pengukuran";
+        function parseInterval(intervalText) {
+            const angka = intervalText.match(/-?\d+(?:\.\d+)?/g) || [];
+            if (angka.length < 2) {
+                return { bawah: 0, atas: 0 };
+            }
 
-  if(!data||!intervalKelas||!frekuensiBenar){
-    alert("Aktivitas 3 belum selesai");
-    location.href="index.html";
-    return;
-  }
-
-document.getElementById("dataTerurut").innerText=data.sort((a,b)=>a-b).join(", ");
-  document.getElementById("judulGrafikUser").innerText="Histogram "+nama;
-  document.getElementById("judulGrafikSistem").innerText="Histogram "+nama+" (Sistem)";
-
-  lebarKelas = intervalKelas.map(hitungLebarKelas);
-
-  buatSlider();
-}
-
-function buatSlider(){
-  const tbody=document.getElementById("tabelFrekuensiUser");
-  tbody.innerHTML="";
-  sliderValues=[];
-  const maxFrekuensi = Math.max(1, ...frekuensiBenar);
-  const maxSlider = Math.max(10, maxFrekuensi + 5);
-
-  intervalKelas.forEach((interval,i)=>{
-    sliderValues.push(0);
-
-    const tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td>K${i+1}</td>
-      <td>${interval}</td>
-      <td>
-        <input type="range" min="0" max="${maxSlider}" value="0"
-          oninput="ubahBar(${i},this.value)">
-      </td>
-      <td><b id="nilai${i}">0</b></td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-function hitungLebarKelas(interval){
-  if (!interval || typeof interval !== "string") return 1;
-  const cleaned = interval.replace(/[–—]/g, "-");
-  const parts = cleaned.split("-").map(p => parseFloat(p.trim()));
-  if (parts.length !== 2 || Number.isNaN(parts[0]) || Number.isNaN(parts[1])) {
-    return 1;
-  }
-  return Math.max(1, parts[1] - parts[0] + 1);
-}
-
-function hitungSkalaMaks() {
-  return Math.max(1, ...frekuensiBenar);
-}
-
-function buatBar(container,height,label,isSystem,frekuensi,lebar){
-  const wrap=document.createElement("div");
-  wrap.className="bar-wrap";
-  wrap.style.flexGrow = lebar;
-
-  const bar=document.createElement("div");
-  bar.className=isSystem?"bar system":"bar";
-  bar.style.height=height+"px";
-  bar.innerText=frekuensi;
-
-  const lbl=document.createElement("div");
-  lbl.className="bar-label";
-  lbl.innerText=label;
-
-  wrap.appendChild(bar);
-  wrap.appendChild(lbl);
-  document.getElementById(container).appendChild(wrap);
-}
-
-function ubahBar(i,val){
-  sliderValues[i]=Number(val);
-  document.getElementById("nilai"+i).innerText=val;
-
-  renderHistogram("histogramUser", sliderValues, false);
-}
-
-function tampilkanHistogramSistem(){
-  renderHistogram("histogramSystem", frekuensiBenar, true);
-  systemBox.style.display="block";
-  refleksiBox.style.display="block";
-    hitungKecocokan(); 
-}
-
-function renderHistogram(container, values, isSystem) {
-  const area=document.getElementById(container);
-  area.innerHTML="";
-  const skalaMaks = hitungSkalaMaks();
-
-  values.forEach((v,idx)=>{
-    const tinggi = Math.round((v / skalaMaks) * tinggiMaksBar);
-    buatBar(container, tinggi, intervalKelas[idx], isSystem, v, lebarKelas[idx] || 1);
-  });
-}
-  
-function hitungKecocokan() {
-    let total = 0;
-    let detail = [];
-
-    sliderValues.forEach((fUser, i) => {
-        const fBenar = frekuensiBenar[i];
-
-        let skor;
-        if (fBenar === 0) {
-            skor = fUser === 0 ? 1 : 0;
-        } else {
-            skor = 1 - Math.abs(fUser - fBenar) / fBenar;
-            if (skor < 0) skor = 0;
+            return {
+                bawah: Number(angka[0]),
+                atas: Number(angka[1])
+            };
         }
 
-        total += skor;
-
-        if (fUser !== fBenar) {
-            detail.push(
-                `Kelas ${intervalKelas[i]}: frekuensi kamu ${fUser}, seharusnya ${fBenar}`
-            );
+        function formatBoundary(value) {
+            const angkaPositif = Math.abs(value);
+            return Number.isInteger(angkaPositif)
+                ? String(angkaPositif)
+                : angkaPositif.toFixed(1).replace(".0", "");
         }
-    });
 
-    const persen = Math.round((total / frekuensiBenar.length) * 100);
-    tampilkanHasil(persen, detail);
-}
+        function getClassBoundaries() {
+            if (!intervalKelas.length) return [];
 
+            const parsed = intervalKelas.map(parseInterval);
+            const boundaries = [parsed[0].bawah - 0.5];
 
-function tampilkanHasil(persen, detail) {
-    document.getElementById("hasilKecocokan").style.display = "block";
-    document.getElementById("persenCocok").innerHTML =
-        `<b>Persentase kecocokan histogram:</b> ${persen}%`;
+            parsed.forEach((item) => {
+                boundaries.push(item.atas + 0.5);
+            });
 
-    const ul = document.getElementById("detailSalah");
-    ul.innerHTML = "";
+            return boundaries;
+        }
 
-    if (detail.length === 0) {
-        ul.innerHTML = "<li>✅ Semua frekuensi sudah sesuai.</li>";
-    } else {
-        detail.forEach(d => {
-            const li = document.createElement("li");
-            li.innerText = d;
-            ul.appendChild(li);
-        });
-    }
-}
+        function initStudio() {
+            setStudioStep(1);
+        }
 
-function submitAktivitas4(){
-  const hasil = {
-    frekuensiUser: sliderValues,
-    frekuensiBenar: frekuensiBenar,
-    intervalKelas: intervalKelas,
-    refleksi: document.getElementById("refleksi").value,
-    kecocokan: document.getElementById("persenCocok").innerText
-  };
+        function muatStudio() {
+            const data = JSON.parse(localStorage.getItem("dataAktivitas2"));
+            intervalKelas = JSON.parse(localStorage.getItem("intervalKelas"));
+            frekuensiBenar = JSON.parse(localStorage.getItem("frekuensiBenar"));
+            namaData = localStorage.getItem("namaData") || "Data Pengukuran";
+            satuanData = localStorage.getItem("satuanData") || "";
 
-  localStorage.setItem("hasilAktivitas4", JSON.stringify(hasil));
-  localStorage.setItem("aktivitas4", "true");
+            if (!data || !intervalKelas || !frekuensiBenar) {
+                alert("Aktivitas 3 belum selesai.");
+                window.location.href = "beranda.html";
+                return;
+            }
 
-  alert("Aktivitas 4 berhasil disimpan.");
-  window.location.href = "beranda.html";
-}
+            frekuensiUser = intervalKelas.map(() => 0);
 
-</script>
+            const tbody = document.getElementById("tableAcuanBody");
+            tbody.innerHTML = "";
+            intervalKelas.forEach((interval, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>K${index + 1}</td><td>${interval}</td><td>${frekuensiBenar[index]}</td>`;
+                tbody.appendChild(row);
+            });
 
+            document.getElementById("judulGrafikInput").value = `Histogram ${namaData}`;
+            document.getElementById("labelXInput").value = satuanData ? `${namaData} (${satuanData})` : namaData;
+            document.getElementById("labelYInput").value = "Frekuensi";
+            document.getElementById("maxYInput").value = Math.max(...frekuensiBenar) + 1;
+
+            renderFreqInputs();
+            renderHistogram();
+        }
+
+        function setStudioStep(no) {
+            document.querySelectorAll(".step-panel").forEach((panel) => panel.classList.remove("active"));
+            document.querySelectorAll(".step-card").forEach((card) => card.classList.remove("active", "done"));
+            document.getElementById(`step${no}`).classList.add("active");
+            for (let i = 1; i <= 4; i++) {
+                if (i < no) document.getElementById(`stepCard${i}`).classList.add("done");
+                if (i === no) document.getElementById(`stepCard${i}`).classList.add("active");
+            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function goStudioStep(no) {
+            setStudioStep(no);
+        }
+
+        function cekKomponenGrafik() {
+            const judul = document.getElementById("judulGrafikInput").value.trim();
+            const labelX = document.getElementById("labelXInput").value.trim();
+            const labelY = document.getElementById("labelYInput").value.trim();
+            const maxY = Number(document.getElementById("maxYInput").value);
+
+            if (!judul || !labelX || !labelY || !maxY) {
+                alert("Lengkapi terlebih dahulu judul grafik, label sumbu, dan skala maksimum sumbu Y.");
+                return;
+            }
+
+            if (maxY < Math.max(...frekuensiBenar)) {
+                alert("Skala maksimum sumbu Y harus sama dengan atau lebih besar dari frekuensi tertinggi.");
+                return;
+            }
+
+            document.getElementById("displayJudulGrafik").innerText = judul;
+            document.getElementById("displayLabelX").innerText = labelX;
+            document.getElementById("displayLabelY").innerText = labelY;
+            renderHistogram();
+            setStudioStep(3);
+        }
+
+        function renderFreqInputs() {
+            const wrap = document.getElementById("freqInputGrid");
+            wrap.innerHTML = "";
+            intervalKelas.forEach((interval, index) => {
+                const row = document.createElement("div");
+                row.className = "freq-input-row";
+                row.innerHTML = `
+                    <strong>K${index + 1} | ${interval}</strong>
+                    <input type="number" min="0" value="${frekuensiUser[index]}" data-index="${index}" placeholder="Frekuensi">
+                `;
+                wrap.appendChild(row);
+            });
+
+            wrap.querySelectorAll("input").forEach((input) => {
+                input.addEventListener("input", (event) => {
+                    const idx = Number(event.target.dataset.index);
+                    frekuensiUser[idx] = Number(event.target.value) || 0;
+                    renderHistogram();
+                });
+            });
+        }
+
+        function renderHistogram() {
+            const maxY = Number(document.getElementById("maxYInput").value) || Math.max(...frekuensiBenar) + 1;
+            const judul = document.getElementById("judulGrafikInput").value.trim() || `Histogram ${namaData}`;
+            const labelX = document.getElementById("labelXInput").value.trim() || "Tepi Kelas";
+            const labelY = document.getElementById("labelYInput").value.trim() || "Frekuensi";
+
+            renderHistogramChart({
+                barsAreaId: "barsArea",
+                axisTicksId: "axisTicks",
+                xBoundariesId: "xBoundaries",
+                titleId: "displayJudulGrafik",
+                labelXId: "displayLabelX",
+                labelYId: "displayLabelY",
+                frekuensi: frekuensiUser,
+                maxY,
+                judul,
+                labelX,
+                labelY
+            });
+        }
+
+        function renderReferenceHistogram() {
+            const maxY = Number(document.getElementById("maxYInput").value) || Math.max(...frekuensiBenar) + 1;
+            const judul = (document.getElementById("judulGrafikInput").value.trim() || `Histogram ${namaData}`) + " (Acuan)";
+            const labelX = document.getElementById("labelXInput").value.trim() || "Tepi Kelas";
+            const labelY = document.getElementById("labelYInput").value.trim() || "Frekuensi";
+
+            renderHistogramChart({
+                barsAreaId: "referenceBarsArea",
+                axisTicksId: "referenceAxisTicks",
+                xBoundariesId: "referenceXBoundaries",
+                titleId: "referenceJudulGrafik",
+                labelXId: "referenceLabelX",
+                labelYId: "referenceLabelY",
+                frekuensi: frekuensiBenar,
+                maxY,
+                judul,
+                labelX,
+                labelY
+            });
+        }
+
+        function renderHistogramChart(config) {
+            const barsArea = document.getElementById(config.barsAreaId);
+            const axisTicks = document.getElementById(config.axisTicksId);
+            const xBoundaries = document.getElementById(config.xBoundariesId);
+
+            barsArea.innerHTML = "";
+            axisTicks.innerHTML = "";
+            xBoundaries.innerHTML = "";
+
+            const tickValues = 5;
+            for (let i = tickValues; i >= 0; i--) {
+                const tick = document.createElement("div");
+                tick.innerText = Math.round((config.maxY / tickValues) * i);
+                axisTicks.appendChild(tick);
+            }
+
+            intervalKelas.forEach((interval, index) => {
+                const value = config.frekuensi[index] || 0;
+                const height = config.maxY === 0 ? 0 : (value / config.maxY) * 100;
+                const group = document.createElement("div");
+                group.className = "bar-group";
+                group.innerHTML = `
+                    <div class="bar" style="height:${height}%">${value > 0 ? value : ""}</div>
+                `;
+                barsArea.appendChild(group);
+            });
+
+            const boundaries = getClassBoundaries();
+            boundaries.forEach((boundary, index) => {
+                const tick = document.createElement("div");
+                tick.className = "boundary-tick";
+                if (index === 0) tick.classList.add("edge-start");
+                if (index === boundaries.length - 1) tick.classList.add("edge-end");
+                tick.style.left = `${(index / (boundaries.length - 1)) * 100}%`;
+                tick.innerText = formatBoundary(boundary);
+                xBoundaries.appendChild(tick);
+            });
+
+            document.getElementById(config.titleId).innerText = config.judul;
+            document.getElementById(config.labelXId).innerText = config.labelX;
+            document.getElementById(config.labelYId).innerText = config.labelY;
+        }
+
+        function cekHistogram() {
+            const masihKosong = frekuensiUser.some((nilai) => nilai === 0 && frekuensiBenar.includes(nilai) === false);
+            const adaKosongInput = document.querySelectorAll("#freqInputGrid input").length !== intervalKelas.length ||
+                Array.from(document.querySelectorAll("#freqInputGrid input")).some((input) => input.value === "");
+
+            if (adaKosongInput) {
+                alert("Lengkapi dahulu frekuensi pada setiap kelas sebelum memeriksa histogram.");
+                return;
+            }
+
+            let total = 0;
+            let detail = [];
+
+            frekuensiUser.forEach((fUser, i) => {
+                const fBenar = frekuensiBenar[i];
+                let skor;
+                if (fBenar === 0) {
+                    skor = fUser === 0 ? 1 : 0;
+                } else {
+                    skor = 1 - Math.abs(fUser - fBenar) / fBenar;
+                    if (skor < 0) skor = 0;
+                }
+                total += skor;
+                if (fUser !== fBenar) {
+                    detail.push(`Kelas ${intervalKelas[i]}: frekuensi yang kamu isi ${fUser}, seharusnya ${fBenar}.`);
+                }
+            });
+
+            skorKecocokan = Math.round((total / frekuensiBenar.length) * 100);
+            document.getElementById("hasilPemeriksaanText").innerText =
+                skorKecocokan === 100
+                    ? "Histogram yang kamu buat sudah sesuai dengan tabel distribusi frekuensi."
+                    : "Histogram sudah terbentuk, tetapi masih ada beberapa bagian yang perlu diperbaiki.";
+
+            const pill = document.getElementById("resultPill");
+            pill.style.display = "inline-flex";
+            pill.innerText = `${skorKecocokan}% cocok`;
+
+            const list = document.getElementById("feedbackList");
+            list.innerHTML = "";
+            if (detail.length === 0) {
+                list.innerHTML = "<li>Semua frekuensi pada histogram sudah sesuai.</li>";
+            } else {
+                detail.forEach((item) => {
+                    const li = document.createElement("li");
+                    li.innerText = item;
+                    list.appendChild(li);
+                });
+            }
+
+            renderReferenceHistogram();
+            setStudioStep(4);
+        }
+
+        function submitAktivitas4() {
+            const refleksi = document.getElementById("refleksi").value.trim();
+            if (!refleksi) {
+                alert("Tuliskan terlebih dahulu interpretasi atau refleksimu terhadap histogram.");
+                return;
+            }
+
+            const hasil = {
+                frekuensiUser,
+                frekuensiBenar,
+                intervalKelas,
+                judulGrafik: document.getElementById("judulGrafikInput").value.trim(),
+                labelX: document.getElementById("labelXInput").value.trim(),
+                labelY: document.getElementById("labelYInput").value.trim(),
+                maxY: document.getElementById("maxYInput").value,
+                refleksi,
+                kecocokan: skorKecocokan
+            };
+
+            localStorage.setItem("hasilAktivitas4", JSON.stringify(hasil));
+            localStorage.setItem("aktivitas4", "true");
+
+            alert("Aktivitas 4 berhasil disimpan.");
+            window.location.href = "beranda.html";
+        }
+    </script>
 </body>
 </html>
-
-
