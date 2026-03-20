@@ -43,6 +43,14 @@ function bukaHalaman(file) {
     window.location.href = file;
 }
 
+function toggleMobileNav(button) {
+    const topbar = button.closest(".topbar");
+    if (!topbar) return;
+    topbar.classList.toggle("nav-open");
+    const expanded = topbar.classList.contains("nav-open");
+    button.setAttribute("aria-expanded", expanded ? "true" : "false");
+}
+
 /* ============================================================
    CEK IZIN AKSES (Agar tidak lompat aktivitas)
    ============================================================ */
