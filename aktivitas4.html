@@ -41,8 +41,10 @@
         .build-grid { grid-template-columns: .95fr 1.05fr; margin-top: 24px; }
         .data-table-shell { margin-top: 14px; border-radius: 20px; overflow-x: auto; overflow-y: hidden; border: 1px solid rgba(86,99,164,.14); background: white; }
         table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 14px 12px; text-align: center; border-bottom: 1px solid rgba(86,99,164,.12); }
+        th, td { padding: 14px 12px; text-align: center; border-bottom: 1px solid rgba(86,99,164,.12); color: #31405f; }
         th { background: #f3f6ff; color: #21358e; }
+        tbody tr:nth-child(even) td { background: rgba(248,250,255,.7); }
+        .empty-row { color: #6a7294; font-style: italic; }
         .chart-settings { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
         .field label { display: block; margin-bottom: 8px; font-weight: 700; color: #21358e; }
         .field input { width: 100%; padding: 12px 14px; border-radius: 16px; border: 1px solid rgba(86,99,164,.18); background: white; }
@@ -108,7 +110,7 @@
         }
     </style>
 </head>
-<body onload="cekAkses(4); muatStudio(); initStudio();">
+<body class="arcade-skin" onload="cekAkses(4); muatStudio(); initStudio();">
     <header class="topbar studio-topbar">
         <div class="brand-mark">
             <span class="brand-dot"></span>
@@ -126,25 +128,64 @@
     <main class="studio-wrap">
         <section class="studio-hero">
             <div>
-                <span class="studio-pill">Aktivitas 4 - Studio Histogram Digital</span>
-                <h1>Bangun histogram dari tabel distribusi frekuensi</h1>
-                <p>Pada aktivitas ini, murid mempelajari cara membuat histogram, lalu membangun histogram digital berdasarkan tabel distribusi frekuensi yang sudah disusun pada Aktivitas 3.</p>
+                <span class="studio-pill">World 4 - Histogram Builder</span>
+                <h1>Bangun histogram dan hadapi boss world utama</h1>
+                <p>Ini adalah arena utama. Kamu harus menyiapkan komponen grafik, menyusun batang histogram, lalu memeriksa kecocokannya dengan tabel distribusi frekuensi.</p>
             </div>
             <div class="hero-side">
-                <h3>Fokus aktivitas ini</h3>
+                <h3>Target world ini</h3>
                 <ul>
                     <li>Memahami langkah membuat histogram dari tabel distribusi frekuensi.</li>
                     <li>Menyusun komponen grafik: judul, sumbu, dan skala.</li>
-                    <li>Menginterpretasikan histogram yang telah dibuat.</li>
+                    <li>Mengalahkan boss dengan histogram yang akurat dan interpretasi yang bermakna.</li>
                 </ul>
             </div>
         </section>
 
+        <section class="mission-hud">
+            <article class="quest-board">
+                <span class="section-kicker">Mission Brief</span>
+                <h3>Objective boss arena</h3>
+                <div class="objective-list">
+                    <div class="objective-item">
+                        <span class="objective-icon">SET</span>
+                        <div>
+                            <strong>Siapkan arena</strong>
+                            <p>Pastikan judul, label sumbu, dan skala maksimum sumbu Y sudah masuk akal.</p>
+                        </div>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">BAR</span>
+                        <div>
+                            <strong>Bangun batang boss</strong>
+                            <p>Isi frekuensi tiap kelas sampai histogram digital terbentuk penuh.</p>
+                        </div>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">REF</span>
+                        <div>
+                            <strong>Buat laporan akhir</strong>
+                            <p>Periksa hasilnya lalu tuliskan interpretasi terhadap pola data pada histogram.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="quest-status-board">
+                <span class="section-kicker">Status Quest</span>
+                <h3>Progress World 4</h3>
+                <div class="status-list" id="questStatusList"></div>
+                <div class="inline-meter">
+                    <span id="questProgressFill"></span>
+                </div>
+            </article>
+        </section>
+
         <section class="studio-card steps">
-            <div class="step-card active" id="stepCard1"><div class="step-no">1</div><strong>Pahami Cara Membuat Histogram</strong><p>Tonton tutorial dan pahami elemen penting histogram.</p></div>
-            <div class="step-card" id="stepCard2"><div class="step-no">2</div><strong>Siapkan Komponen Grafik</strong><p>Tentukan judul, sumbu, dan acuan tabel frekuensi.</p></div>
-            <div class="step-card" id="stepCard3"><div class="step-no">3</div><strong>Bangun Histogram</strong><p>Isi frekuensi lalu bangun histogram digital.</p></div>
-            <div class="step-card" id="stepCard4"><div class="step-no">4</div><strong>Cek dan Interpretasi</strong><p>Bandingkan hasil dan tuliskan interpretasi histogram.</p></div>
+            <div class="step-card active" id="stepCard1"><div class="step-no">1</div><strong>Scout Tutorial</strong><p>Tonton tutorial dan pahami elemen penting histogram.</p></div>
+            <div class="step-card" id="stepCard2"><div class="step-no">2</div><strong>Set Arena</strong><p>Tentukan judul, sumbu, dan acuan tabel frekuensi.</p></div>
+            <div class="step-card" id="stepCard3"><div class="step-no">3</div><strong>Spawn Histogram</strong><p>Isi frekuensi lalu bangun histogram digital.</p></div>
+            <div class="step-card" id="stepCard4"><div class="step-no">4</div><strong>Boss Check</strong><p>Bandingkan hasil dan tuliskan interpretasi histogram.</p></div>
         </section>
 
         <section class="step-panel active" id="step1">
@@ -327,6 +368,12 @@
                 </div>
             </div>
         </section>
+
+        <section class="mission-clear" id="missionClearBox">
+            <span class="section-kicker">Mission Clear</span>
+            <h3>Boss arena berhasil ditaklukkan</h3>
+            <p>Komponen grafik, bentuk histogram, dan interpretasi akhir sudah lengkap. Kamu siap masuk ke ruang refleksi pada world penutup.</p>
+        </section>
     </main>
 
     <script src="script.js"></script>
@@ -337,6 +384,8 @@
         let namaData = "";
         let satuanData = "";
         let skorKecocokan = 0;
+        let komponenSudahSiap = false;
+        let histogramSudahDicek = false;
 
         function parseInterval(intervalText) {
             const angka = intervalText.match(/-?\d+(?:\.\d+)?/g) || [];
@@ -372,6 +421,14 @@
 
         function initStudio() {
             setStudioStep(1);
+            document.getElementById("refleksi").addEventListener("input", updateQuestStatus);
+            ["judulGrafikInput", "labelXInput", "labelYInput", "maxYInput"].forEach((id) => {
+                document.getElementById(id).addEventListener("input", () => {
+                    komponenSudahSiap = false;
+                    updateQuestStatus();
+                });
+            });
+            updateQuestStatus();
         }
 
         function muatStudio() {
@@ -391,11 +448,16 @@
 
             const tbody = document.getElementById("tableAcuanBody");
             tbody.innerHTML = "";
-            intervalKelas.forEach((interval, index) => {
-                const row = document.createElement("tr");
-                row.innerHTML = `<td>K${index + 1}</td><td>${interval}</td><td>${frekuensiBenar[index]}</td>`;
-                tbody.appendChild(row);
-            });
+
+            if (!intervalKelas.length || !frekuensiBenar.length) {
+                tbody.innerHTML = `<tr><td colspan="3" class="empty-row">Tabel distribusi frekuensi belum tersedia.</td></tr>`;
+            } else {
+                intervalKelas.forEach((interval, index) => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `<td>K${index + 1}</td><td>${interval}</td><td>${frekuensiBenar[index]}</td>`;
+                    tbody.appendChild(row);
+                });
+            }
 
             document.getElementById("judulGrafikInput").value = `Histogram ${namaData}`;
             document.getElementById("labelXInput").value = satuanData ? `${namaData} (${satuanData})` : namaData;
@@ -404,6 +466,7 @@
 
             renderFreqInputs();
             renderHistogram();
+            updateQuestStatus();
         }
 
         function setStudioStep(no) {
@@ -415,6 +478,7 @@
                 if (i === no) document.getElementById(`stepCard${i}`).classList.add("active");
             }
             window.scrollTo({ top: 0, behavior: "smooth" });
+            updateQuestStatus();
         }
 
         function goStudioStep(no) {
@@ -440,7 +504,9 @@
             document.getElementById("displayJudulGrafik").innerText = judul;
             document.getElementById("displayLabelX").innerText = labelX;
             document.getElementById("displayLabelY").innerText = labelY;
+            komponenSudahSiap = true;
             renderHistogram();
+            updateQuestStatus();
             setStudioStep(3);
         }
 
@@ -461,7 +527,9 @@
                 input.addEventListener("input", (event) => {
                     const idx = Number(event.target.dataset.index);
                     frekuensiUser[idx] = Number(event.target.value) || 0;
+                    histogramSudahDicek = false;
                     renderHistogram();
+                    updateQuestStatus();
                 });
             });
         }
@@ -601,8 +669,49 @@
                 });
             }
 
+            histogramSudahDicek = true;
             renderReferenceHistogram();
+            updateQuestStatus();
             setStudioStep(4);
+        }
+
+        function semuaFrekuensiTerisi() {
+            const inputs = Array.from(document.querySelectorAll("#freqInputGrid input"));
+            return inputs.length === intervalKelas.length && inputs.every((input) => input.value !== "");
+        }
+
+        function updateQuestStatus() {
+            const refleksi = document.getElementById("refleksi") ? document.getElementById("refleksi").value.trim() : "";
+            const statuses = [
+                {
+                    done: komponenSudahSiap,
+                    label: "Arena siap dipakai",
+                    note: "Judul grafik, label sumbu, dan skala maksimum sudah valid."
+                },
+                {
+                    done: semuaFrekuensiTerisi() && histogramSudahDicek,
+                    label: "Histogram boss terbentuk",
+                    note: "Frekuensi terisi lengkap dan histogram sudah diperiksa."
+                },
+                {
+                    done: Boolean(refleksi),
+                    label: "Laporan akhir selesai",
+                    note: "Interpretasi histogram sudah ditulis."
+                }
+            ];
+
+            const doneCount = statuses.filter((item) => item.done).length;
+            document.getElementById("questStatusList").innerHTML = statuses.map((item, index) => `
+                <div class="status-item ${item.done ? "done" : "locked"}">
+                    <span class="status-icon">${item.done ? "OK" : index + 1}</span>
+                    <div>
+                        <strong>${item.label}</strong>
+                        <p>${item.note}</p>
+                    </div>
+                </div>
+            `).join("");
+            document.getElementById("questProgressFill").style.width = `${(doneCount / statuses.length) * 100}%`;
+            document.getElementById("missionClearBox").classList.toggle("active", doneCount === statuses.length);
         }
 
         function submitAktivitas4() {

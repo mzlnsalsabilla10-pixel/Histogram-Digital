@@ -6,8 +6,8 @@
     <title>Beranda Pembelajaran Histogram</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="dashboard-body" onload="cekLogin(); cekStatusAwal(); isiSapaan(); renderProgress();">
-    <header class="topbar dashboard-topbar">
+<body class="dashboard-body arcade-skin" onload="cekLogin(); cekStatusAwal(); isiSapaan(); renderProgress();">
+    <header class="topbar dashboard-topbar has-hamburger" id="dashboardTopbar">
         <div class="brand-mark">
             <span class="brand-dot"></span>
             <div>
@@ -15,7 +15,12 @@
                 <p>Beranda pembelajaran</p>
             </div>
         </div>
-        <nav class="topnav">
+        <button class="menu-toggle" type="button" id="menuToggle" aria-expanded="false" aria-controls="dashboardNav" aria-label="Buka menu navigasi">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav class="topnav nav-drawer" id="dashboardNav">
             <a href="index.html#tentang-media">Tentang Media</a>
             <a href="index.html#tujuan-pembelajaran">Tujuan Pembelajaran</a>
             <a href="index.html#panduan-penggunaan">Panduan Penggunaan</a>
@@ -27,176 +32,391 @@
     <main class="dashboard-main">
         <section class="dashboard-hero">
             <div>
-                <span class="eyebrow">Perjalanan Belajar Histogram</span>
+                <span class="eyebrow">Choose World</span>
                 <h1 id="sapaanJudul">Selamat datang!</h1>
-                <p class="hero-text">
-                    Mari lanjutkan perjalanan belajar histogram secara bertahap melalui aktivitas interaktif berikut.
+                <p class="hero-text hero-text-short">
+                    Geser area, pilih world, lalu masuk ke petualangan histogrammu.
                 </p>
             </div>
 
-            <div class="hero-aside-card">
-                <p class="aside-label">Status belajar</p>
-                <strong id="progressText">0 dari 5 aktivitas selesai</strong>
+            <div class="hero-aside-card xp-panel">
+                <p class="aside-label">XP</p>
+                <strong id="progressText">0 XP</strong>
                 <div class="progress-track">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
+                <div class="xp-badges" id="badgeWrap"></div>
             </div>
         </section>
 
-        <section class="progress-panel">
-            <div class="section-heading compact">
-                <span class="section-kicker">Progres Belajar</span>
-                <h2>Tahap demi tahap menuju histogram digital</h2>
-            </div>
+        <section class="mission-hud compact-hud">
+            <article class="quest-board">
+                <span class="section-kicker">Main Quest</span>
+                <h3>Target utama</h3>
+                <div class="objective-list compact-objectives">
+                    <div class="objective-item">
+                        <span class="objective-icon">1</span>
+                        <div><strong>Pahami</strong><p>Konsep histogram</p></div>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">2</span>
+                        <div><strong>Bangun</strong><p>Data dan tabel</p></div>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">3</span>
+                        <div><strong>Taklukkan</strong><p>Boss histogram</p></div>
+                    </div>
+                </div>
+            </article>
 
-            <div class="step-indicator" id="stepIndicator"></div>
+            <article class="reward-panel">
+                <span class="section-kicker">Reward</span>
+                <h3>Yang dibuka</h3>
+                <div class="reward-list compact-rewards" id="rewardPreview"></div>
+            </article>
         </section>
 
-        <section class="cards-section">
+        <section class="progress-panel world-slider-section">
             <div class="section-heading compact">
-                <span class="section-kicker">Aktivitas Pembelajaran</span>
-                <h2>Pilih tahap yang tersedia</h2>
+                <span class="section-kicker">Area Select</span>
+                <h2>Swipe world yang ingin dimainkan</h2>
             </div>
 
-            <div class="cards-container dashboard-cards">
-                <div class="card activity-card" id="card1" onclick="bukaHalaman('aktivitas1.html')">
-                    <div class="badge purple">1</div>
-                    <span class="card-status status-open">Siap</span>
-                    <h3>Eksplorasi Konsep Histogram</h3>
-                    <p>Mengamati video dan menjawab pertanyaan pemantik tentang perbedaan diagram batang dan histogram.</p>
+            <div class="slider-shell">
+                <button class="slider-nav prev" type="button" onclick="scrollWorlds(-1)" aria-label="Geser ke kiri">&lt;</button>
+                <div class="slider-lane" id="sliderLane">
+                    <div class="slider-track" id="stepIndicator"></div>
                 </div>
+                <button class="slider-nav next" type="button" onclick="scrollWorlds(1)" aria-label="Geser ke kanan">&gt;</button>
+            </div>
 
-                <div class="checkpoint-card">
-                    <p class="checkpoint-tag">Checkpoint Penguatan Guru</p>
-                    <h3>Lanjutkan setelah penguatan bersama guru</h3>
-                    <p>
-                        Setelah menyelesaikan Aktivitas 1, murid mengikuti penguatan dari guru mengenai
-                        perbedaan diagram batang dan histogram. Masukkan kode akses dari guru untuk melanjutkan ke Aktivitas 2.
-                    </p>
-                    <input type="text" id="kodeAkt2" placeholder="Masukkan kode akses">
-                    <button onclick="cekKodeAkt2()">Buka Aktivitas 2</button>
-                </div>
-
-                <div id="card2" class="card activity-card locked">
-                    <div class="badge aqua">2</div>
-                    <span class="card-status status-locked">Terkunci</span>
-                    <h3>Pengumpulan Data</h3>
-                    <p>Mengumpulkan data numerik kontinu dari konteks nyata untuk digunakan dalam penyusunan histogram.</p>
-                </div>
-
-                <div id="card3" class="card activity-card locked">
-                    <div class="badge yellow">3</div>
-                    <span class="card-status status-locked">Terkunci</span>
-                    <h3>Penyusunan Tabel Distribusi Frekuensi</h3>
-                    <p>Mengurutkan data, menentukan jangkauan, banyak kelas, dan interval kelas secara bertahap.</p>
-                </div>
-
-                <div id="card4" class="card activity-card locked">
-                    <div class="badge blue">4</div>
-                    <span class="card-status status-locked">Terkunci</span>
-                    <h3>Pembuatan Histogram Digital</h3>
-                    <p>Menyusun histogram digital berdasarkan data dan tabel distribusi frekuensi yang telah dibuat.</p>
-                </div>
-
-                <div id="card5" class="card activity-card locked">
-                    <div class="badge pink">5</div>
-                    <span class="card-status status-locked">Terkunci</span>
-                    <h3>Refleksi Pembelajaran</h3>
-                    <p>Merefleksikan strategi, pemahaman, dan hasil belajar yang telah diperoleh selama proses pembelajaran.</p>
-                </div>
+            <div class="slider-hint-row">
+                <p class="slider-hint">Tap card untuk lihat info singkat world. Di HP cukup swipe ke samping.</p>
+                <div class="locked-note" id="lockedNote">World ini masih terkunci.</div>
             </div>
         </section>
     </main>
 
+    <div class="map-modal world-popup" id="worldModal" aria-hidden="true">
+        <div class="map-modal-panel world-popup-panel" role="dialog" aria-modal="true" aria-labelledby="modalWorldTitle">
+            <div class="map-modal-head world-popup-head">
+                <div>
+                    <span class="section-kicker" id="modalWorldTag">World</span>
+                    <h3 id="modalWorldTitle">Info World</h3>
+                </div>
+                <button class="map-modal-close" type="button" onclick="tutupWorldModal()">x</button>
+            </div>
+
+            <div class="map-modal-body world-popup-body">
+                <div class="map-status-badge" id="modalWorldState">Status</div>
+
+                <div class="world-popup-summary">
+                    <p id="modalWorldMission"></p>
+                </div>
+
+                <div class="popup-chip-row">
+                    <span class="popup-chip" id="modalWorldReward"></span>
+                    <span class="popup-chip" id="modalWorldXp"></span>
+                </div>
+
+                <div class="popup-objectives" id="modalObjectiveList"></div>
+
+                <div class="map-modal-card map-password-wrap world-password-wrap" id="modalPasswordWrap" style="display:none;">
+                    <input type="text" id="modalKodeAkt2" placeholder="Kode portal World 2">
+                    <button class="button" type="button" onclick="submitKodeWorld2()">Buka Portal</button>
+                </div>
+
+                <div class="map-modal-actions world-popup-actions">
+                    <p class="map-password-msg" id="modalActionHint"></p>
+                    <a class="quest-cta popup-enter-button" id="modalEnterButton" href="#">Mainkan</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
     <script>
+        const WORLD_DETAILS = {
+            1: {
+                mission: "Bedakan diagram batang dan histogram lewat petunjuk visual.",
+                objectives: ["Tonton", "Cocokkan", "Jawab"]
+            },
+            2: {
+                mission: "Kumpulkan data numerik kontinu dari situasi nyata.",
+                objectives: ["Pilih data", "Kumpulkan 25+", "Refleksi"]
+            },
+            3: {
+                mission: "Susun tabel distribusi frekuensi dari data hasil buruan.",
+                objectives: ["Hitung", "Bentuk tabel", "Cek"]
+            },
+            4: {
+                mission: "Bangun histogram digital dan cek kecocokannya.",
+                objectives: ["Set arena", "Bangun", "Periksa"]
+            },
+            5: {
+                mission: "Tutup petualangan dengan refleksi dan strategi perbaikan.",
+                objectives: ["Ingat", "Evaluasi", "Upgrade"]
+            }
+        };
+        const WORLD_ART = {
+            1: "world 1.png",
+            2: "world 2.png",
+            3: "world 3.png",
+            4: "world 4.png",
+            5: "world 5.png"
+        };
+        const WORLD_ART_VERSION = "20260409";
+
         function isiSapaan() {
             const namaLengkap = localStorage.getItem("namaLengkap") || "Murid";
-            document.getElementById("sapaanJudul").innerHTML = `Selamat datang, <span>${namaLengkap}</span>!`;
+            document.getElementById("sapaanJudul").innerHTML = `Halo, <span>${namaLengkap}</span>!`;
+        }
+
+        function getWorldIllustrationMarkup(worldNo, title) {
+            const art = WORLD_ART[worldNo];
+
+            if (art) {
+                return `
+                    <div class="world-illustration has-art">
+                        <img src="${art}?v=${WORLD_ART_VERSION}" alt="Ilustrasi ${title}">
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="world-illustration placeholder-${worldNo}">
+                    <span class="scene-cloud cloud-a"></span>
+                    <span class="scene-cloud cloud-b"></span>
+                    <span class="scene-ground"></span>
+                    <span class="scene-deco deco-a"></span>
+                    <span class="scene-deco deco-b"></span>
+                    <span class="world-art-note">Artwork Soon</span>
+                </div>
+            `;
         }
 
         function renderProgress() {
-            const langkah = [
-                { no: 1, label: "Eksplorasi Konsep", done: localStorage.getItem("aktivitas1") === "true" },
-                {
-                    no: 2,
-                    label: "Pengumpulan Data",
-                    done: localStorage.getItem("aktivitas2") === "true",
-                    unlocked: localStorage.getItem("aktivitas2_unlock") === "true"
-                },
-                { no: 3, label: "Penyusunan Tabel Distribusi Frekuensi", done: localStorage.getItem("aktivitas3") === "true" },
-                { no: 4, label: "Pembuatan Histogram", done: localStorage.getItem("aktivitas4") === "true" },
-                { no: 5, label: "Refleksi", done: localStorage.getItem("aktivitas5") === "true" }
-            ];
-
-            const selesai = langkah.filter((item) => item.done).length;
-            const persen = (selesai / langkah.length) * 100;
+            const progress = getGameProgress();
+            const persen = (progress.completedCount / LEVEL_META.length) * 100;
             const wrap = document.getElementById("stepIndicator");
+            const rewardPreview = document.getElementById("rewardPreview");
+            const badgeWrap = document.getElementById("badgeWrap");
 
-            document.getElementById("progressText").innerText = `${selesai} dari 5 aktivitas selesai`;
+            document.getElementById("progressText").innerText = `${progress.xp} XP`;
             document.getElementById("progressFill").style.width = `${persen}%`;
+            badgeWrap.innerHTML = progress.badges.length
+                ? progress.badges.map((badge) => `<span class="xp-badge">${badge}</span>`).join("")
+                : `<span class="xp-badge">Mulai Quest</span>`;
+
+            rewardPreview.innerHTML = LEVEL_META.map((item) => `
+                <div class="reward-item mini">
+                    <span class="reward-icon">${item.no}</span>
+                    <div>
+                        <strong>${item.reward}</strong>
+                        <p>${item.xp} XP</p>
+                    </div>
+                </div>
+            `).join("");
 
             wrap.innerHTML = "";
 
-            langkah.forEach((item) => {
-                const step = document.createElement("div");
-                let statusClass = "is-locked";
+            LEVEL_META.forEach((item) => {
+                const done = isLevelDone(item.no);
+                const unlocked = isLevelUnlocked(item.no);
+                const waitingPortal = item.no === 2 && !unlocked && isLevelDone(1);
+                const stateClass = done ? "done" : unlocked ? "current" : "locked";
+                const stateText = done ? "Clear" : waitingPortal ? "Portal" : unlocked ? "Play" : "Lock";
+                const badgeClass = done ? "clear" : waitingPortal ? "portal" : unlocked ? "play" : "lock";
+                const statusLabel = done ? "Mission Clear" : waitingPortal ? "Need Password" : unlocked ? "Tap to Play" : "Locked";
 
-                if (item.done) {
-                    statusClass = "is-done";
-                } else if (item.no === 1 || item.unlocked || localStorage.getItem(`aktivitas${item.no - 1}`) === "true") {
-                    statusClass = "is-current";
-                }
-
-                step.className = `step-item ${statusClass}`;
-                step.innerHTML = `
-                    <div class="step-bullet">${item.done ? "&#10003;" : item.no}</div>
-                    <div class="step-copy">
-                        <strong>${item.label}</strong>
-                        <p>${item.done ? "Selesai" : statusClass === "is-current" ? "Tersedia" : "Terkunci"}</p>
-                    </div>
+                const slide = document.createElement("article");
+                slide.className = `world-slide theme-${item.no} ${stateClass}`;
+                slide.innerHTML = `
+                    <button class="world-slide-button" type="button" aria-label="${item.world} ${item.title}">
+                        <div class="world-scene">
+                            <span class="world-lock-badge ${badgeClass}">${stateText}</span>
+                            <div class="illustration-frame">
+                                ${getWorldIllustrationMarkup(item.no, item.title)}
+                            </div>
+                        </div>
+                        <div class="world-slide-copy">
+                            <div class="world-ribbon">${item.world}</div>
+                            <h3>${item.title}</h3>
+                            <div class="world-slide-meta">
+                                <span>${item.xp} XP</span>
+                                <span>${statusLabel}</span>
+                            </div>
+                        </div>
+                    </button>
                 `;
-                wrap.appendChild(step);
+                slide.querySelector(".world-slide-button").addEventListener("click", () => handleWorldClick(item.no));
+                wrap.appendChild(slide);
             });
 
-            syncCardStatuses();
+            focusCurrentWorld(progress.nextLevel);
         }
 
-        function syncCardStatuses() {
-            for (let no = 1; no <= 5; no++) {
-                const card = document.getElementById(`card${no}`);
-                if (!card) continue;
+        function focusCurrentWorld(nextLevel) {
+            const lane = document.getElementById("sliderLane");
+            const slides = lane.querySelectorAll(".world-slide");
+            if (!slides.length) return;
 
-                const status = card.querySelector(".card-status");
-                const done = localStorage.getItem(`aktivitas${no}`) === "true";
-                const unlocked = no === 1
-                    ? true
-                    : no === 2
-                        ? localStorage.getItem("aktivitas2_unlock") === "true"
-                        : localStorage.getItem(`aktivitas${no - 1}`) === "true";
-
-                if (done || unlocked) {
-                    card.classList.remove("locked");
-                } else {
-                    card.classList.add("locked");
-                }
-
-                if (!status) continue;
-
-                status.classList.remove("status-open", "status-locked", "status-done");
-
-                if (done) {
-                    status.classList.add("status-done");
-                    status.textContent = "Selesai";
-                } else if (unlocked) {
-                    status.classList.add("status-open");
-                    status.textContent = no === 1 ? "Siap" : "Tersedia";
-                } else {
-                    status.classList.add("status-locked");
-                    status.textContent = "Terkunci";
-                }
+            const targetIndex = nextLevel ? nextLevel.no - 1 : slides.length - 1;
+            const target = slides[targetIndex];
+            if (target) {
+                setTimeout(() => {
+                    target.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+                }, 120);
             }
         }
+
+        function scrollWorlds(direction) {
+            const lane = document.getElementById("sliderLane");
+            lane.scrollBy({
+                left: direction * Math.min(360, lane.clientWidth * 0.84),
+                behavior: "smooth"
+            });
+        }
+
+        function handleWorldClick(worldNo) {
+            const unlocked = isLevelUnlocked(worldNo);
+            const done = isLevelDone(worldNo);
+            const canOpenPortal = worldNo === 2 && isLevelDone(1);
+
+            if (!unlocked && !done && !canOpenPortal) {
+                triggerLockedAnimation(worldNo);
+                return;
+            }
+
+            bukaWorldModal(worldNo);
+        }
+
+        function triggerLockedAnimation(worldNo) {
+            const slide = document.querySelectorAll(".world-slide")[worldNo - 1];
+            const note = document.getElementById("lockedNote");
+
+            if (!slide) return;
+
+            slide.classList.remove("is-shaking");
+            void slide.offsetWidth;
+            slide.classList.add("is-shaking");
+            setTimeout(() => slide.classList.remove("is-shaking"), 500);
+
+            note.classList.add("active");
+            note.textContent = worldNo === 2
+                ? "Selesaikan World 1 dulu, lalu buka portal World 2."
+                : `World ${worldNo} masih terkunci.`;
+            setTimeout(() => note.classList.remove("active"), 2200);
+        }
+
+        function bukaWorldModal(worldNo) {
+            const meta = getLevelMeta(worldNo);
+            const detail = WORLD_DETAILS[worldNo];
+            const done = isLevelDone(worldNo);
+            const unlocked = isLevelUnlocked(worldNo);
+            const canOpenPortal = worldNo === 2 && isLevelDone(1) && !unlocked;
+            const modal = document.getElementById("worldModal");
+            const enterButton = document.getElementById("modalEnterButton");
+            const passwordWrap = document.getElementById("modalPasswordWrap");
+            const actionHint = document.getElementById("modalActionHint");
+
+            document.getElementById("modalWorldTag").textContent = meta.world;
+            document.getElementById("modalWorldTitle").textContent = meta.title;
+            document.getElementById("modalWorldMission").textContent = detail.mission;
+            document.getElementById("modalWorldReward").textContent = meta.reward;
+            document.getElementById("modalWorldXp").textContent = `${meta.xp} XP`;
+            document.getElementById("modalObjectiveList").innerHTML = detail.objectives.map((item, index) => `
+                <span class="popup-objective">
+                    <span>${index + 1}</span>${item}
+                </span>
+            `).join("");
+
+            passwordWrap.style.display = "none";
+            enterButton.style.display = "inline-flex";
+
+            if (done) {
+                document.getElementById("modalWorldState").textContent = "Mission Clear";
+                actionHint.textContent = "World ini sudah clear.";
+                enterButton.textContent = "Main Lagi";
+                enterButton.href = `aktivitas${worldNo}.html`;
+            } else if (unlocked) {
+                document.getElementById("modalWorldState").textContent = "Quest Terbuka";
+                actionHint.textContent = "Tekan main untuk masuk.";
+                enterButton.textContent = "Play";
+                enterButton.href = `aktivitas${worldNo}.html`;
+            } else if (canOpenPortal) {
+                document.getElementById("modalWorldState").textContent = "Portal";
+                actionHint.textContent = "Masukkan kode portal dari guru.";
+                enterButton.style.display = "none";
+                passwordWrap.style.display = "grid";
+                document.getElementById("modalKodeAkt2").value = "";
+            }
+
+            modal.classList.add("active");
+            modal.setAttribute("aria-hidden", "false");
+        }
+
+        function tutupWorldModal() {
+            const modal = document.getElementById("worldModal");
+            modal.classList.remove("active");
+            modal.setAttribute("aria-hidden", "true");
+        }
+
+        function submitKodeWorld2() {
+            const input = document.getElementById("modalKodeAkt2");
+            const kode = input.value.trim();
+
+            if (kode === "HISTO2") {
+                localStorage.setItem("aktivitas2_unlock", "true");
+                renderProgress();
+                bukaWorldModal(2);
+            } else {
+                input.value = "";
+                input.placeholder = "Kode salah";
+                triggerLockedAnimation(2);
+            }
+        }
+
+        document.getElementById("worldModal").addEventListener("click", (event) => {
+            if (event.target.id === "worldModal") {
+                tutupWorldModal();
+            }
+        });
+
+        const topbar = document.getElementById("dashboardTopbar");
+        const menuToggle = document.getElementById("menuToggle");
+        const dashboardNav = document.getElementById("dashboardNav");
+
+        function tutupMenu() {
+            topbar.classList.remove("menu-open");
+            menuToggle.setAttribute("aria-expanded", "false");
+        }
+
+        menuToggle.addEventListener("click", () => {
+            const isOpen = topbar.classList.toggle("menu-open");
+            menuToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+
+        dashboardNav.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                if (window.innerWidth <= 980) {
+                    tutupMenu();
+                }
+            });
+        });
+
+        document.addEventListener("click", (event) => {
+            if (window.innerWidth > 980) return;
+            if (!topbar.contains(event.target)) {
+                tutupMenu();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 980) {
+                tutupMenu();
+            }
+        });
     </script>
 </body>
 </html>

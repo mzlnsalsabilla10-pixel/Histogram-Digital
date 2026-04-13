@@ -362,7 +362,7 @@
         }
     </style>
 </head>
-<body onload="cekLogin(); cekAkses(1); siapkanAktivitas1();">
+<body class="arcade-skin" onload="cekLogin(); cekAkses(1); siapkanAktivitas1();">
     <header class="topbar activity-topbar">
         <div class="brand-mark">
             <span class="brand-dot"></span>
@@ -380,22 +380,61 @@
     <main class="activity-stage">
         <section class="activity-hero">
             <div>
-                <span class="activity-pill">Aktivitas 1 - Eksplorasi Konsep Histogram</span>
-                <h1>Pahami perbedaan diagram batang dan histogram</h1>
+                <span class="activity-pill">World 1 - Graph Lab</span>
+                <h1>Selidiki jejak grafik untuk membedakan histogram</h1>
                 <p>
-                    Pada aktivitas ini, murid akan mengamati video, mengenali ciri-ciri histogram,
-                    membedakannya dari diagram batang, lalu menuliskan alasan berdasarkan pemahaman konsep.
+                    Misi pertamamu adalah menjadi detektif grafik. Amati petunjuk visual, identifikasi ciri histogram,
+                    lalu buktikan jawabanmu lewat alasan yang logis dan berbasis konsep.
                 </p>
             </div>
 
             <div class="hero-mini-panel">
-                <h3>Tujuan aktivitas ini</h3>
+                <h3>Target world ini</h3>
                 <ul>
-                    <li>Mengamati ciri visual diagram batang dan histogram.</li>
-                    <li>Mengidentifikasi perbedaan konsep dari dua jenis grafik tersebut.</li>
-                    <li>Menyampaikan alasan secara logis berdasarkan hasil pengamatan.</li>
+                    <li>Menemukan petunjuk visual yang membedakan diagram batang dan histogram.</li>
+                    <li>Menjelaskan alasan dengan konsep data kategorik dan data kontinu.</li>
+                    <li>Membuka gerbang penguatan guru menuju world berikutnya.</li>
                 </ul>
             </div>
+        </section>
+
+        <section class="mission-hud">
+            <article class="quest-board">
+                <span class="section-kicker">Mission Brief</span>
+                <h3>Checklist misi</h3>
+                <div class="objective-list">
+                    <div class="objective-item">
+                        <span class="objective-icon">VID</span>
+                        <div>
+                            <strong>Aktifkan radar video</strong>
+                            <p>Tonton video sampai selesai lalu konfirmasi bahwa timmu sudah mengamati petunjuk utama.</p>
+                        </div>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">LOG</span>
+                        <div>
+                            <strong>Kumpulkan bukti konsep</strong>
+                            <p>Isi catatan awal dan cocokkan semua kartu ciri ke zona grafik yang benar.</p>
+                        </div>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">Q1</span>
+                        <div>
+                            <strong>Kunci jawaban detektif</strong>
+                            <p>Jawab tiga soal dengan alasan yang menunjukkan pemahaman, bukan tebakan.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="quest-status-board">
+                <span class="section-kicker">Status Quest</span>
+                <h3>Progress World 1</h3>
+                <div class="status-list" id="questStatusList"></div>
+                <div class="inline-meter">
+                    <span id="questProgressFill"></span>
+                </div>
+            </article>
         </section>
 
         <section class="activity-card-wide">
@@ -557,11 +596,19 @@
         <section class="activity-card-wide">
             <div class="submit-wrap">
                 <p class="submit-hint">
-                    Pastikan video sudah dikonfirmasi, catatan awal telah diisi, kartu konsep sudah dicocokkan,
-                    dan seluruh soal pemahaman telah dijawab.
+                    Selesaikan seluruh objective world ini agar status mission berubah menjadi clear dan portal guru terbuka.
                 </p>
                 <div class="button" onclick="submitAktivitas1()">Kirim Jawaban Aktivitas 1</div>
             </div>
+        </section>
+
+        <section class="mission-clear" id="missionClearBox">
+            <span class="section-kicker">Mission Clear</span>
+            <h3>World 1 siap dituntaskan</h3>
+            <p>
+                Semua objective utama sudah terpenuhi. Setelah jawaban dikirim, timmu akan memperoleh akses ke
+                gerbang guru untuk membuka World 2.
+            </p>
         </section>
     </main>
 
@@ -605,12 +652,23 @@
                     cekDragDrop();
                 });
             });
+
+            document.querySelectorAll('input[name="s1"], input[name="s2"], input[name="s3"]').forEach((input) => {
+                input.addEventListener("change", updateQuestStatus);
+            });
+
+            ["checkpointJawaban", "alasan1", "alasan2", "alasan3"].forEach((id) => {
+                document.getElementById(id).addEventListener("input", updateQuestStatus);
+            });
+
+            updateQuestStatus();
         }
 
         function konfirmasiVideo() {
             videoSudahDikonfirmasi = true;
             document.getElementById("btnTontonSelesai").style.display = "none";
             document.getElementById("watchStatus").style.display = "inline-flex";
+            updateQuestStatus();
         }
 
         function cekDragDrop() {
@@ -644,6 +702,8 @@
             } else {
                 feedback.style.display = "none";
             }
+
+            updateQuestStatus();
         }
 
         function semuaKartuSudahDipindah() {
@@ -658,6 +718,50 @@
             return Array.from(semuaDiZona).every((item) => {
                 return item.dataset.target === item.closest(".drop-zone").dataset.zone;
             });
+        }
+
+        function semuaSoalTerisi() {
+            return Boolean(document.querySelector('input[name="s1"]:checked')) &&
+                Boolean(document.querySelector('input[name="s2"]:checked')) &&
+                Boolean(document.querySelector('input[name="s3"]:checked')) &&
+                alasan1.value.trim() &&
+                alasan2.value.trim() &&
+                alasan3.value.trim();
+        }
+
+        function updateQuestStatus() {
+            const statuses = [
+                {
+                    done: videoSudahDikonfirmasi,
+                    label: "Radar video aktif",
+                    note: "Video sudah ditonton dan dikonfirmasi."
+                },
+                {
+                    done: checkpointJawaban.value.trim() && semuaKartuBenar(),
+                    label: "Bukti konsep lengkap",
+                    note: "Catatan awal terisi dan semua kartu ditempatkan dengan benar."
+                },
+                {
+                    done: semuaSoalTerisi(),
+                    label: "Jawaban detektif lengkap",
+                    note: "Tiga soal dan seluruh alasan sudah terisi."
+                }
+            ];
+
+            const doneCount = statuses.filter((item) => item.done).length;
+            const wrap = document.getElementById("questStatusList");
+            wrap.innerHTML = statuses.map((item, index) => `
+                <div class="status-item ${item.done ? "done" : "locked"}">
+                    <span class="status-icon">${item.done ? "OK" : index + 1}</span>
+                    <div>
+                        <strong>${item.label}</strong>
+                        <p>${item.note}</p>
+                    </div>
+                </div>
+            `).join("");
+
+            document.getElementById("questProgressFill").style.width = `${(doneCount / statuses.length) * 100}%`;
+            document.getElementById("missionClearBox").classList.toggle("active", doneCount === statuses.length);
         }
 
         function submitAktivitas1() {

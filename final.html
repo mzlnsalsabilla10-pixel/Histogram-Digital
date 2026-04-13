@@ -212,7 +212,7 @@
         }
     </style>
 </head>
-<body onload="cekLogin(); initFinalPage();">
+<body class="arcade-skin" onload="cekLogin(); initFinalPage();">
     <header class="topbar final-topbar">
         <div class="brand-mark">
             <span class="brand-dot"></span>
@@ -230,18 +230,32 @@
     <main class="final-wrap">
         <section class="final-hero">
             <div>
-                <span class="final-pill">Laporan Hasil Belajar</span>
+                <span class="final-pill">Victory Screen</span>
                 <h1 id="finalGreeting">Selamat!</h1>
-                <p id="finalIntro">Kamu telah menyelesaikan seluruh rangkaian pembelajaran histogram berbasis web. Halaman ini merangkum hasil pekerjaanmu dari awal sampai akhir.</p>
+                <p id="finalIntro">Kamu telah menyelesaikan seluruh petualangan histogram. Halaman ini menampilkan ringkasan kemenangan, status world, dan laporan hasil belajarmu.</p>
             </div>
             <div class="hero-side">
-                <h3>Hal yang bisa kamu lakukan di halaman ini</h3>
+                <h3>Yang bisa kamu lakukan di layar kemenangan ini</h3>
                 <ul>
                     <li>Melihat kembali identitas dan hasil belajar yang sudah dikerjakan.</li>
-                    <li>Mengunduh laporan hasil belajar untuk dibaca kembali.</li>
-                    <li>Menyelesaikan sesi belajar dan keluar dari web.</li>
+                    <li>Meninjau semua world yang sudah kamu taklukkan beserta reward-nya.</li>
+                    <li>Mengunduh laporan hasil belajar atau menutup sesi bermain-belajar.</li>
                 </ul>
             </div>
+        </section>
+
+        <section class="mission-hud">
+            <article class="quest-board">
+                <span class="section-kicker">Victory Summary</span>
+                <h3>Petualanganmu sudah tuntas</h3>
+                <div class="status-list" id="victorySummary"></div>
+            </article>
+
+            <article class="reward-panel">
+                <span class="section-kicker">Reward Room</span>
+                <h3>Badge yang berhasil dibuka</h3>
+                <div class="xp-badges" id="finalBadgeWrap"></div>
+            </article>
         </section>
 
         <section class="final-card">
@@ -307,6 +321,7 @@
         function initFinalPage() {
             finalData = collectFinalData();
             renderHero();
+            renderVictorySummary();
             renderIdentity();
             renderStatus();
         }
@@ -358,7 +373,45 @@
         function renderHero() {
             document.getElementById("finalGreeting").innerText = `Selamat, ${finalData.identitas.namaLengkap}!`;
             document.getElementById("finalIntro").innerText =
-                `Kamu dari ${finalData.identitas.kelompokNama} kelas ${finalData.identitas.kelompokKelas} telah menyelesaikan seluruh rangkaian pembelajaran histogram berbasis web. Halaman ini merangkum hasil pekerjaanmu dari awal sampai akhir.`;
+                `Kamu dari ${finalData.identitas.kelompokNama} kelas ${finalData.identitas.kelompokKelas} sudah menuntaskan lima world pembelajaran histogram. Sekarang kamu bisa melihat rangkuman kemenangan dan laporan hasil kerja dari awal sampai akhir.`;
+        }
+
+        function renderVictorySummary() {
+            const progress = getGameProgress();
+            const semuaSelesai = LEVEL_META.every((item) => isLevelDone(item.no));
+            const skorHistogram = finalData.aktivitas4?.kecocokan ?? 0;
+            const summary = [
+                {
+                    label: "World selesai",
+                    note: `${progress.completedCount} dari ${LEVEL_META.length} world berhasil dituntaskan.`
+                },
+                {
+                    label: "XP terkumpul",
+                    note: `${progress.xp} XP masuk ke akun petualanganmu.`
+                },
+                {
+                    label: "Skor boss arena",
+                    note: `Kecocokan histogram pada World 4 mencapai ${skorHistogram}%.`
+                },
+                {
+                    label: "Status akhir",
+                    note: semuaSelesai ? "Semua world clear. Petualangan selesai dengan lengkap." : "Masih ada world yang belum sepenuhnya selesai."
+                }
+            ];
+
+            document.getElementById("victorySummary").innerHTML = summary.map((item, index) => `
+                <div class="status-item done">
+                    <span class="status-icon">${index + 1}</span>
+                    <div>
+                        <strong>${item.label}</strong>
+                        <p>${item.note}</p>
+                    </div>
+                </div>
+            `).join("");
+
+            document.getElementById("finalBadgeWrap").innerHTML = progress.badges.length
+                ? progress.badges.map((badge) => `<span class="xp-badge">${badge}</span>`).join("")
+                : `<span class="xp-badge">Belum ada badge</span>`;
         }
 
         function renderIdentity() {
@@ -441,7 +494,7 @@
         @media print { body { padding: 12px; } }
     </style>
 </head>
-<body>
+<body class="arcade-skin">
     <h1>Laporan Hasil Belajar Histogram</h1>
     <p>Laporan ini memuat identitas dan hasil pekerjaan murid dari Aktivitas 1 sampai Aktivitas 5.</p>
 

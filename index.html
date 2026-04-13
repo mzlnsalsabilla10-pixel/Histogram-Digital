@@ -6,8 +6,8 @@
     <title>Histogram Digital Berbasis Web</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="landing-body">
-    <header class="topbar sticky-topbar">
+<body class="landing-body arcade-skin">
+    <header class="topbar sticky-topbar has-hamburger" id="landingTopbar">
         <div class="brand-mark">
             <span class="brand-dot"></span>
             <div>
@@ -15,14 +15,19 @@
                 <p>Media pembelajaran interaktif</p>
             </div>
         </div>
-        <nav class="topnav">
+        <button class="menu-toggle" type="button" id="landingMenuToggle" aria-expanded="false" aria-controls="landingNav" aria-label="Buka menu navigasi">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav class="topnav nav-drawer" id="landingNav">
             <a href="#tentang-media">Tentang Media</a>
             <a href="#tujuan-pembelajaran">Tujuan Pembelajaran</a>
             <a href="#panduan-penggunaan">Panduan Penggunaan</a>
-            <a href="#referensi">Referensi</a>
             <a class="topnav-cta" id="navAction" href="login.html">Mulai Belajar</a>
         </nav>
     </header>
+    <div class="topbar-spacer" id="landingTopbarSpacer" aria-hidden="true"></div>
 
     <main class="landing-main">
         <section class="hero-panel">
@@ -33,33 +38,33 @@
                     Media pembelajaran interaktif untuk membantu murid memahami konsep histogram
                     secara bertahap melalui eksplorasi, pengolahan data, visualisasi, dan refleksi pembelajaran.
                 </p>
-
-                <div class="hero-actions">
-                    <a class="hero-button primary" id="heroPrimaryAction" href="login.html">Mulai Belajar</a>
-                    <a class="hero-button secondary" href="#panduan-penggunaan">Lihat Panduan</a>
-                    <a class="hero-button tertiary hidden-action" id="heroReturnAction" href="beranda.html">Kembali ke Beranda</a>
-                </div>
             </div>
 
             <div class="hero-visual" aria-hidden="true">
-                <div class="chart-card">
-                    <div class="mini-chart">
-                        <span style="height: 34%"></span>
-                        <span style="height: 52%"></span>
-                        <span style="height: 76%"></span>
-                        <span style="height: 88%"></span>
-                        <span style="height: 64%"></span>
-                        <span style="height: 42%"></span>
+                <div class="hero-visual-frame">
+                    <div class="chart-card">
+                        <div class="mini-chart">
+                            <span style="height: 34%"></span>
+                            <span style="height: 52%"></span>
+                            <span style="height: 76%"></span>
+                            <span style="height: 88%"></span>
+                            <span style="height: 64%"></span>
+                            <span style="height: 42%"></span>
+                        </div>
+                        <div class="chart-caption">
+                            <strong>Belajar dari data nyata</strong>
+                            <p>Konsep, tabel distribusi, dan histogram saling terhubung dalam satu alur belajar.</p>
+                        </div>
                     </div>
-                    <div class="chart-caption">
-                        <strong>Belajar dari data nyata</strong>
-                        <p>Konsep, tabel distribusi, dan histogram saling terhubung dalam satu alur belajar.</p>
-                    </div>
-                </div>
 
-                <div class="floating-chip chip-one">Data</div>
-                <div class="floating-chip chip-two">Frekuensi</div>
-                <div class="floating-chip chip-three">Histogram</div>
+                    <div class="floating-chip chip-one">Data</div>
+                    <div class="floating-chip chip-two">Frekuensi</div>
+                    <div class="floating-chip chip-three">Histogram</div>
+                </div>
+            </div>
+
+            <div class="hero-actions hero-actions-visual">
+                <a class="hero-button primary" id="heroPrimaryAction" href="login.html">Mulai Belajar</a>
             </div>
         </section>
 
@@ -154,44 +159,70 @@
             </div>
         </section>
 
-        <section class="content-section" id="referensi">
-            <div class="section-heading">
-                <span class="section-kicker">Referensi</span>
-                <h2>Sumber belajar dan pengembangan media</h2>
-            </div>
-
-            <div class="reference-list">
-                <article class="reference-card">
-                    <h3>Sumber Video</h3>
-                    <p>Video pembelajaran histogram yang digunakan pada aktivitas eksplorasi konsep.</p>
-                </article>
-                <article class="reference-card">
-                    <h3>Sumber Materi</h3>
-                    <p>Buku, modul, dan materi statistika yang mendukung pembelajaran histogram.</p>
-                </article>
-                <article class="reference-card">
-                    <h3>Referensi Pendukung</h3>
-                    <p>Sumber pengembangan media, visualisasi data, dan pembelajaran berbasis web.</p>
-                </article>
-            </div>
-        </section>
     </main>
 
     <script>
         const sudahLogin = localStorage.getItem("login") === "true";
         const navAction = document.getElementById("navAction");
         const heroPrimaryAction = document.getElementById("heroPrimaryAction");
-        const heroReturnAction = document.getElementById("heroReturnAction");
+        const landingTopbar = document.getElementById("landingTopbar");
+        const landingTopbarSpacer = document.getElementById("landingTopbarSpacer");
+        const landingMenuToggle = document.getElementById("landingMenuToggle");
+        const landingNav = document.getElementById("landingNav");
 
         if (sudahLogin) {
             navAction.textContent = "Kembali ke Beranda";
             navAction.href = "beranda.html";
             heroPrimaryAction.textContent = "Kembali ke Beranda";
             heroPrimaryAction.href = "beranda.html";
-            heroReturnAction.classList.remove("hidden-action");
-        } else {
-            heroReturnAction.remove();
         }
+
+        function tutupLandingMenu() {
+            landingTopbar.classList.remove("menu-open");
+            landingMenuToggle.setAttribute("aria-expanded", "false");
+        }
+
+        landingMenuToggle.addEventListener("click", () => {
+            const isOpen = landingTopbar.classList.toggle("menu-open");
+            landingMenuToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+
+        landingNav.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                if (window.innerWidth <= 980) {
+                    tutupLandingMenu();
+                }
+            });
+        });
+
+        document.addEventListener("click", (event) => {
+            if (window.innerWidth > 980) return;
+            if (!landingTopbar.contains(event.target)) {
+                tutupLandingMenu();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 980) {
+                tutupLandingMenu();
+            }
+            updateLandingTopbarMetrics();
+            toggleLandingTopbar();
+        });
+
+        function updateLandingTopbarMetrics() {
+            landingTopbarSpacer.style.setProperty("--topbar-space", `${landingTopbar.offsetHeight + 8}px`);
+        }
+
+        function toggleLandingTopbar() {
+            const shouldFloat = window.scrollY > 12;
+            landingTopbar.classList.toggle("is-floating", shouldFloat);
+            landingTopbarSpacer.classList.toggle("active", shouldFloat);
+        }
+
+        window.addEventListener("scroll", toggleLandingTopbar, { passive: true });
+        updateLandingTopbarMetrics();
+        toggleLandingTopbar();
     </script>
 </body>
 </html>

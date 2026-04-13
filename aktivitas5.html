@@ -270,7 +270,7 @@
         }
     </style>
 </head>
-<body onload="cekLogin(); cekAkses(5);">
+<body class="arcade-skin" onload="cekLogin(); cekAkses(5);">
     <header class="topbar reflection-topbar">
         <div class="brand-mark">
             <span class="brand-dot"></span>
@@ -288,18 +288,57 @@
     <main class="reflection-wrap">
         <section class="reflection-hero">
             <div>
-                <span class="reflection-pill">Aktivitas 5 - Refleksi Pembelajaran</span>
-                <h1>Meninjau kembali proses belajar membuat histogram</h1>
-                <p>Pada aktivitas ini, kamu diajak mengingat kembali perjalanan belajar yang telah dilalui, lalu menuliskan pemahaman, kesulitan, dan strategi yang kamu peroleh selama mempelajari histogram.</p>
+                <span class="reflection-pill">World 5 - Reflection</span>
+                <h1>Masuk ke ruang debrief setelah menaklukkan histogram</h1>
+                <p>World terakhir ini bukan tentang menjawab cepat, tetapi meninjau strategi, kesalahan, dan pemahaman yang tumbuh selama petualangan membuat histogram.</p>
             </div>
             <div class="hero-side">
-                <h3>Fokus aktivitas ini</h3>
+                <h3>Target world ini</h3>
                 <ul>
                     <li>Mengingat kembali tahapan belajar dari konsep hingga pembuatan histogram.</li>
                     <li>Menyadari bagian yang sudah dipahami dan bagian yang masih menantang.</li>
-                    <li>Menuliskan refleksi tanpa takut salah, karena tidak ada jawaban benar atau salah.</li>
+                    <li>Menutup petualangan dengan refleksi yang jujur, sadar, dan bermakna.</li>
                 </ul>
             </div>
+        </section>
+
+        <section class="mission-hud">
+            <article class="quest-board">
+                <span class="section-kicker">Mission Brief</span>
+                <h3>Objective ruang refleksi</h3>
+                <div class="objective-list">
+                    <div class="objective-item">
+                        <span class="objective-icon">MEM</span>
+                        <div>
+                            <strong>Ambil ulang jejak belajar</strong>
+                            <p>Ingat kembali apa yang kamu pahami tentang histogram dan proses membangun data.</p>
+                        </div>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">EVAL</span>
+                        <div>
+                            <strong>Nilai strategi timmu</strong>
+                            <p>Ceritakan kesalahan, tantangan, dan alasan di balik pilihan langkahmu.</p>
+                        </div>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">UP</span>
+                        <div>
+                            <strong>Tentukan upgrade berikutnya</strong>
+                            <p>Tuliskan apa yang akan kamu perbaiki jika harus mengulang petualangan ini.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="quest-status-board">
+                <span class="section-kicker">Status Quest</span>
+                <h3>Progress World 5</h3>
+                <div class="status-list" id="questStatusList"></div>
+                <div class="inline-meter">
+                    <span id="questProgressFill"></span>
+                </div>
+            </article>
         </section>
 
         <section class="reflection-card">
@@ -384,10 +423,56 @@
                 <button class="reflection-btn" onclick="submitRefleksi()">Simpan Refleksi dan Selesaikan</button>
             </div>
         </section>
+
+        <section class="mission-clear" id="missionClearBox">
+            <span class="section-kicker">Mission Clear</span>
+            <h3>Debrief lengkap</h3>
+            <p>Seluruh pertanyaan refleksi sudah terisi. Setelah disimpan, kamu akan masuk ke layar kemenangan akhir untuk melihat rangkuman hasil petualanganmu.</p>
+        </section>
     </main>
 
     <script src="script.js"></script>
     <script>
+        window.addEventListener("load", () => {
+            ["r1", "r2", "r3", "r4"].forEach((id) => {
+                document.getElementById(id).addEventListener("input", updateQuestStatus);
+            });
+            updateQuestStatus();
+        });
+
+        function updateQuestStatus() {
+            const statuses = [
+                {
+                    done: Boolean(document.getElementById("r1").value.trim() && document.getElementById("r2").value.trim()),
+                    label: "Jejak pemahaman terekam",
+                    note: "Refleksi tentang pemahaman baru dan proses berpikir sudah terisi."
+                },
+                {
+                    done: Boolean(document.getElementById("r3").value.trim()),
+                    label: "Evaluasi hasil tercatat",
+                    note: "Perbedaan atau kesalahan pada histogram sudah dianalisis."
+                },
+                {
+                    done: Boolean(document.getElementById("r4").value.trim()),
+                    label: "Strategi upgrade siap",
+                    note: "Langkah perbaikan untuk percobaan berikutnya sudah ditulis."
+                }
+            ];
+
+            const doneCount = statuses.filter((item) => item.done).length;
+            document.getElementById("questStatusList").innerHTML = statuses.map((item, index) => `
+                <div class="status-item ${item.done ? "done" : "locked"}">
+                    <span class="status-icon">${item.done ? "OK" : index + 1}</span>
+                    <div>
+                        <strong>${item.label}</strong>
+                        <p>${item.note}</p>
+                    </div>
+                </div>
+            `).join("");
+            document.getElementById("questProgressFill").style.width = `${(doneCount / statuses.length) * 100}%`;
+            document.getElementById("missionClearBox").classList.toggle("active", doneCount === statuses.length);
+        }
+
         function submitRefleksi() {
             const r1 = document.getElementById("r1").value.trim();
             const r2 = document.getElementById("r2").value.trim();

@@ -346,7 +346,7 @@
         }
     </style>
 </head>
-<body onload="cekAkses(2); siapkanAktivitas2();">
+<body class="arcade-skin" onload="cekAkses(2); siapkanAktivitas2();">
     <header class="topbar data-topbar">
         <div class="brand-mark">
             <span class="brand-dot"></span>
@@ -364,23 +364,62 @@
     <main class="data-stage">
         <section class="data-hero">
             <div>
-                <span class="data-pill">Aktivitas 2 - Pengumpulan Data</span>
-                <h1>Kumpulkan data nyata untuk membuat histogram</h1>
+                <span class="data-pill">World 2 - Data Collection</span>
+                <h1>Kumpulkan energi data dari dunia nyata</h1>
                 <p>
-                    Pada aktivitas ini, murid mengumpulkan data numerik kontinu dari konteks nyata,
-                    lalu menyiapkannya untuk digunakan dalam penyusunan tabel distribusi frekuensi dan histogram digital.
+                    Di world ini, timmu berburu data numerik kontinu sebagai sumber energi utama untuk
+                    membangun histogram. Semakin rapi dan lengkap datanya, semakin mudah world berikutnya dibuka.
                 </p>
             </div>
 
             <div class="data-side-card">
-                <h3>Hal penting yang perlu diperhatikan</h3>
+                <h3>Target world ini</h3>
                 <ul>
                     <li>Pilih data yang bersifat numerik kontinu.</li>
                     <li>Gunakan data dari konteks nyata di lingkungan sekitar.</li>
                     <li>Kumpulkan minimal 25 data agar cukup untuk dianalisis.</li>
-                    <li>Data yang dikumpulkan akan dipakai pada aktivitas berikutnya.</li>
+                    <li>Data yang dikumpulkan akan menjadi bahan bakar World 3 dan World 4.</li>
                 </ul>
             </div>
+        </section>
+
+        <section class="mission-hud">
+            <article class="quest-board">
+                <span class="section-kicker">Mission Brief</span>
+                <h3>Objective berburu data</h3>
+                <div class="objective-list">
+                    <div class="objective-item">
+                        <span class="objective-icon">SET</span>
+                        <div>
+                            <strong>Tentukan variabel buruan</strong>
+                            <p>Pilih konteks data, nama variabel, dan satuan yang jelas sebelum mengisi angka.</p>
+                        </div>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">25</span>
+                        <div>
+                            <strong>Isi energy meter</strong>
+                            <p>Kumpulkan minimal 25 data valid agar power meter world ini penuh.</p>
+                        </div>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">REF</span>
+                        <div>
+                            <strong>Laporkan alasan pilihan data</strong>
+                            <p>Tuliskan refleksi singkat tentang mengapa data ini cocok dibuat histogram.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="quest-status-board">
+                <span class="section-kicker">Status Quest</span>
+                <h3>Progress World 2</h3>
+                <div class="status-list" id="questStatusList"></div>
+                <div class="inline-meter">
+                    <span id="questProgressFill"></span>
+                </div>
+            </article>
         </section>
 
         <section class="data-card">
@@ -521,11 +560,16 @@
         <section class="data-card">
             <div class="submit-panel">
                 <p>
-                    Pastikan identitas data telah diisi, minimal 25 data sudah terkumpul, dan refleksi singkat
-                    sudah dituliskan sebelum melanjutkan.
+                    Saat semua objective selesai, world ini siap ditutup dan data akan dibawa ke Data Structuring pada World 3.
                 </p>
                 <div class="button" onclick="selesaiAktivitas2()">Simpan Data dan Lanjutkan</div>
             </div>
+        </section>
+
+        <section class="mission-clear" id="missionClearBox">
+            <span class="section-kicker">Mission Clear</span>
+            <h3>Energi data sudah penuh</h3>
+            <p>Variabel data jelas, target minimal 25 data tercapai, dan refleksi singkat sudah siap. Kamu bisa menutup world ini dan lanjut ke penyusunan tabel distribusi frekuensi.</p>
         </section>
     </main>
 
@@ -541,6 +585,10 @@
                     tambahData();
                 }
             });
+
+            ["namaData", "satuanData", "refleksiAkt2"].forEach((id) => {
+                document.getElementById(id).addEventListener("input", updateQuestStatus);
+            });
         }
 
         function pilihKonteks(nama, satuan, elemen) {
@@ -549,6 +597,7 @@
 
             document.querySelectorAll(".context-card").forEach((card) => card.classList.remove("active"));
             elemen.classList.add("active");
+            updateQuestStatus();
         }
 
         function tambahData() {
@@ -629,6 +678,44 @@
             } else {
                 progressMessage.textContent = "Target minimal data sudah tercapai. Kamu masih bisa menambahkan data jika diperlukan.";
             }
+
+            updateQuestStatus();
+        }
+
+        function updateQuestStatus() {
+            const namaData = document.getElementById("namaData").value.trim();
+            const satuanData = document.getElementById("satuanData").value.trim();
+            const refleksi = document.getElementById("refleksiAkt2").value.trim();
+            const statuses = [
+                {
+                    done: Boolean(namaData && satuanData),
+                    label: "Variabel buruan ditetapkan",
+                    note: "Nama data dan satuan sudah jelas."
+                },
+                {
+                    done: dataAktivitas.length >= 25,
+                    label: "Energy meter penuh",
+                    note: `${dataAktivitas.length} data terkumpul. Target minimal adalah 25 data.`
+                },
+                {
+                    done: Boolean(refleksi),
+                    label: "Laporan refleksi siap",
+                    note: "Alasan mengapa data cocok untuk histogram sudah dituliskan."
+                }
+            ];
+
+            const doneCount = statuses.filter((item) => item.done).length;
+            document.getElementById("questStatusList").innerHTML = statuses.map((item, index) => `
+                <div class="status-item ${item.done ? "done" : "locked"}">
+                    <span class="status-icon">${item.done ? "OK" : index + 1}</span>
+                    <div>
+                        <strong>${item.label}</strong>
+                        <p>${item.note}</p>
+                    </div>
+                </div>
+            `).join("");
+            document.getElementById("questProgressFill").style.width = `${(doneCount / statuses.length) * 100}%`;
+            document.getElementById("missionClearBox").classList.toggle("active", doneCount === statuses.length);
         }
 
         function selesaiAktivitas2() {

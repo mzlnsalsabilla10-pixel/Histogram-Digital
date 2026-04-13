@@ -6,8 +6,8 @@
     <title>Login Pembelajaran Histogram</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="landing-body">
-    <header class="topbar sticky-topbar">
+<body class="landing-body arcade-skin">
+    <header class="topbar sticky-topbar has-hamburger" id="loginTopbar">
         <div class="brand-mark">
             <span class="brand-dot"></span>
             <div>
@@ -15,14 +15,18 @@
                 <p>Login pembelajaran</p>
             </div>
         </div>
-        <nav class="topnav">
+        <button class="menu-toggle" type="button" id="loginMenuToggle" aria-expanded="false" aria-controls="loginNav" aria-label="Buka menu navigasi">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav class="topnav nav-drawer" id="loginNav">
             <a href="index.html#tentang-media">Tentang Media</a>
             <a href="index.html#tujuan-pembelajaran">Tujuan Pembelajaran</a>
             <a href="index.html#panduan-penggunaan">Panduan Penggunaan</a>
-            <a href="index.html#referensi">Referensi</a>
-            <a class="topnav-cta" href="login.html">Mulai Belajar</a>
         </nav>
     </header>
+    <div class="topbar-spacer" id="loginTopbarSpacer" aria-hidden="true"></div>
 
     <main class="landing-main">
         <section class="content-section form-section single-form-section">
@@ -33,31 +37,84 @@
             </div>
 
             <div class="login-shell">
-                <div class="login-container modern-login">
+                <form class="login-container modern-login" id="loginForm">
                     <div class="inputBox">
-                        <label>Nama Lengkap</label>
+                        <label for="namaLengkap">Nama Lengkap</label>
                         <input type="text" id="namaLengkap" placeholder="Masukkan nama lengkap">
                     </div>
 
                     <div class="inputBox">
-                        <label>Nama Kelompok</label>
+                        <label for="kelompokNama">Nama Kelompok</label>
                         <input type="text" id="kelompokNama" placeholder="Misal: Kelompok Histogram 1">
                     </div>
 
                     <div class="inputBox">
-                        <label>Kelas / Rombel</label>
+                        <label for="kelompokKelas">Kelas / Rombel</label>
                         <input type="text" id="kelompokKelas" placeholder="Misal: X-3">
                     </div>
 
-                    <div class="button landing-submit" onclick="mulai()">
+                    <button class="button landing-submit" type="submit">
                         Masuk ke Beranda Belajar
-                    </div>
-                </div>
+                    </button>
+                </form>
             </div>
         </section>
     </main>
 
     <script>
+        const loginTopbar = document.getElementById("loginTopbar");
+        const loginTopbarSpacer = document.getElementById("loginTopbarSpacer");
+        const loginMenuToggle = document.getElementById("loginMenuToggle");
+        const loginNav = document.getElementById("loginNav");
+        const loginForm = document.getElementById("loginForm");
+
+        function tutupLoginMenu() {
+            loginTopbar.classList.remove("menu-open");
+            loginMenuToggle.setAttribute("aria-expanded", "false");
+        }
+
+        loginMenuToggle.addEventListener("click", () => {
+            const isOpen = loginTopbar.classList.toggle("menu-open");
+            loginMenuToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+
+        loginNav.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                if (window.innerWidth <= 980) {
+                    tutupLoginMenu();
+                }
+            });
+        });
+
+        document.addEventListener("click", (event) => {
+            if (window.innerWidth > 980) return;
+            if (!loginTopbar.contains(event.target)) {
+                tutupLoginMenu();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 980) {
+                tutupLoginMenu();
+            }
+            updateLoginTopbarMetrics();
+            toggleLoginTopbar();
+        });
+
+        function updateLoginTopbarMetrics() {
+            loginTopbarSpacer.style.setProperty("--topbar-space", `${loginTopbar.offsetHeight + 8}px`);
+        }
+
+        function toggleLoginTopbar() {
+            const shouldFloat = window.scrollY > 12;
+            loginTopbar.classList.toggle("is-floating", shouldFloat);
+            loginTopbarSpacer.classList.toggle("active", shouldFloat);
+        }
+
+        window.addEventListener("scroll", toggleLoginTopbar, { passive: true });
+        updateLoginTopbarMetrics();
+        toggleLoginTopbar();
+
         function mulai() {
             let namaLengkap = document.getElementById("namaLengkap").value.trim();
             let nama = document.getElementById("kelompokNama").value.trim();
@@ -75,6 +132,11 @@
 
             window.location.href = "beranda.html";
         }
+
+        loginForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            mulai();
+        });
     </script>
 </body>
 </html>

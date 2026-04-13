@@ -86,7 +86,7 @@
         }
     </style>
 </head>
-<body onload="cekAkses(3); muatData(); initA3();">
+<body class="arcade-skin" onload="cekAkses(3); muatData(); initA3();">
     <header class="topbar a3-topbar">
         <div class="brand-mark">
             <span class="brand-dot"></span>
@@ -104,24 +104,63 @@
     <main class="a3-wrap">
         <section class="a3-hero">
             <div>
-                <span class="pill">Aktivitas 3 - Tabel Distribusi Frekuensi</span>
-                <h1>Olah data sampai siap dibuat histogram</h1>
-                <p>Pada aktivitas ini, murid memahami unsur penting tabel distribusi frekuensi lalu mengolah data hasil Aktivitas 2 menjadi interval kelas dan frekuensi.</p>
+                <span class="pill">World 3 - Data Structuring</span>
+                <h1>Rakitan data mentahmu menjadi tabel yang siap tempur</h1>
+                <p>Di bengkel ini, kamu mengubah data hasil buruan menjadi tabel distribusi frekuensi. Setiap hitungan yang tepat akan mengaktifkan mesin pembentuk histogram.</p>
             </div>
             <div class="hero-side">
-                <h3>Fokus belajar</h3>
+                <h3>Target world ini</h3>
                 <ul>
                     <li>Memahami minimum, maksimum, jangkauan, kelas, interval, dan frekuensi.</li>
                     <li>Menggunakan data sendiri untuk membangun tabel distribusi frekuensi.</li>
-                    <li>Menyiapkan hasil akhir untuk Aktivitas 4.</li>
+                    <li>Mengisi mesin tabel dengan interval dan frekuensi yang benar untuk membuka boss arena histogram.</li>
                 </ul>
             </div>
         </section>
 
+        <section class="mission-hud">
+            <article class="quest-board">
+                <span class="section-kicker">Mission Brief</span>
+                <h3>Objective bengkel frekuensi</h3>
+                <div class="objective-list">
+                    <div class="objective-item">
+                        <span class="objective-icon">NOTE</span>
+                        <div>
+                            <strong>Kunci konsep bengkel</strong>
+                            <p>Tulis catatan inti agar proses hitung dilakukan dengan sadar, bukan sekadar mengikuti rumus.</p>
+                        </div>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">CALC</span>
+                        <div>
+                            <strong>Aktifkan mesin hitung</strong>
+                            <p>Masukkan jangkauan, banyak kelas, dan panjang interval secara tepat.</p>
+                        </div>
+                    </div>
+                    <div class="objective-item">
+                        <span class="objective-icon">TAB</span>
+                        <div>
+                            <strong>Rakitan tabel selesai</strong>
+                            <p>Susun interval kelas dan frekuensi dengan rapi sampai ringkasan siap dibawa ke world berikutnya.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="quest-status-board">
+                <span class="section-kicker">Status Quest</span>
+                <h3>Progress World 3</h3>
+                <div class="status-list" id="questStatusList"></div>
+                <div class="inline-meter">
+                    <span id="questProgressFill"></span>
+                </div>
+            </article>
+        </section>
+
         <section class="a3-card steps">
-            <div class="step-card active" id="stepCard1"><div class="step-no">1</div><strong>Pahami Konsep</strong><p>Pelajari materi inti dan tulis catatanmu.</p></div>
-            <div class="step-card" id="stepCard2"><div class="step-no">2</div><strong>Olah Data dan Susun Tabel</strong><p>Hitung unsur data lalu bentuk interval dan frekuensi.</p></div>
-            <div class="step-card" id="stepCard3"><div class="step-no">3</div><strong>Ringkasan</strong><p>Periksa hasil akhir sebelum lanjut ke histogram.</p></div>
+            <div class="step-card active" id="stepCard1"><div class="step-no">1</div><strong>Briefing Bengkel</strong><p>Pelajari materi inti dan tulis catatanmu.</p></div>
+            <div class="step-card" id="stepCard2"><div class="step-no">2</div><strong>Nyalakan Mesin Tabel</strong><p>Hitung unsur data lalu bentuk interval dan frekuensi.</p></div>
+            <div class="step-card" id="stepCard3"><div class="step-no">3</div><strong>Core Ringkasan</strong><p>Periksa hasil akhir sebelum lanjut ke histogram.</p></div>
         </section>
 
         <section class="step-panel active" id="step1">
@@ -277,6 +316,12 @@
                 </div>
             </div>
         </section>
+
+        <section class="mission-clear" id="missionClearBox">
+            <span class="section-kicker">Mission Clear</span>
+            <h3>Mesin tabel berhasil diaktifkan</h3>
+            <p>Catatan konsep, perhitungan, dan tabel distribusi frekuensi sudah lengkap. World 4 siap dibuka untuk membangun histogram digital.</p>
+        </section>
     </main>
 
     <script src="script.js"></script>
@@ -294,6 +339,15 @@
 
         function initA3() {
             setStep(1);
+            document.getElementById("catatanKonsep").addEventListener("input", updateQuestStatus);
+            ["inputRange", "inputKelas", "inputInterval"].forEach((id) => {
+                document.getElementById(id).addEventListener("input", () => {
+                    hitungSudahBenar = false;
+                    document.getElementById("btnBuatTabel").disabled = true;
+                    updateQuestStatus();
+                });
+            });
+            updateQuestStatus();
         }
 
         function muatData() {
@@ -348,6 +402,7 @@
                 if (i === no) document.getElementById(`stepCard${i}`).classList.add("active");
             }
             window.scrollTo({ top: 0, behavior: "smooth" });
+            updateQuestStatus();
         }
 
         function goStep(no) {
@@ -381,6 +436,7 @@
 
             hitungSudahBenar = inputRange === rangeVal && inputKelas === kelasVal && inputInterval === intervalVal;
             document.getElementById("btnBuatTabel").disabled = !hitungSudahBenar;
+            updateQuestStatus();
         }
 
         function buatTabel() {
@@ -412,6 +468,7 @@
             document.getElementById("intervalHint").innerText =
                 `Petunjuk: batas bawah kelas pertama dimulai dari ${minVal}, dan batas atas kelas terakhir sebaiknya mencapai ${maxVal}.`;
             showFeedback("Tabel interval sudah dibentuk. Susun interval kelasmu sendiri dengan memperhatikan batas awal dan batas akhir data.");
+            updateQuestStatus();
         }
 
         function cekTabel() {
@@ -447,12 +504,14 @@
                 tabelSudahBenar = false;
                 document.getElementById("btnKeRingkasan").disabled = true;
                 showFeedback("Masih ada interval yang belum tepat. Periksa kembali urutan kelas, batas bawah, batas atas, dan lebar interval.", true);
+                updateQuestStatus();
                 return;
             }
 
             tabelSudahBenar = true;
             document.getElementById("btnKeRingkasan").disabled = false;
             showFeedback("Bagus. Interval kelas dan frekuensi yang kamu isi sudah sesuai.");
+            updateQuestStatus();
         }
 
         function keRingkasan() {
@@ -474,6 +533,7 @@
             });
 
             setStep(3);
+            updateQuestStatus();
         }
 
         function showFeedback(text, isError = false) {
@@ -482,6 +542,39 @@
             box.style.background = isError ? "#fff1f2" : "#eef4ff";
             box.style.color = isError ? "#b42318" : "#3154d7";
             box.textContent = text;
+        }
+
+        function updateQuestStatus() {
+            const statuses = [
+                {
+                    done: Boolean(document.getElementById("catatanKonsep").value.trim()),
+                    label: "Catatan bengkel tersimpan",
+                    note: "Catatan konsep inti sudah ditulis."
+                },
+                {
+                    done: hitungSudahBenar,
+                    label: "Mesin hitung aktif",
+                    note: "Jangkauan, banyak kelas, dan interval sudah benar."
+                },
+                {
+                    done: tabelSudahBenar && intervalKelas.length > 0,
+                    label: "Rakitan tabel siap pakai",
+                    note: "Interval kelas dan frekuensi sudah lolos pengecekan."
+                }
+            ];
+
+            const doneCount = statuses.filter((item) => item.done).length;
+            document.getElementById("questStatusList").innerHTML = statuses.map((item, index) => `
+                <div class="status-item ${item.done ? "done" : "locked"}">
+                    <span class="status-icon">${item.done ? "OK" : index + 1}</span>
+                    <div>
+                        <strong>${item.label}</strong>
+                        <p>${item.note}</p>
+                    </div>
+                </div>
+            `).join("");
+            document.getElementById("questProgressFill").style.width = `${(doneCount / statuses.length) * 100}%`;
+            document.getElementById("missionClearBox").classList.toggle("active", doneCount === statuses.length);
         }
 
         function submitAktivitas3() {

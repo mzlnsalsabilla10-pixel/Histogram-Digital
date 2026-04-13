@@ -1,6 +1,49 @@
 /* ============================================================
    CEK LOGIN - WAJIB SEBELUM MASUK WEB
    ============================================================ */
+const LEVEL_META = [
+    {
+        no: 1,
+        world: "World 1",
+        title: "Graph Lab",
+        hook: "Membedakan diagram batang dan histogram dari petunjuk visual.",
+        reward: "Badge Pengintai Grafik",
+        xp: 120
+    },
+    {
+        no: 2,
+        world: "World 2",
+        title: "Data Collection",
+        hook: "Mengumpulkan minimal 25 data numerik kontinu dari dunia nyata.",
+        reward: "Badge Pengumpul Data",
+        xp: 160
+    },
+    {
+        no: 3,
+        world: "World 3",
+        title: "Data Structuring",
+        hook: "Mengolah data menjadi tabel distribusi frekuensi yang akurat.",
+        reward: "Badge Penjaga Interval",
+        xp: 180
+    },
+    {
+        no: 4,
+        world: "World 4",
+        title: "Histogram Builder",
+        hook: "Membangun histogram lengkap dari tabel distribusi frekuensi.",
+        reward: "Badge Arsitek Histogram",
+        xp: 220
+    },
+    {
+        no: 5,
+        world: "World 5",
+        title: "Reflection",
+        hook: "Meninjau strategi, pemahaman, dan perbaikan belajar.",
+        reward: "Badge Penjelajah Bermakna",
+        xp: 120
+    }
+];
+
 function cekLogin() {
     if (!localStorage.getItem("namaLengkap") || !localStorage.getItem("kelompokNama") || !localStorage.getItem("kelompokKelas")) {
         window.location.href = "login.html";
@@ -41,6 +84,34 @@ function unlock(no) {
 
 function bukaHalaman(file) {
     window.location.href = file;
+}
+
+function getLevelMeta(no) {
+    return LEVEL_META.find((item) => item.no === no);
+}
+
+function isLevelDone(no) {
+    return localStorage.getItem(`aktivitas${no}`) === "true";
+}
+
+function isLevelUnlocked(no) {
+    if (no === 1) return true;
+    if (no === 2) return localStorage.getItem("aktivitas2_unlock") === "true";
+    return isLevelDone(no - 1);
+}
+
+function getGameProgress() {
+    const completed = LEVEL_META.filter((item) => isLevelDone(item.no));
+    const xp = completed.reduce((total, item) => total + item.xp, 0);
+    const badges = completed.map((item) => item.reward);
+    const nextLevel = LEVEL_META.find((item) => !isLevelDone(item.no));
+
+    return {
+        completedCount: completed.length,
+        xp,
+        badges,
+        nextLevel
+    };
 }
 
 /* ============================================================
@@ -116,6 +187,9 @@ function cekKodeAkt2() {
         localStorage.setItem("aktivitas2_unlock", "true");
         alert("Aktivitas 2 berhasil dibuka. Silakan lanjutkan.");
         unlock(2);
+        if (typeof renderProgress === "function") {
+            renderProgress();
+        }
     } else {
         alert("Kode salah. Silakan periksa kembali kode dari guru.");
     }
