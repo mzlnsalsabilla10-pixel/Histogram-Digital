@@ -101,7 +101,7 @@
 
         .section-title h2 {
             font-family: 'Sora', sans-serif;
-            color: #21358e;
+            color: #cf2727;
             font-size: clamp(1.4rem, 2vw, 2rem);
         }
 
@@ -182,6 +182,7 @@
             flex-wrap: wrap;
             gap: 12px;
             align-items: center;
+            justify-content: flex-start;
         }
 
         .video-fallback a {
@@ -259,6 +260,11 @@
 
         .drag-item.dragging {
             opacity: 0.55;
+        }
+
+        .drag-item.selected-touch {
+            border-color: #cf2727;
+            box-shadow: 0 0 0 4px rgba(207, 39, 39, 0.16), 0 8px 18px rgba(49, 84, 215, 0.08);
         }
 
         .drop-columns {
@@ -353,17 +359,97 @@
             z-index: 1000;
         }
 
+        .mobile-drag-note {
+            display: none;
+            margin-top: 14px;
+            margin-bottom: 18px;
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: #fff4cf;
+            color: #7a4b20;
+            border: 1px solid rgba(255, 184, 92, 0.38);
+            line-height: 1.65;
+            font-weight: 600;
+        }
+
         @media (max-width: 960px) {
             .activity-hero,
-            .drag-grid,
+            .drag-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .drop-columns {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .drag-items {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .drag-item {
+                min-height: 86px;
+                touch-action: none;
+            }
+
+            .drop-zone {
+                min-height: 260px;
+                padding: 16px;
+            }
+
+            .mobile-drag-note {
+                display: block;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .activity-topbar.has-hamburger {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                gap: 14px;
+            }
+
+            .activity-topbar.has-hamburger .menu-toggle {
+                display: inline-flex;
+                margin-left: auto;
+            }
+
+            .activity-topbar.has-hamburger .nav-drawer {
+                position: absolute;
+                top: calc(100% + 10px);
+                left: 0;
+                right: 0;
+                width: auto;
+                padding: 12px;
+                display: none;
+            }
+
+            .activity-topbar.has-hamburger.menu-open .nav-drawer {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .activity-topbar.has-hamburger .nav-drawer a {
+                width: 100%;
+                text-align: center;
+            }
+
+            .drag-items,
             .drop-columns {
                 grid-template-columns: 1fr;
+            }
+
+            .drop-zone {
+                min-height: 220px;
             }
         }
     </style>
 </head>
 <body class="arcade-skin" onload="cekLogin(); cekAkses(1); siapkanAktivitas1();">
-    <header class="topbar activity-topbar">
+    <header class="topbar activity-topbar has-hamburger" id="activityTopbar">
         <div class="brand-mark">
             <span class="brand-dot"></span>
             <div>
@@ -371,8 +457,12 @@
                 <p>Aktivitas 1</p>
             </div>
         </div>
-        <nav class="topnav">
-            <a href="index.html#tentang-media">Tentang Media</a>
+        <button class="menu-toggle" type="button" id="activityMenuToggle" aria-expanded="false" aria-controls="activityNav" aria-label="Buka menu navigasi">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav class="topnav nav-drawer" id="activityNav">
             <a href="beranda.html">Beranda Belajar</a>
         </nav>
     </header>
@@ -407,7 +497,7 @@
                         <span class="objective-icon">VID</span>
                         <div>
                             <strong>Aktifkan radar video</strong>
-                            <p>Tonton video sampai selesai lalu konfirmasi bahwa timmu sudah mengamati petunjuk utama.</p>
+                            <p>Pelajari video pembelajaran dan gunakan YouTube bila video di web tidak dapat diputar.</p>
                         </div>
                     </div>
                     <div class="objective-item">
@@ -480,17 +570,10 @@
 
             <div class="video-fallback">
                 <a class="button" href="https://www.youtube.com/watch?v=JsEwJD1mYpU" target="_blank" rel="noopener noreferrer">Buka Video di YouTube</a>
-                <p>Jika video tidak dapat diputar di dalam web, buka melalui YouTube.</p>
             </div>
 
             <div class="watch-note">
-                Video ini dirancang untuk ditonton satu kali sebagai bagian dari pembelajaran berkesadaran.
-                Setelah selesai menonton, klik tombol konfirmasi lalu lanjutkan ke tahap berikutnya.
-            </div>
-
-            <div class="watch-actions">
-                <div class="button" id="btnTontonSelesai" onclick="konfirmasiVideo()">Saya sudah menonton video</div>
-                <div class="watch-status" id="watchStatus" style="display:none;">Video sudah dikonfirmasi</div>
+                Note: Jika video tidak dapat diputar di dalam web, buka melalui YouTube.
             </div>
         </section>
 
@@ -514,6 +597,10 @@
                 <p>
                     Seret setiap kartu ke kotak <b>Diagram Batang</b> atau <b>Histogram</b> sesuai dengan konsep yang benar.
                 </p>
+            </div>
+
+            <div class="mobile-drag-note">
+                Di HP, ketuk satu kartu untuk memilih, lalu ketuk kotak tujuan agar kartu berpindah. Di laptop kamu tetap bisa tahan dan seret seperti biasa.
             </div>
 
             <div class="drag-grid">
@@ -614,12 +701,14 @@
 
     <script src="script.js"></script>
     <script>
-        let videoSudahDikonfirmasi = false;
+        let videoSudahDikonfirmasi = true;
         let draggedItem = null;
+        let selectedTouchItem = null;
 
         function siapkanAktivitas1() {
             const items = document.querySelectorAll(".drag-item");
             const zones = document.querySelectorAll(".drop-zone");
+            const isTouchMode = window.matchMedia("(max-width: 960px)").matches || window.matchMedia("(pointer: coarse)").matches;
 
             items.forEach((item) => {
                 item.addEventListener("dragstart", () => {
@@ -630,6 +719,21 @@
                 item.addEventListener("dragend", () => {
                     item.classList.remove("dragging");
                 });
+
+                if (isTouchMode) {
+                    item.addEventListener("click", () => {
+                        if (item.closest(".drop-zone")) return;
+                        if (selectedTouchItem === item) {
+                            item.classList.remove("selected-touch");
+                            selectedTouchItem = null;
+                            return;
+                        }
+
+                        document.querySelectorAll(".drag-item").forEach((card) => card.classList.remove("selected-touch"));
+                        selectedTouchItem = item;
+                        item.classList.add("selected-touch");
+                    });
+                }
             });
 
             zones.forEach((zone) => {
@@ -651,6 +755,16 @@
                     zone.querySelector(".drop-list").appendChild(draggedItem);
                     cekDragDrop();
                 });
+
+                if (isTouchMode) {
+                    zone.addEventListener("click", () => {
+                        if (!selectedTouchItem) return;
+                        zone.querySelector(".drop-list").appendChild(selectedTouchItem);
+                        selectedTouchItem.classList.remove("selected-touch");
+                        selectedTouchItem = null;
+                        cekDragDrop();
+                    });
+                }
             });
 
             document.querySelectorAll('input[name="s1"], input[name="s2"], input[name="s3"]').forEach((input) => {
@@ -661,13 +775,6 @@
                 document.getElementById(id).addEventListener("input", updateQuestStatus);
             });
 
-            updateQuestStatus();
-        }
-
-        function konfirmasiVideo() {
-            videoSudahDikonfirmasi = true;
-            document.getElementById("btnTontonSelesai").style.display = "none";
-            document.getElementById("watchStatus").style.display = "inline-flex";
             updateQuestStatus();
         }
 
@@ -734,7 +841,7 @@
                 {
                     done: videoSudahDikonfirmasi,
                     label: "Radar video aktif",
-                    note: "Video sudah ditonton dan dikonfirmasi."
+                    note: "Video siap dipelajari dan bisa dibuka lewat YouTube bila diperlukan."
                 },
                 {
                     done: checkpointJawaban.value.trim() && semuaKartuBenar(),
@@ -765,11 +872,6 @@
         }
 
         function submitAktivitas1() {
-            if (!videoSudahDikonfirmasi) {
-                alert("Konfirmasikan terlebih dahulu bahwa video sudah ditonton.");
-                return;
-            }
-
             if (!checkpointJawaban.value.trim()) {
                 alert("Catatan awal kelompok harus diisi.");
                 return;
@@ -812,6 +914,41 @@
             alert("Jawaban Aktivitas 1 berhasil disimpan. Selanjutnya akan ada penguatan dari guru sebelum membuka Aktivitas 2.");
             window.location.href = "beranda.html";
         }
+
+        const activityTopbar = document.getElementById("activityTopbar");
+        const activityMenuToggle = document.getElementById("activityMenuToggle");
+        const activityNav = document.getElementById("activityNav");
+
+        function tutupActivityMenu() {
+            activityTopbar.classList.remove("menu-open");
+            activityMenuToggle.setAttribute("aria-expanded", "false");
+        }
+
+        activityMenuToggle.addEventListener("click", () => {
+            const isOpen = activityTopbar.classList.toggle("menu-open");
+            activityMenuToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+
+        activityNav.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                if (window.innerWidth <= 640) {
+                    tutupActivityMenu();
+                }
+            });
+        });
+
+        document.addEventListener("click", (event) => {
+            if (window.innerWidth > 640) return;
+            if (!activityTopbar.contains(event.target)) {
+                tutupActivityMenu();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 640) {
+                tutupActivityMenu();
+            }
+        });
     </script>
 </body>
 </html>
