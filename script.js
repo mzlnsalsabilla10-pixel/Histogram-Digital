@@ -8,6 +8,8 @@ const LEVEL_META = [
         title: "Graph Lab",
         hook: "Membedakan diagram batang dan histogram dari petunjuk visual.",
         reward: "Badge Pengintai Grafik",
+        badgeIcon: "🔎",
+        badgeShort: "Grafik",
         xp: 120
     },
     {
@@ -16,6 +18,8 @@ const LEVEL_META = [
         title: "Data Collection",
         hook: "Mengumpulkan minimal 25 data numerik kontinu dari dunia nyata.",
         reward: "Badge Pengumpul Data",
+        badgeIcon: "🧭",
+        badgeShort: "Data",
         xp: 160
     },
     {
@@ -24,6 +28,8 @@ const LEVEL_META = [
         title: "Data Structuring",
         hook: "Mengolah data menjadi tabel distribusi frekuensi yang akurat.",
         reward: "Badge Penjaga Interval",
+        badgeIcon: "🧩",
+        badgeShort: "Struktur",
         xp: 180
     },
     {
@@ -32,6 +38,8 @@ const LEVEL_META = [
         title: "Histogram Builder",
         hook: "Membangun histogram lengkap dari tabel distribusi frekuensi.",
         reward: "Badge Arsitek Histogram",
+        badgeIcon: "📊",
+        badgeShort: "Builder",
         xp: 220
     },
     {
@@ -40,6 +48,8 @@ const LEVEL_META = [
         title: "Reflection",
         hook: "Meninjau strategi, pemahaman, dan perbaikan belajar.",
         reward: "Badge Penjelajah Bermakna",
+        badgeIcon: "💡",
+        badgeShort: "Refleksi",
         xp: 120
     }
 ];
