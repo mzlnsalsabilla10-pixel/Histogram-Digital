@@ -9,7 +9,8 @@
         .a3-wrap { max-width: 1180px; margin: 0 auto; display: grid; gap: 22px; }
         .a3-card, .a3-hero { background: rgba(255,255,255,.92); border: 1px solid rgba(86,99,164,.16); border-radius: 30px; box-shadow: 0 18px 50px rgba(49,84,215,.1); }
         .a3-hero { padding: 34px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 22px; }
-        .a3-hero h1, .a3-title h2, .concept h3, .calc h3 { font-family: 'Sora', sans-serif; color: #21358e; }
+        .a3-hero h1, .concept h3, .calc h3 { font-family: 'Sora', sans-serif; color: #21358e; }
+        .a3-title h2 { font-family: 'Sora', sans-serif; color: #cf2727; }
         .a3-hero h1 { font-size: clamp(2rem,3vw,3rem); margin-bottom: 14px; }
         .a3-hero p, .a3-title p, .concept p, .calc p, .summary p, .step-card p { color: #5f678c; line-height: 1.8; }
         .pill { display: inline-flex; padding: 10px 16px; border-radius: 999px; background: rgba(49,84,215,.08); color: #3154d7; font-weight: 700; margin-bottom: 16px; }
@@ -77,6 +78,35 @@
             .steps, .stats, .summary-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 640px) {
+            .a3-topbar.has-hamburger {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                gap: 14px;
+            }
+            .a3-topbar.has-hamburger .menu-toggle {
+                display: inline-flex;
+                margin-left: auto;
+            }
+            .a3-topbar.has-hamburger .nav-drawer {
+                position: absolute;
+                top: calc(100% + 10px);
+                left: 0;
+                right: 0;
+                width: auto;
+                padding: 12px;
+                display: none;
+            }
+            .a3-topbar.has-hamburger.menu-open .nav-drawer {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .a3-topbar.has-hamburger .nav-drawer a {
+                width: 100%;
+                text-align: center;
+            }
             .a3-card, .a3-hero { padding: 22px; border-radius: 24px; }
             .a3-hero h1, .a3-title h2 { line-height: 1.2; }
             .steps { padding: 18px; }
@@ -87,7 +117,7 @@
     </style>
 </head>
 <body class="arcade-skin" onload="cekAkses(3); muatData(); initA3();">
-    <header class="topbar a3-topbar">
+    <header class="topbar a3-topbar has-hamburger" id="activityTopbar">
         <div class="brand-mark">
             <span class="brand-dot"></span>
             <div>
@@ -95,8 +125,12 @@
                 <p>Aktivitas 3</p>
             </div>
         </div>
-        <nav class="topnav">
-            <a href="index.html#tujuan-pembelajaran">Tujuan Pembelajaran</a>
+        <button class="menu-toggle" type="button" id="activityMenuToggle" aria-expanded="false" aria-controls="activityNav" aria-label="Buka menu navigasi">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav class="topnav nav-drawer" id="activityNav">
             <a href="beranda.html">Beranda Belajar</a>
         </nav>
     </header>
@@ -590,6 +624,41 @@
             alert("Aktivitas 3 selesai. Lanjut ke Aktivitas 4.");
             window.location.href = "beranda.html";
         }
+
+        const activityTopbar = document.getElementById("activityTopbar");
+        const activityMenuToggle = document.getElementById("activityMenuToggle");
+        const activityNav = document.getElementById("activityNav");
+
+        function tutupActivityMenu() {
+            activityTopbar.classList.remove("menu-open");
+            activityMenuToggle.setAttribute("aria-expanded", "false");
+        }
+
+        activityMenuToggle.addEventListener("click", () => {
+            const isOpen = activityTopbar.classList.toggle("menu-open");
+            activityMenuToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+
+        activityNav.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                if (window.innerWidth <= 640) {
+                    tutupActivityMenu();
+                }
+            });
+        });
+
+        document.addEventListener("click", (event) => {
+            if (window.innerWidth > 640) return;
+            if (!activityTopbar.contains(event.target)) {
+                tutupActivityMenu();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 640) {
+                tutupActivityMenu();
+            }
+        });
     </script>
 </body>
 </html>

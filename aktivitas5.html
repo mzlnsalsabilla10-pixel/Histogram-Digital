@@ -31,11 +31,15 @@
         }
 
         .reflection-hero h1,
-        .reflection-card h2,
         .question-card h3,
         .tips-card h3 {
             font-family: 'Sora', sans-serif;
             color: #21358e;
+        }
+
+        .reflection-card h2 {
+            font-family: 'Sora', sans-serif;
+            color: #cf2727;
         }
 
         .reflection-hero h1 {
@@ -247,6 +251,40 @@
             }
         }
         @media (max-width: 640px) {
+            .reflection-topbar.has-hamburger {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                gap: 14px;
+            }
+
+            .reflection-topbar.has-hamburger .menu-toggle {
+                display: inline-flex;
+                margin-left: auto;
+            }
+
+            .reflection-topbar.has-hamburger .nav-drawer {
+                position: absolute;
+                top: calc(100% + 10px);
+                left: 0;
+                right: 0;
+                width: auto;
+                padding: 12px;
+                display: none;
+            }
+
+            .reflection-topbar.has-hamburger.menu-open .nav-drawer {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .reflection-topbar.has-hamburger .nav-drawer a {
+                width: 100%;
+                text-align: center;
+            }
+
             .reflection-hero,
             .reflection-card,
             .question-card,
@@ -271,7 +309,7 @@
     </style>
 </head>
 <body class="arcade-skin" onload="cekLogin(); cekAkses(5);">
-    <header class="topbar reflection-topbar">
+    <header class="topbar reflection-topbar has-hamburger" id="activityTopbar">
         <div class="brand-mark">
             <span class="brand-dot"></span>
             <div>
@@ -279,8 +317,12 @@
                 <p>Aktivitas 5</p>
             </div>
         </div>
-        <nav class="topnav">
-            <a href="index.html#panduan-penggunaan">Panduan Penggunaan</a>
+        <button class="menu-toggle" type="button" id="activityMenuToggle" aria-expanded="false" aria-controls="activityNav" aria-label="Buka menu navigasi">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav class="topnav nav-drawer" id="activityNav">
             <a href="beranda.html">Beranda Belajar</a>
         </nav>
     </header>
@@ -493,6 +535,41 @@
 
             window.location.href = "final.html";
         }
+
+        const activityTopbar = document.getElementById("activityTopbar");
+        const activityMenuToggle = document.getElementById("activityMenuToggle");
+        const activityNav = document.getElementById("activityNav");
+
+        function tutupActivityMenu() {
+            activityTopbar.classList.remove("menu-open");
+            activityMenuToggle.setAttribute("aria-expanded", "false");
+        }
+
+        activityMenuToggle.addEventListener("click", () => {
+            const isOpen = activityTopbar.classList.toggle("menu-open");
+            activityMenuToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+
+        activityNav.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                if (window.innerWidth <= 640) {
+                    tutupActivityMenu();
+                }
+            });
+        });
+
+        document.addEventListener("click", (event) => {
+            if (window.innerWidth > 640) return;
+            if (!activityTopbar.contains(event.target)) {
+                tutupActivityMenu();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 640) {
+                tutupActivityMenu();
+            }
+        });
     </script>
 </body>
 </html>

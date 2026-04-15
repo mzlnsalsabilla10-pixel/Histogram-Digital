@@ -9,7 +9,8 @@
         .studio-wrap { max-width: 1240px; margin: 0 auto; display: grid; gap: 22px; }
         .studio-hero, .studio-card { background: rgba(255,255,255,.92); border: 1px solid rgba(86,99,164,.16); border-radius: 30px; box-shadow: 0 18px 50px rgba(49,84,215,.1); }
         .studio-hero { padding: 34px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 22px; }
-        .studio-hero h1, .studio-title h2, .guide-card h3, .panel-card h3, .chart-shell h3 { font-family: 'Sora', sans-serif; color: #21358e; }
+        .studio-hero h1, .guide-card h3, .panel-card h3, .chart-shell h3 { font-family: 'Sora', sans-serif; color: #21358e; }
+        .studio-title h2 { font-family: 'Sora', sans-serif; color: #cf2727; }
         .studio-hero h1 { font-size: clamp(2rem,3vw,3rem); margin-bottom: 14px; }
         .studio-hero p, .studio-title p, .guide-card p, .panel-card p, .hint-box p, .result-box p, .reflection-card p { color: #5f678c; line-height: 1.8; }
         .studio-pill { display: inline-flex; padding: 10px 16px; border-radius: 999px; background: rgba(49,84,215,.08); color: #3154d7; font-weight: 700; margin-bottom: 16px; }
@@ -96,6 +97,35 @@
             .x-boundaries { left: 44px; right: 12px; }
         }
         @media (max-width: 640px) {
+            .studio-topbar.has-hamburger {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                gap: 14px;
+            }
+            .studio-topbar.has-hamburger .menu-toggle {
+                display: inline-flex;
+                margin-left: auto;
+            }
+            .studio-topbar.has-hamburger .nav-drawer {
+                position: absolute;
+                top: calc(100% + 10px);
+                left: 0;
+                right: 0;
+                width: auto;
+                padding: 12px;
+                display: none;
+            }
+            .studio-topbar.has-hamburger.menu-open .nav-drawer {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .studio-topbar.has-hamburger .nav-drawer a {
+                width: 100%;
+                text-align: center;
+            }
             .studio-hero, .studio-card { padding: 22px; border-radius: 24px; }
             .steps { padding: 18px; }
             .chart-shell, .panel-card, .form-card, .result-box, .reflection-card { padding: 18px; border-radius: 20px; }
@@ -111,7 +141,7 @@
     </style>
 </head>
 <body class="arcade-skin" onload="cekAkses(4); muatStudio(); initStudio();">
-    <header class="topbar studio-topbar">
+    <header class="topbar studio-topbar has-hamburger" id="activityTopbar">
         <div class="brand-mark">
             <span class="brand-dot"></span>
             <div>
@@ -119,8 +149,12 @@
                 <p>Aktivitas 4</p>
             </div>
         </div>
-        <nav class="topnav">
-            <a href="index.html#tujuan-pembelajaran">Tujuan Pembelajaran</a>
+        <button class="menu-toggle" type="button" id="activityMenuToggle" aria-expanded="false" aria-controls="activityNav" aria-label="Buka menu navigasi">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav class="topnav nav-drawer" id="activityNav">
             <a href="beranda.html">Beranda Belajar</a>
         </nav>
     </header>
@@ -739,6 +773,41 @@
             alert("Aktivitas 4 berhasil disimpan.");
             window.location.href = "beranda.html";
         }
+
+        const activityTopbar = document.getElementById("activityTopbar");
+        const activityMenuToggle = document.getElementById("activityMenuToggle");
+        const activityNav = document.getElementById("activityNav");
+
+        function tutupActivityMenu() {
+            activityTopbar.classList.remove("menu-open");
+            activityMenuToggle.setAttribute("aria-expanded", "false");
+        }
+
+        activityMenuToggle.addEventListener("click", () => {
+            const isOpen = activityTopbar.classList.toggle("menu-open");
+            activityMenuToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+
+        activityNav.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                if (window.innerWidth <= 640) {
+                    tutupActivityMenu();
+                }
+            });
+        });
+
+        document.addEventListener("click", (event) => {
+            if (window.innerWidth > 640) return;
+            if (!activityTopbar.contains(event.target)) {
+                tutupActivityMenu();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 640) {
+                tutupActivityMenu();
+            }
+        });
     </script>
 </body>
 </html>

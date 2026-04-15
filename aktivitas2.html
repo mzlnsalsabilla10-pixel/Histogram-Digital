@@ -104,6 +104,7 @@
             font-family: 'Sora', sans-serif;
             font-size: clamp(1.4rem, 2vw, 2rem);
             margin-top: 6px;
+            color: #cf2727;
         }
 
         .context-grid {
@@ -344,10 +345,46 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        @media (max-width: 640px) {
+            .data-topbar.has-hamburger {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                gap: 14px;
+            }
+
+            .data-topbar.has-hamburger .menu-toggle {
+                display: inline-flex;
+                margin-left: auto;
+            }
+
+            .data-topbar.has-hamburger .nav-drawer {
+                position: absolute;
+                top: calc(100% + 10px);
+                left: 0;
+                right: 0;
+                width: auto;
+                padding: 12px;
+                display: none;
+            }
+
+            .data-topbar.has-hamburger.menu-open .nav-drawer {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .data-topbar.has-hamburger .nav-drawer a {
+                width: 100%;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body class="arcade-skin" onload="cekAkses(2); siapkanAktivitas2();">
-    <header class="topbar data-topbar">
+    <header class="topbar data-topbar has-hamburger" id="activityTopbar">
         <div class="brand-mark">
             <span class="brand-dot"></span>
             <div>
@@ -355,8 +392,12 @@
                 <p>Aktivitas 2</p>
             </div>
         </div>
-        <nav class="topnav">
-            <a href="index.html#tentang-media">Tentang Media</a>
+        <button class="menu-toggle" type="button" id="activityMenuToggle" aria-expanded="false" aria-controls="activityNav" aria-label="Buka menu navigasi">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav class="topnav nav-drawer" id="activityNav">
             <a href="beranda.html">Beranda Belajar</a>
         </nav>
     </header>
@@ -747,6 +788,41 @@
             alert("Aktivitas 2 selesai. Lanjut ke Aktivitas 3.");
             window.location.href = "beranda.html";
         }
+
+        const activityTopbar = document.getElementById("activityTopbar");
+        const activityMenuToggle = document.getElementById("activityMenuToggle");
+        const activityNav = document.getElementById("activityNav");
+
+        function tutupActivityMenu() {
+            activityTopbar.classList.remove("menu-open");
+            activityMenuToggle.setAttribute("aria-expanded", "false");
+        }
+
+        activityMenuToggle.addEventListener("click", () => {
+            const isOpen = activityTopbar.classList.toggle("menu-open");
+            activityMenuToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+
+        activityNav.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                if (window.innerWidth <= 640) {
+                    tutupActivityMenu();
+                }
+            });
+        });
+
+        document.addEventListener("click", (event) => {
+            if (window.innerWidth > 640) return;
+            if (!activityTopbar.contains(event.target)) {
+                tutupActivityMenu();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 640) {
+                tutupActivityMenu();
+            }
+        });
     </script>
 </body>
 </html>
