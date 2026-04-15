@@ -93,6 +93,25 @@
                 </article>
             </div>
 
+            <article class="info-card info-card-mobile" aria-label="Ringkasan tentang media">
+                <div class="info-mobile-item">
+                    <h3>Materi</h3>
+                    <p>Statistika pada topik histogram.</p>
+                </div>
+                <div class="info-mobile-item">
+                    <h3>Sasaran</h3>
+                    <p>Murid SMA/MA kelas X.</p>
+                </div>
+                <div class="info-mobile-item">
+                    <h3>Bentuk Media</h3>
+                    <p>Media pembelajaran interaktif berbasis web.</p>
+                </div>
+                <div class="info-mobile-item">
+                    <h3>Karakter Media</h3>
+                    <p>Bertahap, interaktif, dan mendukung refleksi pembelajaran.</p>
+                </div>
+            </article>
+
             <div class="text-panel">
                 <p>
                     Media ini dirancang untuk mendampingi murid mempelajari histogram secara konseptual
@@ -214,10 +233,16 @@
             landingTopbarSpacer.style.setProperty("--topbar-space", `${landingTopbar.offsetHeight + 8}px`);
         }
 
+        let landingTopbarFloating = false;
+
         function toggleLandingTopbar() {
             const shouldFloat = window.scrollY > 12;
+            if (shouldFloat === landingTopbarFloating) return;
+
+            landingTopbarFloating = shouldFloat;
             landingTopbar.classList.toggle("is-floating", shouldFloat);
             landingTopbarSpacer.classList.toggle("active", shouldFloat);
+            updateLandingTopbarMetrics();
         }
 
         window.addEventListener("scroll", toggleLandingTopbar, { passive: true });

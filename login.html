@@ -105,10 +105,16 @@
             loginTopbarSpacer.style.setProperty("--topbar-space", `${loginTopbar.offsetHeight + 8}px`);
         }
 
+        let loginTopbarFloating = false;
+
         function toggleLoginTopbar() {
             const shouldFloat = window.scrollY > 12;
+            if (shouldFloat === loginTopbarFloating) return;
+
+            loginTopbarFloating = shouldFloat;
             loginTopbar.classList.toggle("is-floating", shouldFloat);
             loginTopbarSpacer.classList.toggle("active", shouldFloat);
+            updateLoginTopbarMetrics();
         }
 
         window.addEventListener("scroll", toggleLoginTopbar, { passive: true });
