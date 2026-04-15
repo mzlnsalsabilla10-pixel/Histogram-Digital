@@ -100,7 +100,7 @@
     <div class="map-modal world-popup" id="worldModal" aria-hidden="true">
         <div class="map-modal-panel world-popup-panel" role="dialog" aria-modal="true" aria-labelledby="modalWorldTitle">
             <div class="map-modal-head world-popup-head">
-                <div>
+                <div class="world-popup-title-block">
                     <span class="section-kicker" id="modalWorldTag">World</span>
                     <h3 id="modalWorldTitle">Info World</h3>
                 </div>
@@ -119,16 +119,13 @@
                     <span class="popup-chip" id="modalWorldXp"></span>
                 </div>
 
-                <div class="popup-objectives" id="modalObjectiveList"></div>
-
                 <div class="map-modal-card map-password-wrap world-password-wrap" id="modalPasswordWrap" style="display:none;">
                     <input type="text" id="modalKodeAkt2" placeholder="Kode portal World 2">
                     <button class="button" type="button" onclick="submitKodeWorld2()">Buka Portal</button>
                 </div>
 
                 <div class="map-modal-actions world-popup-actions">
-                    <p class="map-password-msg" id="modalActionHint"></p>
-                    <a class="quest-cta popup-enter-button" id="modalEnterButton" href="#">Mainkan</a>
+                    <a class="quest-cta popup-enter-button" id="modalEnterButton" href="#">Play</a>
                 </div>
             </div>
         </div>
@@ -329,35 +326,28 @@
             const modal = document.getElementById("worldModal");
             const enterButton = document.getElementById("modalEnterButton");
             const passwordWrap = document.getElementById("modalPasswordWrap");
-            const actionHint = document.getElementById("modalActionHint");
 
             document.getElementById("modalWorldTag").textContent = meta.world;
             document.getElementById("modalWorldTitle").textContent = meta.title;
-            document.getElementById("modalWorldMission").textContent = detail.mission;
+            document.getElementById("modalWorldMission").textContent = `Task: ${detail.mission}`;
             document.getElementById("modalWorldReward").textContent = meta.reward;
             document.getElementById("modalWorldXp").textContent = `${meta.xp} XP`;
-            document.getElementById("modalObjectiveList").innerHTML = detail.objectives.map((item, index) => `
-                <span class="popup-objective">
-                    <span>${index + 1}</span>${item}
-                </span>
-            `).join("");
 
             passwordWrap.style.display = "none";
             enterButton.style.display = "inline-flex";
+            document.getElementById("modalWorldState").className = "map-status-badge";
 
             if (done) {
-                document.getElementById("modalWorldState").textContent = "Mission Clear";
-                actionHint.textContent = "World ini sudah clear.";
-                enterButton.textContent = "Main Lagi";
+                document.getElementById("modalWorldState").textContent = "Status: Mission Clear";
+                document.getElementById("modalWorldState").classList.add("is-clear");
+                enterButton.textContent = "Play";
                 enterButton.href = `aktivitas${worldNo}.html`;
             } else if (unlocked) {
-                document.getElementById("modalWorldState").textContent = "Quest Terbuka";
-                actionHint.textContent = "Tekan main untuk masuk.";
+                document.getElementById("modalWorldState").textContent = "Status: Quest Terbuka";
                 enterButton.textContent = "Play";
                 enterButton.href = `aktivitas${worldNo}.html`;
             } else if (canOpenPortal) {
-                document.getElementById("modalWorldState").textContent = "Portal";
-                actionHint.textContent = "Masukkan kode portal dari guru.";
+                document.getElementById("modalWorldState").textContent = "Status: Portal Terkunci";
                 enterButton.style.display = "none";
                 passwordWrap.style.display = "grid";
                 document.getElementById("modalKodeAkt2").value = "";
