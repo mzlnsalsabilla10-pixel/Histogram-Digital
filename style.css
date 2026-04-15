@@ -1595,10 +1595,39 @@ body::after {
 
 .arcade-skin .world-popup-head {
     background: linear-gradient(135deg, #ff9e4f, #ffc94d);
+    justify-content: center;
+    text-align: center;
+    position: relative;
 }
 
 .arcade-skin .world-popup-body {
     text-align: center;
+}
+
+.arcade-skin .world-popup-title-block {
+    width: 100%;
+}
+
+.arcade-skin .world-popup-head .section-kicker {
+    margin-bottom: 1px;
+    padding: 5px 12px;
+    font-size: 11px;
+    box-shadow: 0 3px 0 #d7b435;
+}
+
+.arcade-skin .world-popup-head h3 {
+    margin-bottom: 0;
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 2.45rem);
+    line-height: 1;
+    color: #1d2c7a;
+    text-shadow: 0 3px 0 #ffe7a5, 0 8px 12px rgba(0, 0, 0, 0.12);
+}
+
+.arcade-skin .world-popup-head .map-modal-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
 }
 
 .arcade-skin .world-popup-summary {
@@ -1673,6 +1702,41 @@ body::after {
 .arcade-skin .popup-enter-button {
     max-width: 220px;
     margin-top: 0;
+    animation: popup-play-pulse 1.9s ease-in-out infinite;
+}
+
+.arcade-skin .map-status-badge {
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+}
+
+.arcade-skin .map-status-badge.is-clear {
+    background: linear-gradient(135deg, #9cf7a6, #5ad06a);
+    color: #0d4a1f;
+}
+
+@keyframes popup-play-pulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow:
+            0 0 0 0 rgba(255, 123, 77, 0.18),
+            0 6px 0 #1f2e7a,
+            0 12px 20px rgba(0, 0, 0, 0.18);
+    }
+    50% {
+        transform: scale(1.04);
+        box-shadow:
+            0 0 0 12px rgba(255, 123, 77, 0),
+            0 6px 0 #1f2e7a,
+            0 16px 24px rgba(0, 0, 0, 0.22);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .arcade-skin .popup-enter-button {
+        animation: none;
+    }
 }
 
 .arcade-skin .map-cloud,
