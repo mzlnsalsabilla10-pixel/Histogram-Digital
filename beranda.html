@@ -32,10 +32,10 @@
     <main class="dashboard-main">
         <section class="dashboard-hero">
             <div>
-                <span class="eyebrow">Choose World</span>
+                <span class="eyebrow">Progress Belajar</span>
                 <h1 id="sapaanJudul">Selamat datang!</h1>
                 <p class="hero-text hero-text-short">
-                    Geser area, pilih world, lalu masuk ke petualangan histogrammu.
+                    Selamat datang di perjalanan belajarmu. Pantau terus progres yang sudah kamu capai, buka berbagai reward menarik, dan lanjutkan ke setiap world berikutnya. Selesaikan kelima world yang tersedia untuk mendapatkan badge spesial dan kumpulkan XP hingga penuh sebagai bukti pencapaian terbaikmu!
                 </p>
             </div>
 
@@ -56,15 +56,15 @@
                 <div class="objective-list compact-objectives">
                     <div class="objective-item">
                         <span class="objective-icon">1</span>
-                        <div><strong>Pahami</strong><p>Konsep histogram</p></div>
+                        <div><strong>Memahami</strong><p>Memahami konsep grafik, data, dan histogram melalui Graph Lab.</p></div>
                     </div>
                     <div class="objective-item">
                         <span class="objective-icon">2</span>
-                        <div><strong>Bangun</strong><p>Data dan tabel</p></div>
+                        <div><strong>Mengaplikasi</strong><p>Mengumpulkan data, menyusun struktur, lalu membangun histogram digital.</p></div>
                     </div>
                     <div class="objective-item">
                         <span class="objective-icon">3</span>
-                        <div><strong>Taklukkan</strong><p>Boss histogram</p></div>
+                        <div><strong>Merefleksi</strong><p>Merefleksikan hasil belajar dan strategi perbaikan di world terakhir.</p></div>
                     </div>
                 </div>
             </article>
@@ -78,8 +78,8 @@
 
         <section class="progress-panel world-slider-section">
             <div class="section-heading compact">
-                <span class="section-kicker">Area Select</span>
-                <h2>Swipe world yang ingin dimainkan</h2>
+                <span class="section-kicker">Choose World</span>
+                <h2>Pilih world yang ingin kamu lanjutkan</h2>
             </div>
 
             <div class="slider-shell">
@@ -91,7 +91,7 @@
             </div>
 
             <div class="slider-hint-row">
-                <p class="slider-hint">Tap card untuk lihat info singkat world. Di HP cukup swipe ke samping.</p>
+                <p class="slider-hint">Tap card untuk melihat informasi singkat world dan memulai aktivitas.</p>
                 <div class="locked-note" id="lockedNote">World ini masih terkunci.</div>
             </div>
         </section>
@@ -201,19 +201,30 @@
             const wrap = document.getElementById("stepIndicator");
             const rewardPreview = document.getElementById("rewardPreview");
             const badgeWrap = document.getElementById("badgeWrap");
+            const completedSet = new Set(LEVEL_META.filter((item) => isLevelDone(item.no)).map((item) => item.no));
 
             document.getElementById("progressText").innerText = `${progress.xp} XP`;
             document.getElementById("progressFill").style.width = `${persen}%`;
-            badgeWrap.innerHTML = progress.badges.length
-                ? progress.badges.map((badge) => `<span class="xp-badge">${badge}</span>`).join("")
-                : `<span class="xp-badge">Mulai Quest</span>`;
+            badgeWrap.innerHTML = `
+                <p class="xp-badge-note ${progress.completedCount ? "" : "is-empty"}">
+                    ${progress.completedCount ? `Reward terbuka ${progress.completedCount}/${LEVEL_META.length}` : "Belum ada reward yang dibuka"}
+                </p>
+                <div class="xp-badge-grid">
+                    ${LEVEL_META.map((item) => `
+                        <div class="xp-badge-card ${completedSet.has(item.no) ? "is-earned" : "is-locked"}">
+                            <span class="xp-badge-icon">${item.badgeIcon}</span>
+                            <strong>${item.badgeShort}</strong>
+                        </div>
+                    `).join("")}
+                </div>
+            `;
 
             rewardPreview.innerHTML = LEVEL_META.map((item) => `
-                <div class="reward-item mini">
-                    <span class="reward-icon">${item.no}</span>
+                <div class="reward-item mini ${completedSet.has(item.no) ? "done" : "locked"}">
+                    <span class="reward-icon">${item.badgeIcon}</span>
                     <div>
                         <strong>${item.reward}</strong>
-                        <p>${item.xp} XP</p>
+                        <p>${item.xp} XP · ${completedSet.has(item.no) ? "Terbuka" : "Terkunci"}</p>
                     </div>
                 </div>
             `).join("");
@@ -227,7 +238,7 @@
                 const stateClass = done ? "done" : unlocked ? "current" : "locked";
                 const stateText = done ? "Clear" : waitingPortal ? "Portal" : unlocked ? "Play" : "Lock";
                 const badgeClass = done ? "clear" : waitingPortal ? "portal" : unlocked ? "play" : "lock";
-                const statusLabel = done ? "Mission Clear" : waitingPortal ? "Need Password" : unlocked ? "Tap to Play" : "Locked";
+                const statusLabel = done ? "Mission Clear" : waitingPortal ? "Butuh Password" : unlocked ? "Quest Terbuka" : "Locked";
 
                 const slide = document.createElement("article");
                 slide.className = `world-slide theme-${item.no} ${stateClass}`;
