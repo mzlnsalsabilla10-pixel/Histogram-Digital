@@ -9,8 +9,9 @@
         .studio-wrap { max-width: 1240px; margin: 0 auto; display: grid; gap: 22px; }
         .studio-hero, .studio-card { background: rgba(255,255,255,.92); border: 1px solid rgba(86,99,164,.16); border-radius: 30px; box-shadow: 0 18px 50px rgba(49,84,215,.1); }
         .studio-hero { padding: 34px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 22px; }
-        .studio-hero h1, .guide-card h3, .panel-card h3, .chart-shell h3 { font-family: 'Sora', sans-serif; color: #21358e; }
+        .guide-card h3, .panel-card h3, .chart-shell h3 { font-family: 'Sora', sans-serif; color: #21358e; }
         .studio-title h2 { font-family: 'Sora', sans-serif; color: #cf2727; }
+        .studio-hero h1 { font-family: var(--font-body); color: #cf2727; }
         .studio-hero h1 { font-size: clamp(2rem,3vw,3rem); margin-bottom: 14px; }
         .studio-hero p, .studio-title p, .guide-card p, .panel-card p, .hint-box p, .result-box p, .reflection-card p { color: #5f678c; line-height: 1.8; }
         .studio-pill { display: inline-flex; padding: 10px 16px; border-radius: 999px; background: rgba(49,84,215,.08); color: #3154d7; font-weight: 700; margin-bottom: 16px; }
@@ -26,7 +27,9 @@
         .step-panel { display: none; animation: fadeUp .4s ease; }
         .step-panel.active { display: block; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(14px);} to { opacity: 1; transform: translateY(0);} }
-        .kicker { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #3154d7; margin-bottom: 10px; }
+        .kicker { display: inline-block; margin-bottom: 10px; }
+        .activity4-hud.status-only { grid-template-columns: 1fr; }
+        .activity4-hud.status-only .quest-board { display: none; }
         .guide-grid, .build-grid, .check-grid { display: grid; gap: 20px; }
         .guide-grid { grid-template-columns: 1fr 1fr; margin-top: 24px; }
         .video-box, .guide-card, .panel-card, .form-card, .result-box, .reflection-card { background: #f8faff; border: 1px solid rgba(86,99,164,.14); border-radius: 24px; padding: 20px; }
@@ -36,9 +39,12 @@
         .video-fallback { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
         .video-fallback a { text-decoration: none; }
         .video-fallback p { color: #6a7294; font-size: 14px; }
-        .guide-list { display: grid; gap: 14px; margin-top: 16px; }
-        .guide-item { background: white; border: 1px solid rgba(86,99,164,.14); border-radius: 18px; padding: 14px 16px; }
-        .guide-item strong { color: #21358e; display: block; margin-bottom: 6px; }
+        .guide-list { display: grid; gap: 12px; margin-top: 16px; }
+        .guide-item { padding-left: 22px; color: #4d557d; line-height: 1.8; position: relative; }
+        .guide-item::before { content: ""; position: absolute; left: 0; top: 11px; width: 9px; height: 9px; border-radius: 50%; background: #ffb347; box-shadow: 0 0 0 3px rgba(255, 212, 71, 0.35); }
+        .guide-item strong { color: #21358e; display: block; margin-bottom: 4px; }
+        .guide-note-head { margin-bottom: 18px; }
+        .guide-note-head h3 { color: #cf2727; margin-top: 8px; }
         .build-grid { grid-template-columns: .95fr 1.05fr; margin-top: 24px; }
         .data-table-shell { margin-top: 14px; border-radius: 20px; overflow-x: auto; overflow-y: hidden; border: 1px solid rgba(86,99,164,.14); background: white; }
         table { width: 100%; border-collapse: collapse; }
@@ -160,7 +166,7 @@
     </header>
 
     <main class="studio-wrap">
-        <section class="studio-hero">
+        <section class="studio-hero" id="activity4Hero">
             <div>
                 <span class="studio-pill">World 4 - Histogram Builder</span>
                 <h1>Bangun histogram dan hadapi boss world utama</h1>
@@ -176,7 +182,7 @@
             </div>
         </section>
 
-        <section class="mission-hud">
+        <section class="mission-hud activity4-hud" id="activity4Hud">
             <article class="quest-board">
                 <span class="section-kicker">Mission Brief</span>
                 <h3>Objective boss arena</h3>
@@ -215,17 +221,10 @@
             </article>
         </section>
 
-        <section class="studio-card steps">
-            <div class="step-card active" id="stepCard1"><div class="step-no">1</div><strong>Scout Tutorial</strong><p>Tonton tutorial dan pahami elemen penting histogram.</p></div>
-            <div class="step-card" id="stepCard2"><div class="step-no">2</div><strong>Set Arena</strong><p>Tentukan judul, sumbu, dan acuan tabel frekuensi.</p></div>
-            <div class="step-card" id="stepCard3"><div class="step-no">3</div><strong>Spawn Histogram</strong><p>Isi frekuensi lalu bangun histogram digital.</p></div>
-            <div class="step-card" id="stepCard4"><div class="step-no">4</div><strong>Boss Check</strong><p>Bandingkan hasil dan tuliskan interpretasi histogram.</p></div>
-        </section>
-
         <section class="step-panel active" id="step1">
             <div class="studio-card">
                 <div class="studio-title">
-                    <span class="kicker">Tutorial Histogram</span>
+                    <span class="section-kicker kicker">Tutorial Histogram</span>
                     <h2>Pahami langkah membuat histogram sebelum mulai</h2>
                     <p>Video dan panduan singkat berikut membantu kamu memahami hubungan antara tabel distribusi frekuensi dan histogram.</p>
                 </div>
@@ -242,7 +241,10 @@
                         </div>
                     </div>
                     <div class="guide-card">
-                        <h3>Langkah Membuat Histogram</h3>
+                        <div class="guide-note-head">
+                            <span class="section-kicker">NOTE</span>
+                            <h3>Langkah Membuat Histogram</h3>
+                        </div>
                         <div class="guide-list">
                             <div class="guide-item"><strong>1. Baca tabel distribusi frekuensi</strong><p>Perhatikan interval kelas dan frekuensi pada setiap kelas.</p></div>
                             <div class="guide-item"><strong>2. Siapkan sumbu grafik</strong><p>Sumbu X memuat jenis data yang diukur beserta satuannya, sedangkan sumbu Y memuat frekuensi.</p></div>
@@ -261,7 +263,7 @@
         <section class="step-panel" id="step2">
             <div class="studio-card">
                 <div class="studio-title">
-                    <span class="kicker">Komponen Grafik</span>
+                    <span class="section-kicker kicker">Komponen Grafik</span>
                     <h2>Siapkan informasi dasar histogram</h2>
                     <p>Lengkapi komponen grafik dan perhatikan tabel distribusi frekuensi sebagai dasar pembuatan histogram.</p>
                 </div>
@@ -320,7 +322,7 @@
         <section class="step-panel" id="step3">
             <div class="studio-card">
                 <div class="studio-title">
-                    <span class="kicker">Studio Histogram</span>
+                    <span class="section-kicker kicker">Studio Histogram</span>
                     <h2>Bangun histogram digitalmu</h2>
                     <p>Isi frekuensi pada setiap interval sesuai tabel distribusi frekuensi, lalu amati bagaimana histogram terbentuk secara dinamis.</p>
                 </div>
@@ -359,7 +361,7 @@
         <section class="step-panel" id="step4">
             <div class="studio-card">
                 <div class="studio-title">
-                    <span class="kicker">Cek dan Interpretasi</span>
+                    <span class="section-kicker kicker">Cek dan Interpretasi</span>
                     <h2>Periksa hasil histogram dan tuliskan interpretasimu</h2>
                     <p>Bandingkan histogram yang kamu buat dengan data acuan, lalu jelaskan hal penting yang kamu temukan dari histogram tersebut.</p>
                 </div>
@@ -493,10 +495,10 @@
                 });
             }
 
-            document.getElementById("judulGrafikInput").value = `Histogram ${namaData}`;
-            document.getElementById("labelXInput").value = satuanData ? `${namaData} (${satuanData})` : namaData;
-            document.getElementById("labelYInput").value = "Frekuensi";
-            document.getElementById("maxYInput").value = Math.max(...frekuensiBenar) + 1;
+            document.getElementById("judulGrafikInput").value = "";
+            document.getElementById("labelXInput").value = "";
+            document.getElementById("labelYInput").value = "";
+            document.getElementById("maxYInput").value = "";
 
             renderFreqInputs();
             renderHistogram();
@@ -505,12 +507,9 @@
 
         function setStudioStep(no) {
             document.querySelectorAll(".step-panel").forEach((panel) => panel.classList.remove("active"));
-            document.querySelectorAll(".step-card").forEach((card) => card.classList.remove("active", "done"));
             document.getElementById(`step${no}`).classList.add("active");
-            for (let i = 1; i <= 4; i++) {
-                if (i < no) document.getElementById(`stepCard${i}`).classList.add("done");
-                if (i === no) document.getElementById(`stepCard${i}`).classList.add("active");
-            }
+            document.getElementById("activity4Hud").classList.toggle("status-only", no > 1);
+            document.getElementById("activity4Hero").style.display = no > 1 ? "none" : "grid";
             window.scrollTo({ top: 0, behavior: "smooth" });
             updateQuestStatus();
         }
