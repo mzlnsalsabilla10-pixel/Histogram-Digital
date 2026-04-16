@@ -30,8 +30,6 @@
             gap: 22px;
         }
 
-        .final-hero h1,
-        .final-card h2,
         .status-card h3,
         .action-card h3 {
             font-family: 'Sora', sans-serif;
@@ -39,8 +37,10 @@
         }
 
         .final-hero h1 {
+            font-family: var(--font-body);
             font-size: clamp(2rem, 3vw, 3rem);
             margin-bottom: 14px;
+            color: #cf2727;
         }
 
         .final-hero p,
@@ -57,16 +57,34 @@
             display: inline-flex;
             padding: 10px 16px;
             border-radius: 999px;
-            background: rgba(49,84,215,.08);
-            color: #3154d7;
+            background: linear-gradient(135deg, #ffd447, #ffb347);
+            color: #1d2c7a;
             font-weight: 700;
             margin-bottom: 16px;
+            border: 3px solid #1d2c7a;
+            box-shadow: 0 6px 0 #1d2c7a;
+            font-family: var(--font-arcade);
+            letter-spacing: .08em;
+            text-transform: uppercase;
         }
 
         .hero-side {
             background: linear-gradient(135deg, rgba(49,84,215,.08), rgba(24,183,163,.14));
             border-radius: 24px;
             padding: 24px;
+        }
+
+        .final-card-head {
+            margin-bottom: 18px;
+        }
+
+        .final-card-head h2,
+        .final-card-head h3,
+        .hero-side h3,
+        .action-card h3 {
+            font-family: var(--font-body);
+            color: #cf2727;
+            margin-top: 8px;
         }
 
         .hero-side ul {
@@ -108,6 +126,46 @@
 
         .status-grid {
             grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+
+        .final-reward-grid {
+            display: grid;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .final-reward-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 18px;
+            border: 2px solid rgba(29,44,122,.12);
+            background: linear-gradient(135deg, rgba(255,255,255,.98), rgba(255,243,207,.94));
+        }
+
+        .final-reward-item strong {
+            display: block;
+            color: #1d2c7a;
+            font-size: 15px;
+        }
+
+        .final-reward-item p {
+            margin-top: 2px;
+        }
+
+        .final-reward-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+            border: 3px solid #1d2c7a;
+            background: linear-gradient(135deg, #ffd447, #ffb347);
+            box-shadow: 0 4px 0 #1d2c7a;
+            flex-shrink: 0;
         }
 
         .status-card {
@@ -163,15 +221,17 @@
         }
 
         .final-btn.primary {
-            background: linear-gradient(135deg, #3154d7, #5e7bff);
-            color: white;
-            box-shadow: 0 14px 28px rgba(49,84,215,.18);
+            background: linear-gradient(135deg, #ffd447, #ff9f43);
+            color: #1d2c7a;
+            border: 3px solid #1d2c7a;
+            box-shadow: 0 6px 0 #1d2c7a, 0 14px 28px rgba(255,159,67,.24);
         }
 
         .final-btn.secondary {
-            background: rgba(49,84,215,.12);
-            color: #21358e;
-            border: 1px solid rgba(49,84,215,.18);
+            background: linear-gradient(135deg, #ff6255, #ff8d5c);
+            color: #fff7ec;
+            border: 3px solid #1d2c7a;
+            box-shadow: 0 6px 0 #1d2c7a, 0 14px 28px rgba(255,98,85,.24);
         }
 
         .final-topbar {
@@ -221,10 +281,6 @@
                 <p>Final</p>
             </div>
         </div>
-        <nav class="topnav">
-            <a href="index.html#tentang-media">Tentang Media</a>
-            <a href="index.html#referensi">Referensi</a>
-        </nav>
     </header>
 
     <main class="final-wrap">
@@ -235,6 +291,7 @@
                 <p id="finalIntro">Kamu telah menyelesaikan seluruh petualangan histogram. Halaman ini menampilkan ringkasan kemenangan, status world, dan laporan hasil belajarmu.</p>
             </div>
             <div class="hero-side">
+                <span class="section-kicker">Final Mission</span>
                 <h3>Yang bisa kamu lakukan di layar kemenangan ini</h3>
                 <ul>
                     <li>Melihat kembali identitas dan hasil belajar yang sudah dikerjakan.</li>
@@ -259,8 +316,11 @@
         </section>
 
         <section class="final-card">
-            <h2>Identitas Hasil Belajar</h2>
-            <p>Data berikut akan menjadi bagian dari laporan hasil belajar murid.</p>
+            <div class="final-card-head">
+                <span class="section-kicker">Identity</span>
+                <h2>Identitas Hasil Belajar</h2>
+                <p>Data berikut akan menjadi bagian dari laporan hasil belajar murid.</p>
+            </div>
             <div class="identity-grid">
                 <div class="identity-item">
                     <strong>Nama Lengkap</strong>
@@ -278,13 +338,17 @@
         </section>
 
         <section class="final-card">
-            <h2>Ringkasan Penyelesaian Aktivitas</h2>
-            <p>Status berikut menunjukkan bahwa seluruh aktivitas pembelajaran telah diselesaikan.</p>
+            <div class="final-card-head">
+                <span class="section-kicker">Activity Recap</span>
+                <h2>Ringkasan Penyelesaian Aktivitas</h2>
+                <p>Status berikut menunjukkan bahwa seluruh aktivitas pembelajaran telah diselesaikan.</p>
+            </div>
             <div class="status-grid" id="statusGrid"></div>
         </section>
 
         <section class="action-card">
             <div>
+                <span class="section-kicker">Final Action</span>
                 <h3>Unduh atau akhiri sesi belajar</h3>
                 <p class="report-note">Unduh laporan untuk membaca kembali seluruh hasil pekerjaan dari Aktivitas 1 sampai Aktivitas 5. Laporan akan dibuka dalam format siap cetak sehingga bisa langsung disimpan sebagai PDF dari browser.</p>
             </div>
@@ -409,9 +473,20 @@
                 </div>
             `).join("");
 
-            document.getElementById("finalBadgeWrap").innerHTML = progress.badges.length
-                ? progress.badges.map((badge) => `<span class="xp-badge">${badge}</span>`).join("")
-                : `<span class="xp-badge">Belum ada badge</span>`;
+            const rewardItems = LEVEL_META.map((item) => {
+                const earned = isLevelDone(item.no);
+                return `
+                    <div class="final-reward-item">
+                        <span class="final-reward-icon">${item.badgeIcon || item.no}</span>
+                        <div>
+                            <strong>${item.reward}</strong>
+                            <p>${item.xp} XP · ${earned ? "Sudah dibuka" : "Belum dibuka"}</p>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+
+            document.getElementById("finalBadgeWrap").innerHTML = `<div class="final-reward-grid">${rewardItems}</div>`;
         }
 
         function renderIdentity() {

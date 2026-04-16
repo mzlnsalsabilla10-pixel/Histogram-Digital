@@ -2,7 +2,7 @@
    STYLE CSS - HISTOGRAM DIGITAL
    ======================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Lilita+One&family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Lilita+One&family=Press+Start+2P&family=Sora:wght@400;600;700&display=swap');
 
 :root {
     --bg-sky: #8ed0ff;
@@ -1477,6 +1477,19 @@ body::after {
     box-shadow: 0 5px 0 #1f2e7a;
 }
 
+.arcade-skin .world-slide-meta .xp-coin-chip {
+    background: linear-gradient(135deg, #ffe27a, #ffb347);
+    color: #7a4a00;
+    box-shadow: 0 5px 0 #1f2e7a, 0 8px 14px rgba(255, 185, 71, 0.24);
+}
+
+.arcade-skin .world-slide-meta .xp-coin-chip::before {
+    content: "✦";
+    margin-right: 6px;
+    color: #fff4c5;
+    text-shadow: 0 1px 0 rgba(122, 74, 0, 0.35);
+}
+
 .arcade-skin .world-slide.theme-1 .world-scene {
     background: linear-gradient(180deg, #8cdf6a 0%, #67c64d 100%);
 }
@@ -1665,6 +1678,23 @@ body::after {
     color: #1f2e7a;
     font-weight: 800;
     box-shadow: 0 6px 0 #1f2e7a;
+}
+
+.arcade-skin .popup-badge-chip {
+    background: linear-gradient(135deg, #fffef8, #fff1c5);
+}
+
+.arcade-skin .popup-xp-chip {
+    background: linear-gradient(135deg, #ffe27a, #ffb347);
+    color: #7a4a00;
+    box-shadow: 0 6px 0 #1f2e7a, 0 8px 14px rgba(255, 185, 71, 0.24);
+}
+
+.arcade-skin .popup-xp-chip::before {
+    content: "◎";
+    font-size: 14px;
+    color: #fff4c5;
+    text-shadow: 0 1px 0 rgba(122, 74, 0, 0.35);
 }
 
 .arcade-skin .popup-objectives {

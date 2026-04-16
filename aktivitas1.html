@@ -496,7 +496,7 @@
                     <div class="objective-item">
                         <span class="objective-icon">VID</span>
                         <div>
-                            <strong>Aktifkan radar video</strong>
+                            <strong>Gunakan video penguat</strong>
                             <p>Pelajari video pembelajaran dan gunakan YouTube bila video di web tidak dapat diputar.</p>
                         </div>
                     </div>
@@ -701,7 +701,6 @@
 
     <script src="script.js"></script>
     <script>
-        let videoSudahDikonfirmasi = true;
         let draggedItem = null;
         let selectedTouchItem = null;
 
@@ -839,8 +838,8 @@
         function updateQuestStatus() {
             const statuses = [
                 {
-                    done: videoSudahDikonfirmasi,
-                    label: "Radar video aktif",
+                    done: true,
+                    label: "Video penguat tersedia",
                     note: "Video siap dipelajari dan bisa dibuka lewat YouTube bila diperlukan."
                 },
                 {

@@ -24,7 +24,6 @@
             <a href="index.html#tentang-media">Tentang Media</a>
             <a href="index.html#tujuan-pembelajaran">Tujuan Pembelajaran</a>
             <a href="index.html#panduan-penggunaan">Panduan Penggunaan</a>
-            <a href="index.html#referensi">Referensi</a>
             <a class="topnav-cta" href="beranda.html">Beranda Belajar</a>
         </nav>
     </header>
@@ -115,8 +114,8 @@
                 </div>
 
                 <div class="popup-chip-row">
-                    <span class="popup-chip" id="modalWorldReward"></span>
-                    <span class="popup-chip" id="modalWorldXp"></span>
+                    <span class="popup-chip popup-badge-chip" id="modalWorldReward"></span>
+                    <span class="popup-chip popup-xp-chip" id="modalWorldXp"></span>
                 </div>
 
                 <div class="map-modal-card map-password-wrap world-password-wrap" id="modalPasswordWrap" style="display:none;">
@@ -251,7 +250,7 @@
                             <div class="world-ribbon">${item.world}</div>
                             <h3>${item.title}</h3>
                             <div class="world-slide-meta">
-                                <span>${item.xp} XP</span>
+                                <span class="xp-coin-chip">XP ${item.xp}</span>
                                 <span>${statusLabel}</span>
                             </div>
                         </div>
@@ -330,8 +329,8 @@
             document.getElementById("modalWorldTag").textContent = meta.world;
             document.getElementById("modalWorldTitle").textContent = meta.title;
             document.getElementById("modalWorldMission").textContent = `Task: ${detail.mission}`;
-            document.getElementById("modalWorldReward").textContent = meta.reward;
-            document.getElementById("modalWorldXp").textContent = `${meta.xp} XP`;
+            document.getElementById("modalWorldReward").textContent = `${meta.badgeIcon} ${meta.reward}`;
+            document.getElementById("modalWorldXp").textContent = `XP ${meta.xp}`;
 
             passwordWrap.style.display = "none";
             enterButton.style.display = "inline-flex";
