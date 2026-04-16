@@ -334,7 +334,7 @@
                         <div class="freq-input-grid" id="freqInputGrid"></div>
                     </div>
 
-                    <div class="chart-shell">
+                    <div class="chart-shell" id="histogramCapture">
                         <h3>Histogram Digital</h3>
                         <div class="chart-meta">
                             <strong id="displayJudulGrafik">Histogram</strong>
@@ -412,6 +412,7 @@
         </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="script.js"></script>
     <script>
         let intervalKelas = [];
@@ -516,6 +517,30 @@
 
         function goStudioStep(no) {
             setStudioStep(no);
+        }
+
+        async function captureHistogramImage() {
+            const target = document.getElementById("histogramCapture");
+            if (!target || typeof html2canvas !== "function") return "";
+
+            const canvas = await html2canvas(target, {
+                backgroundColor: "#ffffff",
+                scale: Math.min(window.devicePixelRatio || 1.5, 2),
+                useCORS: true
+            });
+
+            return canvas.toDataURL("image/png");
+        }
+
+        async function simpanHistogramKeStorage() {
+            try {
+                const imageData = await captureHistogramImage();
+                if (imageData) {
+                    localStorage.setItem("histogramImage", imageData);
+                }
+            } catch (error) {
+                console.error("Gagal menangkap histogram:", error);
+            }
         }
 
         function cekKomponenGrafik() {
@@ -652,7 +677,7 @@
             document.getElementById(config.labelYId).innerText = config.labelY;
         }
 
-        function cekHistogram() {
+        async function cekHistogram() {
             const masihKosong = frekuensiUser.some((nilai) => nilai === 0 && frekuensiBenar.includes(nilai) === false);
             const adaKosongInput = document.querySelectorAll("#freqInputGrid input").length !== intervalKelas.length ||
                 Array.from(document.querySelectorAll("#freqInputGrid input")).some((input) => input.value === "");
@@ -704,6 +729,7 @@
 
             histogramSudahDicek = true;
             renderReferenceHistogram();
+            await simpanHistogramKeStorage();
             updateQuestStatus();
             setStudioStep(4);
         }
@@ -747,12 +773,14 @@
             document.getElementById("missionClearBox").classList.toggle("active", doneCount === statuses.length);
         }
 
-        function submitAktivitas4() {
+        async function submitAktivitas4() {
             const refleksi = document.getElementById("refleksi").value.trim();
             if (!refleksi) {
                 alert("Tuliskan terlebih dahulu interpretasi atau refleksimu terhadap histogram.");
                 return;
             }
+
+            await simpanHistogramKeStorage();
 
             const hasil = {
                 frekuensiUser,
@@ -763,7 +791,8 @@
                 labelY: document.getElementById("labelYInput").value.trim(),
                 maxY: document.getElementById("maxYInput").value,
                 refleksi,
-                kecocokan: skorKecocokan
+                kecocokan: skorKecocokan,
+                histogramImage: localStorage.getItem("histogramImage") || ""
             };
 
             localStorage.setItem("hasilAktivitas4", JSON.stringify(hasil));
