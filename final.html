@@ -423,7 +423,10 @@
                     intervalKelas: readJSON("intervalKelas", []),
                     frekuensiBenar: readJSON("frekuensiBenar", [])
                 },
-                aktivitas4: readJSON("hasilAktivitas4", {}),
+                aktivitas4: {
+                    ...readJSON("hasilAktivitas4", {}),
+                    histogramImage: localStorage.getItem("histogramImage") || ""
+                },
                 aktivitas5: {
                     r1: localStorage.getItem("refleksi_r1") || "-",
                     r2: localStorage.getItem("refleksi_r2") || "-",
