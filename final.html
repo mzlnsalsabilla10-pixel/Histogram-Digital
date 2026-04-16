@@ -234,6 +234,20 @@
             box-shadow: 0 6px 0 #1d2c7a, 0 14px 28px rgba(255,98,85,.24);
         }
 
+        .final-btn.send {
+            background: linear-gradient(135deg, #34d279, #1eb7a3);
+            color: #f7fff8;
+            border: 3px solid #1d2c7a;
+            box-shadow: 0 6px 0 #1d2c7a, 0 14px 28px rgba(30,183,163,.22);
+        }
+
+        .final-btn:disabled {
+            opacity: .7;
+            cursor: wait;
+            transform: none;
+            box-shadow: 0 6px 0 #1d2c7a;
+        }
+
         .final-topbar {
             position: sticky;
             top: 12px;
@@ -354,6 +368,7 @@
             </div>
             <div class="action-buttons">
                 <button class="final-btn primary" onclick="downloadReport()">Unduh / Simpan Laporan PDF</button>
+                <button class="final-btn send" id="sendReportBtn" onclick="kirimLaporanKeGuru()">Kirim Laporan ke Guru</button>
                 <button class="final-btn secondary" onclick="selesaiDanKeluar()">Selesai dan Keluar</button>
             </div>
         </section>
@@ -361,6 +376,7 @@
 
     <script src="script.js"></script>
     <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxC00bXwymu9NeURPzCwosi9XnEOa-eoKNjPQl2_pNWcruokxUdNUuggElAfuGHFyi5/exec";
         let finalData = {};
 
         function readJSON(key, fallback) {
@@ -388,6 +404,36 @@
             renderVictorySummary();
             renderIdentity();
             renderStatus();
+        }
+
+        function buildSubmissionPayload() {
+            const progress = getGameProgress();
+            return {
+                meta: {
+                    appName: "Histogram Digital Berbasis Web",
+                    submittedAt: new Date().toISOString(),
+                    submissionId: `HD-${Date.now()}`
+                },
+                identitas: finalData.identitas,
+                progress: {
+                    xp: progress.xp,
+                    completedCount: progress.completedCount,
+                    badges: LEVEL_META
+                        .filter((item) => isLevelDone(item.no))
+                        .map((item) => item.reward)
+                },
+                aktivitas: finalData.aktivitas,
+                aktivitas1: finalData.aktivitas1,
+                aktivitas2: {
+                    namaData: finalData.identitas.namaData,
+                    satuanData: finalData.identitas.satuanData,
+                    data: finalData.aktivitas2.data || [],
+                    refleksi: finalData.aktivitas2.refleksi || "-"
+                },
+                aktivitas3: finalData.aktivitas3,
+                aktivitas4: finalData.aktivitas4,
+                aktivitas5: finalData.aktivitas5
+            };
         }
 
         function collectFinalData() {
@@ -769,6 +815,43 @@
             setTimeout(() => {
                 reportWindow.print();
             }, 500);
+        }
+
+        async function kirimLaporanKeGuru() {
+            if (!WEB_APP_URL || WEB_APP_URL.includes("TEMPELKAN_WEB_APP_URL_DI_SINI")) {
+                alert("Web App URL belum dipasang di final.html. Tempelkan dulu URL Apps Script milikmu pada const WEB_APP_URL.");
+                return;
+            }
+
+            const sendBtn = document.getElementById("sendReportBtn");
+            const labelAwal = sendBtn.innerText;
+            const payload = buildSubmissionPayload();
+
+            sendBtn.disabled = true;
+            sendBtn.innerText = "Mengirim laporan...";
+
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "text/plain;charset=utf-8"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || "Pengiriman laporan belum berhasil.");
+                }
+
+                alert("Laporan berhasil dikirim ke guru dan PDF sedang/ sudah dibuat oleh Apps Script.");
+            } catch (error) {
+                alert(`Laporan belum berhasil dikirim. Cek kembali Web App URL, izin deploy, dan koneksi internet.\n\nDetail: ${error.message}`);
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.innerText = labelAwal;
+            }
         }
 
         function selesaiDanKeluar() {
