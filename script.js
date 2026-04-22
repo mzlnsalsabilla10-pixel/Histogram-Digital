@@ -39,7 +39,7 @@ const LEVEL_META = [
         hook: "Membangun histogram lengkap dari tabel distribusi frekuensi.",
         reward: "Lencana Arsitek Histogram",
         badgeIcon: "📊",
-        badgeShort: "Builder",
+        badgeShort: "Histogram",
         xp: 220
     },
     {
