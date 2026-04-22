@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final - Laporan Hasil Belajar</title>
+    <title>Halaman Akhir - Laporan Hasil Belajar</title>
     <link rel="stylesheet" href="style.css">
     <style>
         .final-wrap {
@@ -292,7 +292,7 @@
             <span class="brand-dot"></span>
             <div>
                 <strong>Histogram Digital</strong>
-                <p>Final</p>
+                <p>Akhir</p>
             </div>
         </div>
     </header>
@@ -300,16 +300,15 @@
     <main class="final-wrap">
         <section class="final-hero">
             <div>
-                <span class="final-pill">Victory Screen</span>
                 <h1 id="finalGreeting">Selamat!</h1>
-                <p id="finalIntro">Kamu telah menyelesaikan seluruh petualangan histogram. Halaman ini menampilkan ringkasan kemenangan, status world, dan laporan hasil belajarmu.</p>
+                <p id="finalIntro">Kamu telah menyelesaikan seluruh petualangan histogram. Halaman ini menampilkan ringkasan kemenangan, status aktivitas, dan laporan hasil belajarmu.</p>
             </div>
             <div class="hero-side">
-                <span class="section-kicker">Final Mission</span>
+                <span class="section-kicker">Misi Akhir</span>
                 <h3>Yang bisa kamu lakukan di layar kemenangan ini</h3>
                 <ul>
                     <li>Melihat kembali identitas dan hasil belajar yang sudah dikerjakan.</li>
-                    <li>Meninjau semua world yang sudah kamu taklukkan beserta reward-nya.</li>
+                    <li>Meninjau semua aktivitas yang sudah kamu tuntaskan beserta reward-nya.</li>
                     <li>Mengunduh laporan hasil belajar atau menutup sesi bermain-belajar.</li>
                 </ul>
             </div>
@@ -317,21 +316,21 @@
 
         <section class="mission-hud">
             <article class="quest-board">
-                <span class="section-kicker">Victory Summary</span>
+                <span class="section-kicker">Ringkasan Pencapaian Akhir</span>
                 <h3>Petualanganmu sudah tuntas</h3>
                 <div class="status-list" id="victorySummary"></div>
             </article>
 
             <article class="reward-panel">
-                <span class="section-kicker">Reward Room</span>
-                <h3>Badge yang berhasil dibuka</h3>
+                <span class="section-kicker">Perolehan Reward</span>
+                <h3>Lencana yang berhasil dibuka</h3>
                 <div class="xp-badges" id="finalBadgeWrap"></div>
             </article>
         </section>
 
         <section class="final-card">
             <div class="final-card-head">
-                <span class="section-kicker">Identity</span>
+                <span class="section-kicker">Identitas</span>
                 <h2>Identitas Hasil Belajar</h2>
                 <p>Data berikut akan menjadi bagian dari laporan hasil belajar murid.</p>
             </div>
@@ -353,7 +352,7 @@
 
         <section class="final-card">
             <div class="final-card-head">
-                <span class="section-kicker">Activity Recap</span>
+                <span class="section-kicker">Ringkasan Aktivitas</span>
                 <h2>Ringkasan Penyelesaian Aktivitas</h2>
                 <p>Status berikut menunjukkan bahwa seluruh aktivitas pembelajaran telah diselesaikan.</p>
             </div>
@@ -362,7 +361,7 @@
 
         <section class="action-card">
             <div>
-                <span class="section-kicker">Final Action</span>
+                <span class="section-kicker">Aksi Akhir</span>
                 <h3>Unduh atau akhiri sesi belajar</h3>
                 <p class="report-note">Unduh laporan untuk membaca kembali seluruh hasil pekerjaan dari Aktivitas 1 sampai Aktivitas 5. Laporan akan dibuka dalam format siap cetak sehingga bisa langsung disimpan sebagai PDF dari browser.</p>
             </div>
@@ -602,7 +601,7 @@
         function renderHero() {
             document.getElementById("finalGreeting").innerText = `Selamat, ${finalData.identitas.namaLengkap}!`;
             document.getElementById("finalIntro").innerText =
-                `Kamu dari ${finalData.identitas.kelompokNama} kelas ${finalData.identitas.kelompokKelas} sudah menuntaskan lima world pembelajaran histogram. Sekarang kamu bisa melihat rangkuman kemenangan dan laporan hasil kerja dari awal sampai akhir.`;
+                `Kamu dari ${finalData.identitas.kelompokNama} kelas ${finalData.identitas.kelompokKelas} sudah menuntaskan lima aktivitas pembelajaran histogram. Sekarang kamu bisa melihat rangkuman kemenangan dan laporan hasil kerja dari awal sampai akhir.`;
         }
 
         function renderVictorySummary() {
@@ -611,20 +610,20 @@
             const skorHistogram = finalData.aktivitas4?.kecocokan ?? 0;
             const summary = [
                 {
-                    label: "World selesai",
-                    note: `${progress.completedCount} dari ${LEVEL_META.length} world berhasil dituntaskan.`
+                    label: "Aktivitas selesai",
+                    note: `${progress.completedCount} dari ${LEVEL_META.length} aktivitas berhasil dituntaskan.`
                 },
                 {
-                    label: "XP terkumpul",
-                    note: `${progress.xp} XP masuk ke akun petualanganmu.`
+                    label: "Poin terkumpul",
+                    note: `${progress.xp} poin masuk ke akun petualanganmu.`
                 },
                 {
-                    label: "Skor boss arena",
-                    note: `Kecocokan histogram pada World 4 mencapai ${skorHistogram}%.`
+                    label: "Skor tantangan utama",
+                    note: `Kecocokan histogram pada Aktivitas 4 mencapai ${skorHistogram}%.`
                 },
                 {
                     label: "Status akhir",
-                    note: semuaSelesai ? "Semua world clear. Petualangan selesai dengan lengkap." : "Masih ada world yang belum sepenuhnya selesai."
+                    note: semuaSelesai ? "Semua aktivitas selesai. Petualangan selesai dengan lengkap." : "Masih ada aktivitas yang belum sepenuhnya selesai."
                 }
             ];
 
@@ -645,7 +644,7 @@
                         <span class="final-reward-icon">${item.badgeIcon || item.no}</span>
                         <div>
                             <strong>${item.reward}</strong>
-                            <p>${item.xp} XP · ${earned ? "Sudah dibuka" : "Belum dibuka"}</p>
+                            <p>${item.xp} Poin - ${earned ? "Sudah dibuka" : "Belum dibuka"}</p>
                         </div>
                     </div>
                 `;

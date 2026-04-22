@@ -34,13 +34,13 @@
                 <span class="eyebrow">Progress Belajar</span>
                 <h1 id="sapaanJudul">Selamat datang!</h1>
                 <p class="hero-text hero-text-short">
-                    Selamat datang di perjalanan belajarmu. Pantau terus progres yang sudah kamu capai, buka berbagai reward menarik, dan lanjutkan ke setiap world berikutnya. Selesaikan kelima world yang tersedia untuk mendapatkan badge spesial dan kumpulkan XP hingga penuh sebagai bukti pencapaian terbaikmu!
+                    Selamat datang di perjalanan belajarmu. Pantau terus progres yang sudah kamu capai, buka berbagai reward menarik, dan lanjutkan ke setiap aktivitas berikutnya. Selesaikan kelima aktivitas yang tersedia untuk mendapatkan lencana spesial dan kumpulkan poin hingga penuh sebagai bukti pencapaian terbaikmu!
                 </p>
             </div>
 
             <div class="hero-aside-card xp-panel">
-                <p class="aside-label">XP</p>
-                <strong id="progressText">0 XP</strong>
+                <p class="aside-label">Poin</p>
+                <strong id="progressText">0 Poin</strong>
                 <div class="progress-track">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
@@ -50,12 +50,12 @@
 
         <section class="mission-hud compact-hud">
             <article class="quest-board">
-                <span class="section-kicker">Main Quest</span>
+                <span class="section-kicker">Misi Utama</span>
                 <h3>Target utama</h3>
                 <div class="objective-list compact-objectives">
                     <div class="objective-item">
                         <span class="objective-icon">1</span>
-                        <div><strong>Memahami</strong><p>Memahami konsep grafik, data, dan histogram melalui Graph Lab.</p></div>
+                        <div><strong>Memahami</strong><p>Memahami konsep grafik, data, dan histogram melalui Pengamatan Grafik.</p></div>
                     </div>
                     <div class="objective-item">
                         <span class="objective-icon">2</span>
@@ -63,7 +63,7 @@
                     </div>
                     <div class="objective-item">
                         <span class="objective-icon">3</span>
-                        <div><strong>Merefleksi</strong><p>Merefleksikan hasil belajar dan strategi perbaikan di world terakhir.</p></div>
+                        <div><strong>Merefleksi</strong><p>Merefleksikan hasil belajar dan strategi perbaikan di aktivitas terakhir.</p></div>
                     </div>
                 </div>
             </article>
@@ -77,8 +77,8 @@
 
         <section class="progress-panel world-slider-section">
             <div class="section-heading compact">
-                <span class="section-kicker">Choose World</span>
-                <h2>Pilih world yang ingin kamu lanjutkan</h2>
+                <span class="section-kicker">Pilih Aktivitas</span>
+                <h2>Pilih aktivitas yang ingin kamu lanjutkan</h2>
             </div>
 
             <div class="slider-shell">
@@ -90,8 +90,8 @@
             </div>
 
             <div class="slider-hint-row">
-                <p class="slider-hint">Tap card untuk melihat informasi singkat world dan memulai aktivitas.</p>
-                <div class="locked-note" id="lockedNote">World ini masih terkunci.</div>
+                <p class="slider-hint">Ketuk kartu untuk melihat informasi singkat aktivitas dan memulai aktivitas.</p>
+                <div class="locked-note" id="lockedNote">Aktivitas ini masih terkunci.</div>
             </div>
         </section>
     </main>
@@ -100,8 +100,8 @@
         <div class="map-modal-panel world-popup-panel" role="dialog" aria-modal="true" aria-labelledby="modalWorldTitle">
             <div class="map-modal-head world-popup-head">
                 <div class="world-popup-title-block">
-                    <span class="section-kicker" id="modalWorldTag">World</span>
-                    <h3 id="modalWorldTitle">Info World</h3>
+                    <span class="section-kicker" id="modalWorldTag">Aktivitas</span>
+                    <h3 id="modalWorldTitle">Info Aktivitas</h3>
                 </div>
                 <button class="map-modal-close" type="button" onclick="tutupWorldModal()">x</button>
             </div>
@@ -119,12 +119,12 @@
                 </div>
 
                 <div class="map-modal-card map-password-wrap world-password-wrap" id="modalPasswordWrap" style="display:none;">
-                    <input type="text" id="modalKodeAkt2" placeholder="Kode portal World 2">
-                    <button class="button" type="button" onclick="submitKodeWorld2()">Buka Portal</button>
+                    <input type="text" id="modalKodeAkt2" placeholder="Kode akses Aktivitas 2">
+                    <button class="button" type="button" onclick="submitKodeWorld2()">Buka Akses</button>
                 </div>
 
                 <div class="map-modal-actions world-popup-actions">
-                    <a class="quest-cta popup-enter-button" id="modalEnterButton" href="#">Play</a>
+                    <a class="quest-cta popup-enter-button" id="modalEnterButton" href="#">Mulai</a>
                 </div>
             </div>
         </div>
@@ -186,7 +186,7 @@
                     <span class="scene-ground"></span>
                     <span class="scene-deco deco-a"></span>
                     <span class="scene-deco deco-b"></span>
-                    <span class="world-art-note">Artwork Soon</span>
+                    <span class="world-art-note">Ilustrasi segera hadir</span>
                 </div>
             `;
         }
@@ -199,7 +199,7 @@
             const badgeWrap = document.getElementById("badgeWrap");
             const completedSet = new Set(LEVEL_META.filter((item) => isLevelDone(item.no)).map((item) => item.no));
 
-            document.getElementById("progressText").innerText = `${progress.xp} XP`;
+            document.getElementById("progressText").innerText = `${progress.xp} Poin`;
             document.getElementById("progressFill").style.width = `${persen}%`;
             badgeWrap.innerHTML = `
                 <p class="xp-badge-note ${progress.completedCount ? "" : "is-empty"}">
@@ -220,7 +220,7 @@
                     <span class="reward-icon">${item.badgeIcon}</span>
                     <div>
                         <strong>${item.reward}</strong>
-                        <p>${item.xp} XP · ${completedSet.has(item.no) ? "Terbuka" : "Terkunci"}</p>
+                        <p>${item.xp} Poin - ${completedSet.has(item.no) ? "Terbuka" : "Terkunci"}</p>
                     </div>
                 </div>
             `).join("");
@@ -232,9 +232,9 @@
                 const unlocked = isLevelUnlocked(item.no);
                 const waitingPortal = item.no === 2 && !unlocked && isLevelDone(1);
                 const stateClass = done ? "done" : unlocked ? "current" : "locked";
-                const stateText = done ? "Clear" : waitingPortal ? "Portal" : unlocked ? "Play" : "Lock";
+                const stateText = done ? "Selesai" : waitingPortal ? "Akses" : unlocked ? "Mulai" : "Kunci";
                 const badgeClass = done ? "clear" : waitingPortal ? "portal" : unlocked ? "play" : "lock";
-                const statusLabel = done ? "Mission Clear" : waitingPortal ? "Butuh Password" : unlocked ? "Quest Terbuka" : "Locked";
+                const statusLabel = done ? "Misi Selesai" : waitingPortal ? "Butuh Kode" : unlocked ? "Misi Terbuka" : "Terkunci";
 
                 const slide = document.createElement("article");
                 slide.className = `world-slide theme-${item.no} ${stateClass}`;
@@ -250,7 +250,7 @@
                             <div class="world-ribbon">${item.world}</div>
                             <h3>${item.title}</h3>
                             <div class="world-slide-meta">
-                                <span class="xp-coin-chip">XP ${item.xp}</span>
+                                <span class="xp-coin-chip">${item.xp} Poin</span>
                                 <span>${statusLabel}</span>
                             </div>
                         </div>
@@ -311,8 +311,8 @@
 
             note.classList.add("active");
             note.textContent = worldNo === 2
-                ? "Selesaikan World 1 dulu, lalu buka portal World 2."
-                : `World ${worldNo} masih terkunci.`;
+                ? "Selesaikan Aktivitas 1 dulu, lalu buka akses Aktivitas 2."
+                : `Aktivitas ${worldNo} masih terkunci.`;
             setTimeout(() => note.classList.remove("active"), 2200);
         }
 
@@ -328,25 +328,25 @@
 
             document.getElementById("modalWorldTag").textContent = meta.world;
             document.getElementById("modalWorldTitle").textContent = meta.title;
-            document.getElementById("modalWorldMission").textContent = `Task: ${detail.mission}`;
+            document.getElementById("modalWorldMission").textContent = `Tugas: ${detail.mission}`;
             document.getElementById("modalWorldReward").textContent = `${meta.badgeIcon} ${meta.reward}`;
-            document.getElementById("modalWorldXp").textContent = `XP ${meta.xp}`;
+            document.getElementById("modalWorldXp").textContent = `${meta.xp} Poin`;
 
             passwordWrap.style.display = "none";
             enterButton.style.display = "inline-flex";
             document.getElementById("modalWorldState").className = "map-status-badge";
 
             if (done) {
-                document.getElementById("modalWorldState").textContent = "Status: Mission Clear";
+                document.getElementById("modalWorldState").textContent = "Status: Misi Selesai";
                 document.getElementById("modalWorldState").classList.add("is-clear");
-                enterButton.textContent = "Play";
+                enterButton.textContent = "Mulai";
                 enterButton.href = `aktivitas${worldNo}.html`;
             } else if (unlocked) {
-                document.getElementById("modalWorldState").textContent = "Status: Quest Terbuka";
-                enterButton.textContent = "Play";
+                document.getElementById("modalWorldState").textContent = "Status: Misi Terbuka";
+                enterButton.textContent = "Mulai";
                 enterButton.href = `aktivitas${worldNo}.html`;
             } else if (canOpenPortal) {
-                document.getElementById("modalWorldState").textContent = "Status: Portal Terkunci";
+                document.getElementById("modalWorldState").textContent = "Status: Akses Aktivitas Belum Terbuka";
                 enterButton.style.display = "none";
                 passwordWrap.style.display = "grid";
                 document.getElementById("modalKodeAkt2").value = "";
