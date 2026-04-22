@@ -27,7 +27,7 @@ const LEVEL_META = [
         world: "Aktivitas 3",
         title: "Penyusunan Data",
         hook: "Mengolah data menjadi tabel distribusi frekuensi yang akurat.",
-        reward: "Lencana Penjaga Interval",
+        reward: "Lencana Penyusun Data",
         badgeIcon: "🧩",
         badgeShort: "Struktur",
         xp: 180
