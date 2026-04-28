@@ -2243,6 +2243,105 @@ header h1 span {
     color: var(--text-soft);
 }
 
+.arcade-skin .activity-state-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: 2px solid #1d2c7a;
+    font-family: var(--font-arcade);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    box-shadow: 0 4px 0 rgba(29, 44, 122, 0.2);
+}
+
+.arcade-skin .activity-state-pill.is-done {
+    background: linear-gradient(135deg, #d9ffe1, #f8ffcb);
+    color: #146c2e;
+}
+
+.arcade-skin .activity-state-pill.is-editing {
+    background: linear-gradient(135deg, #fff0bf, #ffd99f);
+    color: #8a4b00;
+}
+
+.arcade-skin .activity-state-pill.is-pending {
+    background: linear-gradient(135deg, #eef4ff, #ffffff);
+    color: #3154d7;
+}
+
+.arcade-skin .activity-review-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 22px;
+    padding: 18px 20px;
+    border: 3px solid #1d2c7a;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(230, 243, 255, 0.98), rgba(255, 247, 214, 0.96));
+    box-shadow: 0 8px 0 #1d2c7a, 0 14px 24px rgba(0, 0, 0, 0.12);
+}
+
+.arcade-skin .activity-review-banner[hidden] {
+    display: none !important;
+}
+
+.arcade-skin .activity-review-copy {
+    display: grid;
+    gap: 6px;
+}
+
+.arcade-skin .activity-review-copy p {
+    margin: 0;
+    color: var(--text-soft);
+}
+
+.arcade-skin .activity-review-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.arcade-skin .activity-edit-btn {
+    appearance: none;
+    border: 2px solid #1d2c7a;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.82);
+    color: #1d2c7a;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 16px;
+    cursor: pointer;
+    box-shadow: 0 6px 0 rgba(29, 44, 122, 0.28);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.arcade-skin .activity-edit-btn:hover {
+    transform: translateY(-2px);
+    background: #ffffff;
+}
+
+.arcade-skin textarea[readonly],
+.arcade-skin input[readonly],
+.arcade-skin input:disabled,
+.arcade-skin textarea:disabled {
+    opacity: 1;
+    color: var(--text-main);
+    background: rgba(241, 245, 255, 0.92);
+    cursor: default;
+}
+
+.arcade-skin button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
 .brand-dot {
     width: 16px;
     height: 16px;
@@ -3167,6 +3266,20 @@ header h1 span {
 
     .brand-mark p {
         font-size: 11px;
+    }
+
+    .arcade-skin .activity-review-banner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .arcade-skin .activity-review-actions {
+        width: 100%;
+    }
+
+    .arcade-skin .activity-edit-btn {
+        width: 100%;
+        justify-content: center;
     }
 
     .brand-dot {

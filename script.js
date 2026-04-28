@@ -124,6 +124,133 @@ function getGameProgress() {
     };
 }
 
+function readJSONStorage(key, fallback) {
+    const raw = localStorage.getItem(key);
+    if (!raw) return fallback;
+
+    try {
+        return JSON.parse(raw);
+    } catch (error) {
+        console.warn(`Gagal membaca data ${key}:`, error);
+        return fallback;
+    }
+}
+
+const ACTIVITY_EDIT_MODE_PREFIX = "aktivitas_edit_mode_";
+
+function getActivityEditModeKey(no) {
+    return `${ACTIVITY_EDIT_MODE_PREFIX}${no}`;
+}
+
+function isActivitySubmitted(no) {
+    return localStorage.getItem(`aktivitas${no}`) === "true";
+}
+
+function isActivityInEditMode(no) {
+    return localStorage.getItem(getActivityEditModeKey(no)) === "true";
+}
+
+function enterActivityEditMode(no) {
+    localStorage.setItem(getActivityEditModeKey(no), "true");
+    window.location.reload();
+}
+
+function exitActivityEditMode(no) {
+    localStorage.removeItem(getActivityEditModeKey(no));
+}
+
+function getActivityViewState(no) {
+    const submitted = isActivitySubmitted(no);
+    const editMode = submitted && isActivityInEditMode(no);
+
+    return {
+        submitted,
+        editMode,
+        reviewMode: submitted && !editMode
+    };
+}
+
+function renderActivityStateBadge(activityNo, elementId) {
+    const badge = document.getElementById(elementId);
+    if (!badge) return;
+
+    const state = getActivityViewState(activityNo);
+    const config = state.reviewMode
+        ? {
+            text: "Sudah dikerjakan",
+            className: "activity-state-pill is-done"
+        }
+        : state.editMode
+            ? {
+                text: "Mode edit",
+                className: "activity-state-pill is-editing"
+            }
+            : {
+                text: "Belum dikumpulkan",
+                className: "activity-state-pill is-pending"
+            };
+
+    badge.className = config.className;
+    badge.textContent = config.text;
+}
+
+function renderActivityArchiveBanner(activityNo, options) {
+    const banner = document.getElementById(options.bannerId);
+    if (!banner) {
+        return getActivityViewState(activityNo);
+    }
+
+    const message = document.getElementById(options.messageId);
+    const actionButton = document.getElementById(options.editButtonId);
+    const state = getActivityViewState(activityNo);
+
+    if (!state.submitted) {
+        banner.hidden = true;
+        return state;
+    }
+
+    banner.hidden = false;
+
+    if (message) {
+        message.textContent = state.reviewMode
+            ? "Jawaban sebelumnya sudah tersimpan. Kamu sedang membaca ulang aktivitas ini dalam mode arsip."
+            : "Mode edit aktif. Perbarui jawaban bila perlu, lalu simpan kembali untuk memperbarui arsip aktivitas.";
+    }
+
+    if (actionButton) {
+        actionButton.textContent = state.reviewMode ? "Edit Jawaban" : "Kembali ke Arsip";
+        actionButton.onclick = () => {
+            if (state.reviewMode) {
+                enterActivityEditMode(activityNo);
+                return;
+            }
+
+            exitActivityEditMode(activityNo);
+            window.location.reload();
+        };
+    }
+
+    return state;
+}
+
+function setReadOnlyState(selectors, isReadOnly) {
+    selectors.forEach((selector) => {
+        document.querySelectorAll(selector).forEach((field) => {
+            if ("readOnly" in field) {
+                field.readOnly = isReadOnly;
+            }
+        });
+    });
+}
+
+function setDisabledState(selectors, isDisabled) {
+    selectors.forEach((selector) => {
+        document.querySelectorAll(selector).forEach((field) => {
+            field.disabled = isDisabled;
+        });
+    });
+}
+
 /* ============================================================
    CEK IZIN AKSES (Agar tidak lompat aktivitas)
    ============================================================ */

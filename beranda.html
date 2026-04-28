@@ -36,6 +36,9 @@
                 <p class="hero-text hero-text-short">
                     Selamat datang di perjalanan belajarmu. Pantau terus progres yang sudah kamu capai, buka berbagai reward menarik, dan lanjutkan ke setiap aktivitas berikutnya. Selesaikan kelima aktivitas yang tersedia untuk mendapatkan lencana spesial dan kumpulkan poin hingga penuh sebagai bukti pencapaian terbaikmu!
                 </p>
+                <div class="hero-actions" id="finalAdventureWrap" style="display:none;">
+                    <a class="hero-button primary" href="final.html" id="finalAdventureButton">Akhiri Petualangan</a>
+                </div>
             </div>
 
             <div class="hero-aside-card xp-panel">
@@ -197,10 +200,12 @@
             const wrap = document.getElementById("stepIndicator");
             const rewardPreview = document.getElementById("rewardPreview");
             const badgeWrap = document.getElementById("badgeWrap");
+            const finalAdventureWrap = document.getElementById("finalAdventureWrap");
             const completedSet = new Set(LEVEL_META.filter((item) => isLevelDone(item.no)).map((item) => item.no));
 
             document.getElementById("progressText").innerText = `${progress.xp} Poin`;
             document.getElementById("progressFill").style.width = `${persen}%`;
+            finalAdventureWrap.style.display = progress.completedCount === LEVEL_META.length ? "flex" : "none";
             badgeWrap.innerHTML = `
                 <p class="xp-badge-note ${progress.completedCount ? "" : "is-empty"}">
                     ${progress.completedCount ? `Reward terbuka ${progress.completedCount}/${LEVEL_META.length}` : "Belum ada reward yang dibuka"}

@@ -328,6 +328,7 @@
             <div>
                 <strong>Histogram Digital</strong>
                 <p>Aktivitas 5</p>
+                <span class="activity-state-pill" id="activity5HeaderStatus">Belum dikumpulkan</span>
             </div>
         </div>
         <button class="menu-toggle" type="button" id="activityMenuToggle" aria-expanded="false" aria-controls="activityNav" aria-label="Buka menu navigasi">
@@ -394,6 +395,16 @@
                     <span id="questProgressFill"></span>
                 </div>
             </article>
+        </section>
+
+        <section class="activity-review-banner" id="activity5ReviewBanner" hidden>
+            <div class="activity-review-copy">
+                <span class="section-kicker">Arsip Jawaban</span>
+                <p id="activity5ReviewMessage"></p>
+            </div>
+            <div class="activity-review-actions">
+                <button class="activity-edit-btn" type="button" id="activity5EditButton">Edit Jawaban</button>
+            </div>
         </section>
 
         <section class="reflection-card">
@@ -473,9 +484,9 @@
         </section>
 
         <section class="reflection-card">
-            <div class="reflection-actions">
+            <div class="reflection-actions" id="activity5SubmitWrap">
                 <p class="reflection-note">Pastikan semua pertanyaan sudah terisi agar refleksimu tersimpan dengan lengkap sebagai penutup pembelajaran.</p>
-                <button class="reflection-btn" onclick="submitRefleksi()">Simpan Refleksi dan Selesaikan</button>
+                <button class="reflection-btn" id="activity5SubmitButton" onclick="submitRefleksi()">Simpan Refleksi dan Selesaikan</button>
             </div>
         </section>
 
@@ -488,12 +499,47 @@
 
     <script src="script.js?v=20260423a"></script>
     <script>
+        let aktivitas5State = { submitted: false, reviewMode: false, editMode: false };
+
         window.addEventListener("load", () => {
+            aktivitas5State = renderActivityArchiveBanner(5, {
+                bannerId: "activity5ReviewBanner",
+                messageId: "activity5ReviewMessage",
+                editButtonId: "activity5EditButton"
+            });
+            renderActivityStateBadge(5, "activity5HeaderStatus");
+
             ["r1", "r2", "r3", "r4"].forEach((id) => {
                 document.getElementById(id).addEventListener("input", updateQuestStatus);
             });
+
+            muatJawabanAktivitas5();
+            terapkanModeAktivitas5();
             updateQuestStatus();
         });
+
+        function muatJawabanAktivitas5() {
+            document.getElementById("r1").value = localStorage.getItem("refleksi_r1") || "";
+            document.getElementById("r2").value = localStorage.getItem("refleksi_r2") || "";
+            document.getElementById("r3").value = localStorage.getItem("refleksi_r3") || "";
+            document.getElementById("r4").value = localStorage.getItem("refleksi_r4") || "";
+        }
+
+        function terapkanModeAktivitas5() {
+            const isReadOnly = aktivitas5State.reviewMode;
+
+            setReadOnlyState([
+                "#r1",
+                "#r2",
+                "#r3",
+                "#r4"
+            ], isReadOnly);
+
+            document.getElementById("activity5SubmitWrap").style.display = isReadOnly ? "none" : "flex";
+            document.getElementById("activity5SubmitButton").textContent = aktivitas5State.editMode
+                ? "Simpan Perubahan Refleksi"
+                : "Simpan Refleksi dan Selesaikan";
+        }
 
         function updateQuestStatus() {
             const statuses = [
@@ -545,6 +591,7 @@
             localStorage.setItem("refleksi_r4", r4);
             localStorage.setItem("status_refleksi", "lengkap");
             localStorage.setItem("aktivitas5", "true");
+            exitActivityEditMode(5);
 
             window.location.href = "final.html";
         }

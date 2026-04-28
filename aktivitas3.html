@@ -130,6 +130,7 @@
             <div>
                 <strong>Histogram Digital</strong>
                 <p>Aktivitas 3</p>
+                <span class="activity-state-pill" id="activity3HeaderStatus">Belum dikumpulkan</span>
             </div>
         </div>
         <button class="menu-toggle" type="button" id="activityMenuToggle" aria-expanded="false" aria-controls="activityNav" aria-label="Buka menu navigasi">
@@ -196,6 +197,16 @@
                     <span id="questProgressFill"></span>
                 </div>
             </article>
+        </section>
+
+        <section class="activity-review-banner" id="activity3ReviewBanner" hidden>
+            <div class="activity-review-copy">
+                <span class="section-kicker">Arsip Jawaban</span>
+                <p id="activity3ReviewMessage"></p>
+            </div>
+            <div class="activity-review-actions">
+                <button class="activity-edit-btn" type="button" id="activity3EditButton">Edit Jawaban</button>
+            </div>
         </section>
 
         <section class="step-panel active" id="step1">
@@ -272,25 +283,25 @@
                             <div class="calc">
                                 <h3>1. Hitung Jangkauan</h3>
                                 <p>Masukkan selisih antara nilai maksimum dan nilai minimum.</p>
-                                <input type="number" id="inputRange" placeholder="Masukkan jangkauan data">
+                                <input type="text" id="inputRange" data-integer-input="true" inputmode="numeric" placeholder="Masukkan jangkauan data">
                                 <div class="helper" id="helperRange">Gunakan rumus: maksimum - minimum.</div>
                             </div>
                             <div class="calc">
                                 <h3>2. Tentukan Banyak Kelas</h3>
                                 <p>Masukkan banyak kelas yang akan digunakan berdasarkan aturan Sturges.</p>
-                                <input type="number" id="inputKelas" placeholder="Masukkan banyak kelas">
+                                <input type="text" id="inputKelas" data-integer-input="true" inputmode="numeric" placeholder="Masukkan banyak kelas">
                                 <div class="helper" id="helperKelas">Gunakan aturan Sturges sebagai acuan.</div>
                             </div>
                             <div class="calc">
                                 <h3>3. Tentukan Panjang Interval</h3>
                                 <p>Masukkan panjang interval yang akan dipakai untuk membentuk kelas.</p>
-                                <input type="number" id="inputInterval" placeholder="Masukkan panjang interval">
+                                <input type="text" id="inputInterval" data-integer-input="true" inputmode="numeric" placeholder="Masukkan panjang interval">
                                 <div class="helper" id="helperInterval">Gunakan jangkauan dibagi banyak kelas.</div>
                             </div>
                         </div>
 
                         <div class="btn-row">
-                            <button class="a3-btn btn-lite" onclick="cekHitung()">Cek Perhitungan</button>
+                            <button class="a3-btn btn-lite" id="activity3CheckButton" onclick="cekHitung()">Cek Perhitungan</button>
                             <button class="a3-btn" id="btnBuatTabel" onclick="buatTabel()" disabled>Bentuk Tabel Interval</button>
                         </div>
                     </div>
@@ -312,7 +323,7 @@
 
                 <div class="btn-row" id="tableActions" style="display:none;">
                     <div class="helper" id="intervalHint" style="margin-top:0;"></div>
-                    <button class="a3-btn" onclick="cekTabel()">Cek Tabel dan Lanjut</button>
+                    <button class="a3-btn" id="activity3CheckTableButton" onclick="cekTabel()">Cek Tabel dan Lanjut</button>
                 </div>
 
                 <div class="feedback" id="feedbackBox"></div>
@@ -353,7 +364,7 @@
 
                 <div class="nav-row">
                     <button class="a3-btn btn-lite" onclick="goStep(2)">Kembali ke Pengolahan Data</button>
-                    <button class="a3-btn" onclick="submitAktivitas3()">Simpan dan Lanjutkan</button>
+                    <button class="a3-btn" id="activity3SubmitButton" onclick="submitAktivitas3()">Simpan dan Lanjutkan</button>
                 </div>
             </div>
         </section>
@@ -377,9 +388,18 @@
         let frekuensiBenar = [];
         let hitungSudahBenar = false;
         let tabelSudahBenar = false;
+        let aktivitas3State = { submitted: false, reviewMode: false, editMode: false };
 
         function initA3() {
+            aktivitas3State = renderActivityArchiveBanner(3, {
+                bannerId: "activity3ReviewBanner",
+                messageId: "activity3ReviewMessage",
+                editButtonId: "activity3EditButton"
+            });
+            renderActivityStateBadge(3, "activity3HeaderStatus");
+
             setStep(1);
+            terapkanPerilakuInputInteger();
             document.getElementById("catatanKonsep").addEventListener("input", updateQuestStatus);
             ["inputRange", "inputKelas", "inputInterval"].forEach((id) => {
                 document.getElementById(id).addEventListener("input", () => {
@@ -388,18 +408,20 @@
                     updateQuestStatus();
                 });
             });
+
+            muatJawabanAktivitas3();
+            terapkanModeAktivitas3();
             updateQuestStatus();
         }
 
         function muatData() {
-            const raw = localStorage.getItem("dataAktivitas2");
-            if (!raw) {
+            const parsed = readJSONStorage("dataAktivitas2", null);
+            if (!parsed) {
                 alert("Data belum ditemukan. Silakan selesaikan Aktivitas 2 terlebih dahulu.");
                 window.location.href = "beranda.html";
                 return;
             }
 
-            const parsed = JSON.parse(raw);
             if (!Array.isArray(parsed) || parsed.length < 25) {
                 alert("Data belum lengkap. Pastikan kamu sudah memasukkan minimal 25 data pada Aktivitas 2.");
                 window.location.href = "beranda.html";
@@ -434,6 +456,165 @@
             });
         }
 
+        function parseSavedInterval(intervalText) {
+            const teks = String(intervalText || "").trim();
+            const pairMatch = teks.match(/^\s*(-?\d+(?:\.\d+)?)\s*-\s*(-?\d+(?:\.\d+)?)\s*$/);
+            if (pairMatch) {
+                return {
+                    bawah: Number(pairMatch[1]),
+                    atas: Number(pairMatch[2])
+                };
+            }
+
+            const angka = teks.match(/-?\d+(?:\.\d+)?/g) || [];
+            return {
+                bawah: Number(angka[0] || 0),
+                atas: Number(angka[1] || 0)
+            };
+        }
+
+        function sanitasiNilaiInteger(value) {
+            if (!value) return "";
+
+            const hasMinus = value.trim().startsWith("-");
+            const digitsOnly = value.replace(/[^\d]/g, "");
+
+            if (!digitsOnly) {
+                return hasMinus ? "-" : "";
+            }
+
+            return `${hasMinus ? "-" : ""}${digitsOnly}`;
+        }
+
+        function terapkanPerilakuInputInteger(root = document) {
+            root.querySelectorAll('[data-integer-input="true"]').forEach((input) => {
+                if (input.dataset.integerBound === "true") return;
+
+                input.dataset.integerBound = "true";
+
+                input.addEventListener("input", () => {
+                    const nilaiBersih = sanitasiNilaiInteger(input.value);
+                    if (input.value !== nilaiBersih) {
+                        input.value = nilaiBersih;
+                    }
+                });
+
+                input.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter") {
+                        event.preventDefault();
+                        input.blur();
+                    }
+                });
+            });
+        }
+
+        function getSavedAktivitas3() {
+            const saved = readJSONStorage("hasilAktivitas3", null);
+            if (saved) return saved;
+
+            const legacyInterval = readJSONStorage("intervalKelas", []);
+            const legacyFrekuensi = readJSONStorage("frekuensiBenar", []);
+
+            if (!legacyInterval.length || !legacyFrekuensi.length) {
+                return null;
+            }
+
+            return {
+                catatanKonsep: "",
+                range: rangeVal,
+                kelas: legacyInterval.length,
+                interval: intervalVal,
+                intervalKelas: legacyInterval,
+                frekuensiBenar: legacyFrekuensi
+            };
+        }
+
+        function muatJawabanAktivitas3() {
+            const saved = getSavedAktivitas3();
+            if (!saved) return;
+
+            document.getElementById("catatanKonsep").value = saved.catatanKonsep || "";
+            document.getElementById("inputRange").value = saved.range ?? rangeVal;
+            document.getElementById("inputKelas").value = saved.kelas ?? kelasVal;
+            document.getElementById("inputInterval").value = saved.interval ?? intervalVal;
+
+            intervalKelas = Array.isArray(saved.intervalKelas) ? saved.intervalKelas.slice() : [];
+            frekuensiBenar = Array.isArray(saved.frekuensiBenar) ? saved.frekuensiBenar.slice() : [];
+
+            hitungSudahBenar = Number(document.getElementById("inputRange").value) === rangeVal &&
+                Number(document.getElementById("inputKelas").value) === kelasVal &&
+                Number(document.getElementById("inputInterval").value) === intervalVal;
+            document.getElementById("btnBuatTabel").disabled = !hitungSudahBenar;
+
+            if (intervalKelas.length && frekuensiBenar.length) {
+                renderSavedTableAktivitas3();
+                tabelSudahBenar = true;
+                document.getElementById("btnKeRingkasan").disabled = false;
+                renderRingkasanAktivitas3();
+            }
+        }
+
+        function renderSavedTableAktivitas3() {
+            const tbody = document.getElementById("tabelInterval");
+            tbody.innerHTML = "";
+
+            intervalKelas.forEach((interval, index) => {
+                const row = document.createElement("tr");
+                const parsed = parseSavedInterval(interval);
+                row.innerHTML = `
+                    <td>K${index + 1}</td>
+                    <td><input type="text" class="bawah" data-integer-input="true" inputmode="numeric" value="${parsed.bawah}"></td>
+                    <td><input type="text" class="atas" data-integer-input="true" inputmode="numeric" value="${parsed.atas}"></td>
+                    <td><input type="text" class="frekuensi-input" data-integer-input="true" inputmode="numeric" value="${frekuensiBenar[index] ?? 0}" placeholder="f"></td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            terapkanPerilakuInputInteger(tbody);
+            document.getElementById("tableShell").style.display = "block";
+            document.getElementById("tableActions").style.display = "flex";
+            document.getElementById("intervalHint").innerText =
+                `Petunjuk: batas bawah kelas pertama dimulai dari ${minVal}, dan batas atas kelas terakhir sebaiknya mencapai ${maxVal}.`;
+            showFeedback("Tabel distribusi frekuensi yang tersimpan berhasil dimuat.");
+        }
+
+        function renderRingkasanAktivitas3() {
+            document.getElementById("sumRange").innerText = document.getElementById("inputRange").value || rangeVal;
+            document.getElementById("sumKelas").innerText = document.getElementById("inputKelas").value || kelasVal;
+            document.getElementById("sumInterval").innerText = document.getElementById("inputInterval").value || intervalVal;
+
+            const body = document.getElementById("summaryBody");
+            body.innerHTML = "";
+            intervalKelas.forEach((interval, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>K${index + 1}</td><td>${interval}</td><td>${frekuensiBenar[index]}</td>`;
+                body.appendChild(row);
+            });
+        }
+
+        function terapkanModeAktivitas3() {
+            const isReadOnly = aktivitas3State.reviewMode;
+
+            setReadOnlyState([
+                "#catatanKonsep",
+                "#inputRange",
+                "#inputKelas",
+                "#inputInterval",
+                "#tabelInterval input"
+            ], isReadOnly);
+
+            setDisabledState([
+                "#activity3CheckButton",
+                "#btnBuatTabel",
+                "#activity3CheckTableButton"
+            ], isReadOnly);
+
+            document.getElementById("activity3SubmitButton").style.display = isReadOnly ? "none" : "inline-flex";
+            document.getElementById("activity3SubmitButton").textContent = aktivitas3State.editMode
+                ? "Simpan Perubahan Aktivitas 3"
+                : "Simpan dan Lanjutkan";
+        }
+
         function setStep(no) {
             document.querySelectorAll(".step-panel").forEach((panel) => panel.classList.remove("active"));
             document.getElementById(`step${no}`).classList.add("active");
@@ -446,7 +627,7 @@
         function goStep(no) {
             if (no === 2) {
                 const catatan = document.getElementById("catatanKonsep").value.trim();
-                if (!catatan) {
+                if (!catatan && !aktivitas3State.reviewMode) {
                     alert("Tuliskan terlebih dahulu catatan inti sebelum lanjut ke pengolahan data.");
                     return;
                 }
@@ -495,12 +676,13 @@
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>K${idx}</td>
-                    <td><input type="number" class="bawah"></td>
-                    <td><input type="number" class="atas"></td>
-                    <td><input type="number" class="frekuensi-input" placeholder="f"></td>
+                    <td><input type="text" class="bawah" data-integer-input="true" inputmode="numeric"></td>
+                    <td><input type="text" class="atas" data-integer-input="true" inputmode="numeric"></td>
+                    <td><input type="text" class="frekuensi-input" data-integer-input="true" inputmode="numeric" placeholder="f"></td>
                 `;
                 tbody.appendChild(row);
             }
+            terapkanPerilakuInputInteger(tbody);
             document.getElementById("tableShell").style.display = "block";
             document.getElementById("tableActions").style.display = "flex";
             document.getElementById("intervalHint").innerText =
@@ -562,13 +744,7 @@
             document.getElementById("sumKelas").innerText = document.getElementById("inputKelas").value || kelasVal;
             document.getElementById("sumInterval").innerText = document.getElementById("inputInterval").value || intervalVal;
 
-            const body = document.getElementById("summaryBody");
-            body.innerHTML = "";
-            intervalKelas.forEach((interval, index) => {
-                const row = document.createElement("tr");
-                row.innerHTML = `<td>K${index + 1}</td><td>${interval}</td><td>${frekuensiBenar[index]}</td>`;
-                body.appendChild(row);
-            });
+            renderRingkasanAktivitas3();
 
             setStep(3);
             updateQuestStatus();
@@ -623,7 +799,16 @@
 
             localStorage.setItem("intervalKelas", JSON.stringify(intervalKelas));
             localStorage.setItem("frekuensiBenar", JSON.stringify(frekuensiBenar));
+            localStorage.setItem("hasilAktivitas3", JSON.stringify({
+                catatanKonsep: document.getElementById("catatanKonsep").value.trim(),
+                range: Number(document.getElementById("inputRange").value),
+                kelas: Number(document.getElementById("inputKelas").value),
+                interval: Number(document.getElementById("inputInterval").value),
+                intervalKelas,
+                frekuensiBenar
+            }));
             localStorage.setItem("aktivitas3", "true");
+            exitActivityEditMode(3);
 
             alert("Aktivitas 3 selesai. Lanjut ke Aktivitas 4.");
             window.location.href = "beranda.html";

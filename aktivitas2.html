@@ -429,6 +429,7 @@
             <div>
                 <strong>Histogram Digital</strong>
                 <p>Aktivitas 2</p>
+                <span class="activity-state-pill" id="activity2HeaderStatus">Belum dikumpulkan</span>
             </div>
         </div>
         <button class="menu-toggle" type="button" id="activityMenuToggle" aria-expanded="false" aria-controls="activityNav" aria-label="Buka menu navigasi">
@@ -502,6 +503,16 @@
             </article>
         </section>
 
+        <section class="activity-review-banner" id="activity2ReviewBanner" hidden>
+            <div class="activity-review-copy">
+                <span class="section-kicker">Arsip Jawaban</span>
+                <p id="activity2ReviewMessage"></p>
+            </div>
+            <div class="activity-review-actions">
+                <button class="activity-edit-btn" type="button" id="activity2EditButton">Edit Jawaban</button>
+            </div>
+        </section>
+
         <section class="data-card">
             <div class="section-head">
                 <span class="section-kicker">Konteks Data</span>
@@ -518,17 +529,17 @@
                     <h3>Lama perjalanan</h3>
                     <p>Contoh data waktu tempuh dari rumah ke sekolah dalam satuan menit.</p>
                 </article>
-                <article class="context-card" onclick="pilihKonteks('Panjang langkah', 'cm', this)">
-                    <h3>Panjang langkah</h3>
-                    <p>Contoh data hasil pengukuran panjang langkah murid.</p>
+                <article class="context-card" onclick="pilihKonteks('Berat badan murid', 'kg', this)">
+                    <h3>Berat badan</h3>
+                    <p>Contoh data pengukuran berat badan murid dalam satuan kg.</p>
                 </article>
-                <article class="context-card" onclick="pilihKonteks('Denyut nadi setelah aktivitas ringan', 'kali/menit', this)">
-                    <h3>Denyut nadi</h3>
-                    <p>Contoh data denyut nadi setelah aktivitas ringan dalam satuan kali per menit.</p>
+                <article class="context-card" onclick="pilihKonteks('Uang saku harian murid', 'rupiah', this)">
+                    <h3>Uang saku harian</h3>
+                    <p>Contoh data jumlah uang saku harian murid dalam satuan rupiah.</p>
                 </article>
-                <article class="context-card" onclick="pilihKonteks('Waktu menyelesaikan tugas sederhana', 'detik', this)">
+                <article class="context-card" onclick="pilihKonteks('Waktu menyelesaikan tugas sederhana', 'menit', this)">
                     <h3>Waktu menyelesaikan tugas</h3>
-                    <p>Contoh data waktu yang dibutuhkan murid menyelesaikan tugas sederhana.</p>
+                    <p>Contoh data waktu yang dibutuhkan murid menyelesaikan tugas sederhana dalam satuan menit.</p>
                 </article>
             </div>
         </section>
@@ -569,12 +580,12 @@
                 <div class="input-panel">
                     <div class="single-input-row">
                         <input type="number" id="singleDataInput" placeholder="Masukkan satu data angka">
-                        <button onclick="tambahData()">Tambahkan Data</button>
+                        <button id="activity2AddDataButton" onclick="tambahData()">Tambahkan Data</button>
                     </div>
 
                     <div class="mini-actions">
-                        <button class="secondary-action soft" onclick="hapusDataTerakhir()">Hapus Data Terakhir</button>
-                        <button class="secondary-action soft" onclick="resetData()">Reset Data</button>
+                        <button class="secondary-action soft" id="activity2DeleteLastButton" onclick="hapusDataTerakhir()">Hapus Data Terakhir</button>
+                        <button class="secondary-action soft" id="activity2ResetButton" onclick="resetData()">Reset Data</button>
                     </div>
 
                     <div class="progress-info">
@@ -638,11 +649,11 @@
         </section>
 
         <section class="data-card">
-            <div class="submit-panel">
+            <div class="submit-panel" id="activity2SubmitWrap">
                 <p>
                     Saat semua target selesai, aktivitas ini siap ditutup dan data akan dibawa ke Penyusunan Data pada Aktivitas 3.
                 </p>
-                <div class="button" onclick="selesaiAktivitas2()">Simpan Data dan Lanjutkan</div>
+                <div class="button" id="activity2SubmitButton" onclick="selesaiAktivitas2()">Simpan Data dan Lanjutkan</div>
             </div>
         </section>
 
@@ -656,8 +667,16 @@
     <script src="script.js?v=20260423a"></script>
     <script>
         let dataAktivitas = [];
+        let aktivitas2State = { submitted: false, reviewMode: false, editMode: false };
 
         function siapkanAktivitas2() {
+            aktivitas2State = renderActivityArchiveBanner(2, {
+                bannerId: "activity2ReviewBanner",
+                messageId: "activity2ReviewMessage",
+                editButtonId: "activity2EditButton"
+            });
+            renderActivityStateBadge(2, "activity2HeaderStatus");
+
             updateTampilanData();
             document.getElementById("singleDataInput").addEventListener("keydown", function(event) {
                 if (event.key === "Enter") {
@@ -669,15 +688,73 @@
             ["namaData", "satuanData", "refleksiAkt2"].forEach((id) => {
                 document.getElementById(id).addEventListener("input", updateQuestStatus);
             });
+
+            muatJawabanAktivitas2();
+            terapkanModeAktivitas2();
         }
 
         function pilihKonteks(nama, satuan, elemen) {
+            if (aktivitas2State.reviewMode) return;
+
             document.getElementById("namaData").value = nama;
             document.getElementById("satuanData").value = satuan;
 
             document.querySelectorAll(".context-card").forEach((card) => card.classList.remove("active"));
             elemen.classList.add("active");
             updateQuestStatus();
+        }
+
+        function muatJawabanAktivitas2() {
+            const namaData = localStorage.getItem("namaData") || "";
+            const satuanData = localStorage.getItem("satuanData") || "";
+            const refleksi = localStorage.getItem("refleksiAktivitas2") || "";
+
+            dataAktivitas = readJSONStorage("dataAktivitas2", []);
+            document.getElementById("namaData").value = namaData;
+            document.getElementById("satuanData").value = satuanData;
+            document.getElementById("refleksiAkt2").value = refleksi;
+
+            const knownContexts = [
+                ["Tinggi badan murid", "cm"],
+                ["Lama perjalanan ke sekolah", "menit"],
+                ["Berat badan murid", "kg"],
+                ["Uang saku harian murid", "rupiah"],
+                ["Waktu menyelesaikan tugas sederhana", "menit"]
+            ];
+            const targetIndex = knownContexts.findIndex(([knownNama, knownSatuan]) => knownNama === namaData && knownSatuan === satuanData);
+
+            document.querySelectorAll(".context-card").forEach((card, index) => {
+                card.classList.toggle("active", index === targetIndex);
+            });
+
+            updateTampilanData();
+        }
+
+        function terapkanModeAktivitas2() {
+            const isReadOnly = aktivitas2State.reviewMode;
+
+            setReadOnlyState([
+                "#namaData",
+                "#satuanData",
+                "#singleDataInput",
+                "#refleksiAkt2"
+            ], isReadOnly);
+
+            setDisabledState([
+                "#singleDataInput",
+                "#activity2AddDataButton",
+                "#activity2DeleteLastButton",
+                "#activity2ResetButton"
+            ], isReadOnly);
+
+            document.querySelectorAll(".context-card").forEach((card) => {
+                card.style.pointerEvents = isReadOnly ? "none" : "";
+            });
+
+            document.getElementById("activity2SubmitWrap").style.display = isReadOnly ? "none" : "block";
+            document.getElementById("activity2SubmitButton").textContent = aktivitas2State.editMode
+                ? "Simpan Perubahan Aktivitas 2"
+                : "Simpan Data dan Lanjutkan";
         }
 
         function tambahData() {
@@ -724,6 +801,7 @@
             const nilaiMin = document.getElementById("nilaiMin");
             const nilaiMax = document.getElementById("nilaiMax");
             const previewDataText = document.getElementById("previewDataText");
+            const sortedData = dataAktivitas.slice().sort((a, b) => a - b);
 
             wrap.innerHTML = "";
 
@@ -740,9 +818,9 @@
                     wrap.appendChild(chip);
                 });
 
-                previewDataText.textContent = dataAktivitas.join(", ");
-                nilaiMin.textContent = Math.min(...dataAktivitas);
-                nilaiMax.textContent = Math.max(...dataAktivitas);
+                previewDataText.textContent = sortedData.join(", ");
+                nilaiMin.textContent = sortedData[0];
+                nilaiMax.textContent = sortedData[sortedData.length - 1];
             }
 
             jumlahData.textContent = dataAktivitas.length;
@@ -823,6 +901,7 @@
             localStorage.setItem("dataAktivitas2", JSON.stringify(dataAktivitas));
             localStorage.setItem("refleksiAktivitas2", refleksi);
             localStorage.setItem("aktivitas2", "true");
+            exitActivityEditMode(2);
 
             alert("Aktivitas 2 selesai. Lanjut ke Aktivitas 3.");
             window.location.href = "beranda.html";

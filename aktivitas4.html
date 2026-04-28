@@ -69,6 +69,7 @@
         .x-label { text-align: center; margin-top: 12px; color: #21358e; font-weight: 700; }
         .chart-grid { position: absolute; inset: 18px 18px 72px 52px; pointer-events: none; background-image: linear-gradient(to top, rgba(49,84,215,.12) 1px, transparent 1px), linear-gradient(to right, rgba(49,84,215,.05) 1px, transparent 1px); background-size: 100% 20%, 14.285% 100%; }
         .bars-area { position: relative; z-index: 1; height: 360px; display: flex; align-items: flex-end; gap: 0; border-left: 3px solid #21358e; border-bottom: 3px solid #21358e; background: linear-gradient(180deg, rgba(49,84,215,.03), rgba(49,84,215,.01)); }
+        .bar-axis-gap { height: 100%; flex: 0 0 auto; }
         .bar-group { flex: 1 1 0; min-width: 0; height: 100%; display: flex; align-items: flex-end; justify-content: stretch; }
         .bar { width: 100%; min-width: 0; border-radius: 0; background: linear-gradient(180deg, #8fa8ff 0%, #5877ee 48%, #3154d7 100%); display: flex; align-items: flex-start; justify-content: center; color: white; font-size: 13px; font-weight: 700; padding-top: 8px; box-sizing: border-box; transition: height .45s ease, background .3s ease; box-shadow: inset 0 1px 0 rgba(255,255,255,.35); }
         .bar-group:first-child .bar { border-top-left-radius: 10px; }
@@ -153,6 +154,7 @@
             <div>
                 <strong>Histogram Digital</strong>
                 <p>Aktivitas 4</p>
+                <span class="activity-state-pill" id="activity4HeaderStatus">Belum dikumpulkan</span>
             </div>
         </div>
         <button class="menu-toggle" type="button" id="activityMenuToggle" aria-expanded="false" aria-controls="activityNav" aria-label="Buka menu navigasi">
@@ -219,6 +221,16 @@
                     <span id="questProgressFill"></span>
                 </div>
             </article>
+        </section>
+
+        <section class="activity-review-banner" id="activity4ReviewBanner" hidden>
+            <div class="activity-review-copy">
+                <span class="section-kicker">Arsip Jawaban</span>
+                <p id="activity4ReviewMessage"></p>
+            </div>
+            <div class="activity-review-actions">
+                <button class="activity-edit-btn" type="button" id="activity4EditButton">Edit Jawaban</button>
+            </div>
         </section>
 
         <section class="step-panel active" id="step1">
@@ -303,7 +315,7 @@
                             </div>
                             <div class="field">
                                 <label>Skala Maksimum Sumbu Y</label>
-                                <input type="number" id="maxYInput" placeholder="Contoh: 10">
+                                <input type="text" id="maxYInput" data-integer-input="true" inputmode="numeric" placeholder="Contoh: 10">
                             </div>
                         </div>
                         <div class="hint-box">
@@ -314,7 +326,7 @@
 
                 <div class="nav-row">
                     <button class="studio-btn secondary" onclick="goStudioStep(1)">Kembali ke Tutorial</button>
-                    <button class="studio-btn" onclick="cekKomponenGrafik()">Lanjut ke Studio Histogram</button>
+                    <button class="studio-btn" id="activity4CheckComponentsButton" onclick="cekKomponenGrafik()">Lanjut ke Studio Histogram</button>
                 </div>
             </div>
         </section>
@@ -335,7 +347,6 @@
                     </div>
 
                     <div class="chart-shell" id="histogramCapture">
-                        <h3>Histogram Digital</h3>
                         <div class="chart-meta">
                             <strong id="displayJudulGrafik">Histogram</strong>
                         </div>
@@ -400,7 +411,7 @@
 
                 <div class="nav-row">
                     <button class="studio-btn secondary" onclick="goStudioStep(3)">Kembali ke Studio Histogram</button>
-                    <button class="studio-btn" onclick="submitAktivitas4()">Simpan dan Lanjutkan</button>
+                    <button class="studio-btn" id="activity4SubmitButton" onclick="submitAktivitas4()">Simpan dan Lanjutkan</button>
                 </div>
             </div>
         </section>
@@ -423,9 +434,29 @@
         let skorKecocokan = 0;
         let komponenSudahSiap = false;
         let histogramSudahDicek = false;
+        let aktivitas4State = { submitted: false, reviewMode: false, editMode: false };
+        let savedAktivitas4 = null;
+        const HISTOGRAM_LEADING_GAP_UNITS = 0.4;
+        const HISTOGRAM_BAR_BACKGROUNDS = [
+            "linear-gradient(180deg, #7db8ff 0%, #4f8ef7 52%, #2f62dc 100%)",
+            "linear-gradient(180deg, #ffbf7a 0%, #ff944d 52%, #e36a1c 100%)",
+            "linear-gradient(180deg, #7ed7a3 0%, #41b86c 52%, #26924b 100%)",
+            "linear-gradient(180deg, #ff8d8d 0%, #f05656 52%, #cf2f39 100%)",
+            "linear-gradient(180deg, #b89cff 0%, #8a6ef3 52%, #6347d5 100%)",
+            "linear-gradient(180deg, #7fd8df 0%, #39b8c6 52%, #1f8fa0 100%)"
+        ];
 
         function parseInterval(intervalText) {
-            const angka = intervalText.match(/-?\d+(?:\.\d+)?/g) || [];
+            const teks = String(intervalText || "").trim();
+            const pairMatch = teks.match(/^\s*(-?\d+(?:\.\d+)?)\s*-\s*(-?\d+(?:\.\d+)?)\s*$/);
+            if (pairMatch) {
+                return {
+                    bawah: Number(pairMatch[1]),
+                    atas: Number(pairMatch[2])
+                };
+            }
+
+            const angka = teks.match(/-?\d+(?:\.\d+)?/g) || [];
             if (angka.length < 2) {
                 return { bawah: 0, atas: 0 };
             }
@@ -456,8 +487,43 @@
             return boundaries;
         }
 
+        function sanitasiNilaiInteger(value) {
+            if (!value) return "";
+            return value.replace(/[^\d]/g, "");
+        }
+
+        function terapkanPerilakuInputInteger(root = document) {
+            root.querySelectorAll('[data-integer-input="true"]').forEach((input) => {
+                if (input.dataset.integerBound === "true") return;
+
+                input.dataset.integerBound = "true";
+
+                input.addEventListener("input", () => {
+                    const nilaiBersih = sanitasiNilaiInteger(input.value);
+                    if (input.value !== nilaiBersih) {
+                        input.value = nilaiBersih;
+                    }
+                });
+
+                input.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter") {
+                        event.preventDefault();
+                        input.blur();
+                    }
+                });
+            });
+        }
+
         function initStudio() {
+            aktivitas4State = renderActivityArchiveBanner(4, {
+                bannerId: "activity4ReviewBanner",
+                messageId: "activity4ReviewMessage",
+                editButtonId: "activity4EditButton"
+            });
+            renderActivityStateBadge(4, "activity4HeaderStatus");
+
             setStudioStep(1);
+            terapkanPerilakuInputInteger();
             document.getElementById("refleksi").addEventListener("input", updateQuestStatus);
             ["judulGrafikInput", "labelXInput", "labelYInput", "maxYInput"].forEach((id) => {
                 document.getElementById(id).addEventListener("input", () => {
@@ -465,13 +531,16 @@
                     updateQuestStatus();
                 });
             });
+
+            muatJawabanAktivitas4();
+            terapkanModeAktivitas4();
             updateQuestStatus();
         }
 
         function muatStudio() {
-            const data = JSON.parse(localStorage.getItem("dataAktivitas2"));
-            intervalKelas = JSON.parse(localStorage.getItem("intervalKelas"));
-            frekuensiBenar = JSON.parse(localStorage.getItem("frekuensiBenar"));
+            const data = readJSONStorage("dataAktivitas2", null);
+            intervalKelas = readJSONStorage("intervalKelas", []);
+            frekuensiBenar = readJSONStorage("frekuensiBenar", []);
             namaData = localStorage.getItem("namaData") || "Data Pengukuran";
             satuanData = localStorage.getItem("satuanData") || "";
 
@@ -481,7 +550,8 @@
                 return;
             }
 
-            frekuensiUser = intervalKelas.map(() => 0);
+            frekuensiUser = intervalKelas.map(() => null);
+            savedAktivitas4 = readJSONStorage("hasilAktivitas4", null);
 
             const tbody = document.getElementById("tableAcuanBody");
             tbody.innerHTML = "";
@@ -506,6 +576,63 @@
             updateQuestStatus();
         }
 
+        function muatJawabanAktivitas4() {
+            if (!savedAktivitas4) return;
+
+            frekuensiUser = Array.isArray(savedAktivitas4.frekuensiUser)
+                ? savedAktivitas4.frekuensiUser.slice()
+                : intervalKelas.map(() => null);
+            skorKecocokan = Number(savedAktivitas4.kecocokan) || 0;
+            komponenSudahSiap = Boolean(
+                (savedAktivitas4.judulGrafik || "").trim() &&
+                (savedAktivitas4.labelX || "").trim() &&
+                (savedAktivitas4.labelY || "").trim() &&
+                String(savedAktivitas4.maxY || "").trim()
+            );
+            histogramSudahDicek = true;
+
+            document.getElementById("judulGrafikInput").value = savedAktivitas4.judulGrafik || "";
+            document.getElementById("labelXInput").value = savedAktivitas4.labelX || "";
+            document.getElementById("labelYInput").value = savedAktivitas4.labelY || "";
+            document.getElementById("maxYInput").value = savedAktivitas4.maxY || "";
+            document.getElementById("refleksi").value = savedAktivitas4.refleksi || "";
+
+            renderFreqInputs();
+            renderHistogram();
+            renderReferenceHistogram();
+            renderHistogramResult(skorKecocokan, buildHistogramFeedback().detail);
+
+            if (savedAktivitas4.histogramImage) {
+                setTimeout(() => {
+                    simpanHistogramKeStorage();
+                }, 60);
+            }
+        }
+
+        function terapkanModeAktivitas4() {
+            const isReadOnly = aktivitas4State.reviewMode;
+
+            setReadOnlyState([
+                "#judulGrafikInput",
+                "#labelXInput",
+                "#labelYInput",
+                "#maxYInput",
+                "#freqInputGrid input",
+                "#refleksi"
+            ], isReadOnly);
+
+            setDisabledState([], isReadOnly);
+
+            const checkButton = document.getElementById("btnCekHistogram");
+            checkButton.textContent = isReadOnly ? "Lihat Hasil Pemeriksaan" : "Periksa Histogram";
+            checkButton.onclick = isReadOnly ? () => setStudioStep(4) : cekHistogram;
+
+            document.getElementById("activity4SubmitButton").style.display = isReadOnly ? "none" : "inline-flex";
+            document.getElementById("activity4SubmitButton").textContent = aktivitas4State.editMode
+                ? "Simpan Perubahan Aktivitas 4"
+                : "Simpan dan Lanjutkan";
+        }
+
         function setStudioStep(no) {
             document.querySelectorAll(".step-panel").forEach((panel) => panel.classList.remove("active"));
             document.getElementById(`step${no}`).classList.add("active");
@@ -523,13 +650,103 @@
             const target = document.getElementById("histogramCapture");
             if (!target || typeof html2canvas !== "function") return "";
 
-            const canvas = await html2canvas(target, {
-                backgroundColor: "#ffffff",
-                scale: Math.min(window.devicePixelRatio || 1.5, 2),
-                useCORS: true
-            });
+            const sandbox = document.createElement("div");
+            sandbox.style.position = "fixed";
+            sandbox.style.left = "-200vw";
+            sandbox.style.top = "0";
+            sandbox.style.width = "920px";
+            sandbox.style.padding = "0";
+            sandbox.style.margin = "0";
+            sandbox.style.background = "#ffffff";
+            sandbox.style.zIndex = "-1";
+            sandbox.style.pointerEvents = "none";
 
-            return canvas.toDataURL("image/png");
+            const clone = target.cloneNode(true);
+            clone.removeAttribute("id");
+            clone.style.width = "860px";
+            clone.style.maxWidth = "860px";
+            clone.style.margin = "0";
+            clone.style.padding = "22px";
+            clone.style.borderRadius = "24px";
+            clone.style.background = "#ffffff";
+            clone.style.boxSizing = "border-box";
+
+            const chartMeta = clone.querySelector(".chart-meta");
+            if (chartMeta) {
+                chartMeta.style.marginBottom = "18px";
+            }
+
+            const chartTitle = clone.querySelector(".chart-meta strong");
+            if (chartTitle) {
+                chartTitle.style.fontSize = "20px";
+            }
+
+            const histogramStage = clone.querySelector(".histogram-stage");
+            if (histogramStage) {
+                histogramStage.style.padding = "18px 18px 72px 52px";
+                histogramStage.style.borderRadius = "22px";
+            }
+
+            const chartGrid = clone.querySelector(".chart-grid");
+            if (chartGrid) {
+                chartGrid.style.inset = "18px 18px 72px 52px";
+            }
+
+            const barsArea = clone.querySelector(".bars-area");
+            if (barsArea) {
+                barsArea.style.height = "360px";
+                barsArea.style.borderLeftWidth = "3px";
+                barsArea.style.borderBottomWidth = "3px";
+            }
+
+            const axisTicks = clone.querySelector(".axis-ticks");
+            if (axisTicks) {
+                axisTicks.style.left = "16px";
+                axisTicks.style.top = "18px";
+                axisTicks.style.bottom = "72px";
+                axisTicks.style.fontSize = "12px";
+            }
+
+            const yLabel = clone.querySelector(".y-label");
+            if (yLabel) {
+                yLabel.style.left = "8px";
+                yLabel.style.fontSize = "14px";
+            }
+
+            const xBoundaries = clone.querySelector(".x-boundaries");
+            if (xBoundaries) {
+                xBoundaries.style.left = "52px";
+                xBoundaries.style.right = "18px";
+                xBoundaries.style.bottom = "18px";
+                xBoundaries.style.height = "32px";
+                xBoundaries.style.fontSize = "12px";
+            }
+
+            const xLabel = clone.querySelector(".x-label");
+            if (xLabel) {
+                xLabel.style.marginTop = "12px";
+                xLabel.style.fontSize = "14px";
+            }
+
+            sandbox.appendChild(clone);
+            document.body.appendChild(sandbox);
+
+            try {
+                await new Promise((resolve) => requestAnimationFrame(() => resolve()));
+                const canvas = await html2canvas(clone, {
+                    backgroundColor: "#ffffff",
+                    scale: 2,
+                    useCORS: true,
+                    windowWidth: 1280,
+                    windowHeight: 900,
+                    width: Math.ceil(clone.getBoundingClientRect().width),
+                    height: Math.ceil(clone.getBoundingClientRect().height)
+                });
+
+                return canvas.toDataURL("image/png");
+            } finally {
+                sandbox.remove();
+            }
         }
 
         async function simpanHistogramKeStorage() {
@@ -572,23 +789,76 @@
             const wrap = document.getElementById("freqInputGrid");
             wrap.innerHTML = "";
             intervalKelas.forEach((interval, index) => {
+                const nilaiAwal = frekuensiUser[index];
                 const row = document.createElement("div");
                 row.className = "freq-input-row";
                 row.innerHTML = `
                     <strong>K${index + 1} | ${interval}</strong>
-                    <input type="number" min="0" value="${frekuensiUser[index]}" data-index="${index}" placeholder="Frekuensi">
+                    <input type="text" data-integer-input="true" inputmode="numeric" value="${nilaiAwal ?? ""}" data-index="${index}" placeholder="Frekuensi">
                 `;
                 wrap.appendChild(row);
             });
 
+            terapkanPerilakuInputInteger(wrap);
+
             wrap.querySelectorAll("input").forEach((input) => {
                 input.addEventListener("input", (event) => {
+                    if (aktivitas4State.reviewMode) return;
                     const idx = Number(event.target.dataset.index);
-                    frekuensiUser[idx] = Number(event.target.value) || 0;
+                    frekuensiUser[idx] = event.target.value === "" ? null : Number(event.target.value);
                     histogramSudahDicek = false;
                     renderHistogram();
                     updateQuestStatus();
                 });
+            });
+        }
+
+        function buildHistogramFeedback() {
+            let total = 0;
+            let detail = [];
+
+            frekuensiUser.forEach((fUser, i) => {
+                const fBenar = frekuensiBenar[i];
+                let skor;
+                if (fBenar === 0) {
+                    skor = fUser === 0 ? 1 : 0;
+                } else {
+                    skor = 1 - Math.abs(fUser - fBenar) / fBenar;
+                    if (skor < 0) skor = 0;
+                }
+                total += skor;
+                if (fUser !== fBenar) {
+                    detail.push(`Kelas ${intervalKelas[i]}: frekuensi yang kamu isi ${fUser}, seharusnya ${fBenar}.`);
+                }
+            });
+
+            return {
+                score: Math.round((total / frekuensiBenar.length) * 100),
+                detail
+            };
+        }
+
+        function renderHistogramResult(score, detail) {
+            document.getElementById("hasilPemeriksaanText").innerText =
+                score === 100
+                    ? "Histogram yang kamu buat sudah sesuai dengan tabel distribusi frekuensi."
+                    : "Histogram sudah terbentuk, tetapi masih ada beberapa bagian yang perlu diperbaiki.";
+
+            const pill = document.getElementById("resultPill");
+            pill.style.display = "inline-flex";
+            pill.innerText = `${score}% cocok`;
+
+            const list = document.getElementById("feedbackList");
+            list.innerHTML = "";
+            if (detail.length === 0) {
+                list.innerHTML = "<li>Semua frekuensi pada histogram sudah sesuai.</li>";
+                return;
+            }
+
+            detail.forEach((item) => {
+                const li = document.createElement("li");
+                li.innerText = item;
+                list.appendChild(li);
             });
         }
 
@@ -638,10 +908,24 @@
             const barsArea = document.getElementById(config.barsAreaId);
             const axisTicks = document.getElementById(config.axisTicksId);
             const xBoundaries = document.getElementById(config.xBoundariesId);
+            const chartGrid = barsArea.parentElement.querySelector(".chart-grid");
 
             barsArea.innerHTML = "";
             axisTicks.innerHTML = "";
             xBoundaries.innerHTML = "";
+
+            const barCount = intervalKelas.length || 1;
+            const totalUnits = barCount + HISTOGRAM_LEADING_GAP_UNITS;
+            const unitWidthPercent = 100 / totalUnits;
+            const leadingGapPercent = (HISTOGRAM_LEADING_GAP_UNITS / totalUnits) * 100;
+
+            barsArea.style.setProperty("--leading-gap-percent", `${leadingGapPercent}%`);
+            xBoundaries.style.setProperty("--leading-gap-percent", `${leadingGapPercent}%`);
+
+            if (chartGrid) {
+                chartGrid.style.backgroundSize = `100% 20%, ${unitWidthPercent}% 100%`;
+                chartGrid.style.backgroundPosition = `0 0, ${leadingGapPercent}% 0`;
+            }
 
             const tickValues = 5;
             for (let i = tickValues; i >= 0; i--) {
@@ -650,13 +934,19 @@
                 axisTicks.appendChild(tick);
             }
 
+            const leadingGap = document.createElement("div");
+            leadingGap.className = "bar-axis-gap";
+            leadingGap.style.flexBasis = `${leadingGapPercent}%`;
+            barsArea.appendChild(leadingGap);
+
             intervalKelas.forEach((interval, index) => {
                 const value = config.frekuensi[index] || 0;
                 const height = config.maxY === 0 ? 0 : (value / config.maxY) * 100;
                 const group = document.createElement("div");
                 group.className = "bar-group";
+                const background = HISTOGRAM_BAR_BACKGROUNDS[index % HISTOGRAM_BAR_BACKGROUNDS.length];
                 group.innerHTML = `
-                    <div class="bar" style="height:${height}%">${value > 0 ? value : ""}</div>
+                    <div class="bar" style="height:${height}%; background:${background};">${value > 0 ? value : ""}</div>
                 `;
                 barsArea.appendChild(group);
             });
@@ -665,9 +955,9 @@
             boundaries.forEach((boundary, index) => {
                 const tick = document.createElement("div");
                 tick.className = "boundary-tick";
-                if (index === 0) tick.classList.add("edge-start");
+                if (index === 0 && HISTOGRAM_LEADING_GAP_UNITS === 0) tick.classList.add("edge-start");
                 if (index === boundaries.length - 1) tick.classList.add("edge-end");
-                tick.style.left = `${(index / (boundaries.length - 1)) * 100}%`;
+                tick.style.left = `${((HISTOGRAM_LEADING_GAP_UNITS + index) / totalUnits) * 100}%`;
                 tick.innerText = formatBoundary(boundary);
                 xBoundaries.appendChild(tick);
             });
@@ -687,45 +977,9 @@
                 return;
             }
 
-            let total = 0;
-            let detail = [];
-
-            frekuensiUser.forEach((fUser, i) => {
-                const fBenar = frekuensiBenar[i];
-                let skor;
-                if (fBenar === 0) {
-                    skor = fUser === 0 ? 1 : 0;
-                } else {
-                    skor = 1 - Math.abs(fUser - fBenar) / fBenar;
-                    if (skor < 0) skor = 0;
-                }
-                total += skor;
-                if (fUser !== fBenar) {
-                    detail.push(`Kelas ${intervalKelas[i]}: frekuensi yang kamu isi ${fUser}, seharusnya ${fBenar}.`);
-                }
-            });
-
-            skorKecocokan = Math.round((total / frekuensiBenar.length) * 100);
-            document.getElementById("hasilPemeriksaanText").innerText =
-                skorKecocokan === 100
-                    ? "Histogram yang kamu buat sudah sesuai dengan tabel distribusi frekuensi."
-                    : "Histogram sudah terbentuk, tetapi masih ada beberapa bagian yang perlu diperbaiki.";
-
-            const pill = document.getElementById("resultPill");
-            pill.style.display = "inline-flex";
-            pill.innerText = `${skorKecocokan}% cocok`;
-
-            const list = document.getElementById("feedbackList");
-            list.innerHTML = "";
-            if (detail.length === 0) {
-                list.innerHTML = "<li>Semua frekuensi pada histogram sudah sesuai.</li>";
-            } else {
-                detail.forEach((item) => {
-                    const li = document.createElement("li");
-                    li.innerText = item;
-                    list.appendChild(li);
-                });
-            }
+            const feedback = buildHistogramFeedback();
+            skorKecocokan = feedback.score;
+            renderHistogramResult(skorKecocokan, feedback.detail);
 
             histogramSudahDicek = true;
             renderReferenceHistogram();
@@ -797,6 +1051,7 @@
 
             localStorage.setItem("hasilAktivitas4", JSON.stringify(hasil));
             localStorage.setItem("aktivitas4", "true");
+            exitActivityEditMode(4);
 
             alert("Aktivitas 4 berhasil disimpan.");
             window.location.href = "beranda.html";

@@ -234,6 +234,11 @@
             border: 1px solid rgba(86, 99, 164, 0.12);
         }
 
+        .drag-bank.drag-over {
+            border-color: #3154d7;
+            background: rgba(49, 84, 215, 0.08);
+        }
+
         .drag-bank h3,
         .drop-zone h3,
         .question-block h3 {
@@ -313,6 +318,20 @@
             color: #3154d7;
             font-weight: 700;
             display: none;
+        }
+
+        .drag-actions {
+            margin-top: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .drag-check-hint {
+            color: #5f678c;
+            line-height: 1.7;
+            margin: 0;
         }
 
         .question-stack {
@@ -455,6 +474,7 @@
             <div>
                 <strong>Histogram Digital</strong>
                 <p>Aktivitas 1</p>
+                <span class="activity-state-pill" id="activity1HeaderStatus">Belum dikumpulkan</span>
             </div>
         </div>
         <button class="menu-toggle" type="button" id="activityMenuToggle" aria-expanded="false" aria-controls="activityNav" aria-label="Buka menu navigasi">
@@ -525,6 +545,16 @@
                     <span id="questProgressFill"></span>
                 </div>
             </article>
+        </section>
+
+        <section class="activity-review-banner" id="activity1ReviewBanner" hidden>
+            <div class="activity-review-copy">
+                <span class="section-kicker">Arsip Jawaban</span>
+                <p id="activity1ReviewMessage"></p>
+            </div>
+            <div class="activity-review-actions">
+                <button class="activity-edit-btn" type="button" id="activity1EditButton">Edit Jawaban</button>
+            </div>
         </section>
 
         <section class="activity-card-wide">
@@ -606,6 +636,7 @@
             <div class="drag-grid">
                 <div class="drag-bank">
                     <h3>Kartu Ciri-ciri</h3>
+                    <p>Di HP, pilih satu kartu lalu ketuk area tujuan untuk memindahkannya. Kamu juga bisa ketuk area bank ini untuk mengembalikan kartu.</p>
                     <div class="drag-items" id="dragItems">
                         <div class="drag-item" draggable="true" data-target="batang">Digunakan untuk data kategorik</div>
                         <div class="drag-item" draggable="true" data-target="histogram">Batangnya saling menempel</div>
@@ -628,6 +659,11 @@
                         <div class="drop-list" id="dropHistogram"></div>
                     </div>
                 </div>
+            </div>
+
+            <div class="drag-actions" id="activity1DragActions">
+                <button class="button" type="button" id="activity1CheckDragButton" onclick="cekJawabanDragDrop()">Cek Jawaban Ciri-ciri</button>
+                <p class="drag-check-hint">Tombol ini dipakai untuk memeriksa apakah semua kartu sudah ditempatkan pada kotak yang benar.</p>
             </div>
 
             <div class="feedback-box" id="dragFeedback"></div>
@@ -681,11 +717,11 @@
         </section>
 
         <section class="activity-card-wide">
-            <div class="submit-wrap">
+            <div class="submit-wrap" id="activity1SubmitWrap">
                 <p class="submit-hint">
                     Selesaikan seluruh target aktivitas ini agar status misi berubah menjadi selesai dan akses guru terbuka.
                 </p>
-                <div class="button" onclick="submitAktivitas1()">Kirim Jawaban Aktivitas 1</div>
+                <div class="button" id="activity1SubmitButton" onclick="submitAktivitas1()">Kirim Jawaban Aktivitas 1</div>
             </div>
         </section>
 
@@ -703,25 +739,42 @@
     <script>
         let draggedItem = null;
         let selectedTouchItem = null;
+        let aktivitas1State = { submitted: false, reviewMode: false, editMode: false };
+        let dragDropSudahDicek = false;
 
         function siapkanAktivitas1() {
+            aktivitas1State = renderActivityArchiveBanner(1, {
+                bannerId: "activity1ReviewBanner",
+                messageId: "activity1ReviewMessage",
+                editButtonId: "activity1EditButton"
+            });
+            renderActivityStateBadge(1, "activity1HeaderStatus");
+
             const items = document.querySelectorAll(".drag-item");
             const zones = document.querySelectorAll(".drop-zone");
+            const dragBank = document.querySelector(".drag-bank");
             const isTouchMode = window.matchMedia("(max-width: 960px)").matches || window.matchMedia("(pointer: coarse)").matches;
 
             items.forEach((item) => {
-                item.addEventListener("dragstart", () => {
+                item.addEventListener("dragstart", (event) => {
+                    if (aktivitas1State.reviewMode) {
+                        event.preventDefault();
+                        return;
+                    }
+
                     draggedItem = item;
                     item.classList.add("dragging");
                 });
 
                 item.addEventListener("dragend", () => {
+                    draggedItem = null;
                     item.classList.remove("dragging");
                 });
 
                 if (isTouchMode) {
-                    item.addEventListener("click", () => {
-                        if (item.closest(".drop-zone")) return;
+                    item.addEventListener("click", (event) => {
+                        event.stopPropagation();
+                        if (aktivitas1State.reviewMode) return;
                         if (selectedTouchItem === item) {
                             item.classList.remove("selected-touch");
                             selectedTouchItem = null;
@@ -733,6 +786,26 @@
                         item.classList.add("selected-touch");
                     });
                 }
+            });
+
+            dragBank.addEventListener("dragover", (event) => {
+                event.preventDefault();
+                dragBank.classList.add("drag-over");
+            });
+
+            dragBank.addEventListener("dragleave", () => {
+                dragBank.classList.remove("drag-over");
+            });
+
+            dragBank.addEventListener("drop", (event) => {
+                event.preventDefault();
+                dragBank.classList.remove("drag-over");
+
+                if (!draggedItem || aktivitas1State.reviewMode) return;
+
+                document.getElementById("dragItems").appendChild(draggedItem);
+                resetCekDragDrop();
+                updateQuestStatus();
             });
 
             zones.forEach((zone) => {
@@ -752,19 +825,34 @@
                     if (!draggedItem) return;
 
                     zone.querySelector(".drop-list").appendChild(draggedItem);
-                    cekDragDrop();
+                    resetCekDragDrop();
+                    updateQuestStatus();
                 });
 
                 if (isTouchMode) {
                     zone.addEventListener("click", () => {
+                        if (aktivitas1State.reviewMode) return;
                         if (!selectedTouchItem) return;
                         zone.querySelector(".drop-list").appendChild(selectedTouchItem);
                         selectedTouchItem.classList.remove("selected-touch");
                         selectedTouchItem = null;
-                        cekDragDrop();
+                        resetCekDragDrop();
+                        updateQuestStatus();
                     });
                 }
             });
+
+            if (isTouchMode) {
+                dragBank.addEventListener("click", () => {
+                    if (aktivitas1State.reviewMode) return;
+                    if (!selectedTouchItem) return;
+                    document.getElementById("dragItems").appendChild(selectedTouchItem);
+                    selectedTouchItem.classList.remove("selected-touch");
+                    selectedTouchItem = null;
+                    resetCekDragDrop();
+                    updateQuestStatus();
+                });
+            }
 
             document.querySelectorAll('input[name="s1"], input[name="s2"], input[name="s3"]').forEach((input) => {
                 input.addEventListener("change", updateQuestStatus);
@@ -774,10 +862,85 @@
                 document.getElementById(id).addEventListener("input", updateQuestStatus);
             });
 
+            muatJawabanAktivitas1();
+            terapkanModeAktivitas1();
             updateQuestStatus();
         }
 
-        function cekDragDrop() {
+        function muatJawabanAktivitas1() {
+            document.getElementById("checkpointJawaban").value = localStorage.getItem("checkpoint1") || "";
+            document.getElementById("alasan1").value = localStorage.getItem("alasan1") || "";
+            document.getElementById("alasan2").value = localStorage.getItem("alasan2") || "";
+            document.getElementById("alasan3").value = localStorage.getItem("alasan3") || "";
+
+            [
+                ["s1", localStorage.getItem("a1")],
+                ["s2", localStorage.getItem("a2")],
+                ["s3", localStorage.getItem("a3")]
+            ].forEach(([name, value]) => {
+                if (!value) return;
+                const target = document.querySelector(`input[name="${name}"][value="${value}"]`);
+                if (target) target.checked = true;
+            });
+
+            if (aktivitas1State.submitted) {
+                susunUlangKartuAktivitas1();
+                dragDropSudahDicek = true;
+                evaluasiDragDrop(true);
+            }
+        }
+
+        function susunUlangKartuAktivitas1() {
+            const dropBatang = document.getElementById("dropBatang");
+            const dropHistogram = document.getElementById("dropHistogram");
+
+            document.querySelectorAll(".drag-item").forEach((item) => {
+                const targetWrap = item.dataset.target === "batang" ? dropBatang : dropHistogram;
+                targetWrap.appendChild(item);
+            });
+        }
+
+        function terapkanModeAktivitas1() {
+            const isReadOnly = aktivitas1State.reviewMode;
+
+            setReadOnlyState([
+                "#checkpointJawaban",
+                "#alasan1",
+                "#alasan2",
+                "#alasan3"
+            ], isReadOnly);
+
+            setDisabledState([
+                'input[name="s1"]',
+                'input[name="s2"]',
+                'input[name="s3"]'
+            ], isReadOnly);
+
+            document.querySelectorAll(".drag-item").forEach((item) => {
+                item.draggable = !isReadOnly;
+            });
+
+            document.getElementById("activity1DragActions").style.display = isReadOnly ? "none" : "flex";
+            document.getElementById("activity1SubmitWrap").style.display = isReadOnly ? "none" : "block";
+            document.getElementById("activity1SubmitButton").textContent = aktivitas1State.editMode
+                ? "Simpan Perubahan Aktivitas 1"
+                : "Kirim Jawaban Aktivitas 1";
+        }
+
+        function resetCekDragDrop() {
+            dragDropSudahDicek = false;
+            draggedItem = null;
+            selectedTouchItem = null;
+            document.querySelectorAll(".drag-item").forEach((item) => item.classList.remove("selected-touch"));
+            document.querySelectorAll(".drop-zone").forEach((zone) => {
+                zone.classList.remove("correct-zone", "wrong-zone");
+            });
+            const feedback = document.getElementById("dragFeedback");
+            feedback.style.display = "none";
+            feedback.textContent = "";
+        }
+
+        function evaluasiDragDrop(showFeedback = false) {
             const semuaItem = document.querySelectorAll(".drag-item");
             const feedback = document.getElementById("dragFeedback");
 
@@ -791,24 +954,45 @@
                     const cocok = item.dataset.target === zone.dataset.zone;
                     if (cocok) {
                         jumlahBenar++;
-                        zone.classList.add("correct-zone");
-                    } else {
-                        zone.classList.add("wrong-zone");
+                    }
+
+                    if (showFeedback) {
+                        if (cocok) {
+                            zone.classList.add("correct-zone");
+                        } else {
+                            zone.classList.add("wrong-zone");
+                        }
                     }
                 });
             });
 
-            if (sudahDitempatkan === semuaItem.length) {
+            if (showFeedback && sudahDitempatkan === semuaItem.length) {
                 feedback.style.display = "block";
                 if (jumlahBenar === semuaItem.length) {
                     feedback.textContent = "Bagus. Semua ciri berhasil dicocokkan dengan benar.";
                 } else {
                     feedback.textContent = "Masih ada beberapa kartu yang belum tepat. Coba cek kembali ciri diagram batang dan histogram.";
                 }
-            } else {
+            } else if (showFeedback) {
                 feedback.style.display = "none";
             }
 
+            return {
+                jumlahBenar,
+                sudahDitempatkan,
+                totalItem: semuaItem.length,
+                semuaBenar: jumlahBenar === semuaItem.length && sudahDitempatkan === semuaItem.length
+            };
+        }
+
+        function cekJawabanDragDrop() {
+            if (!semuaKartuSudahDipindah()) {
+                alert("Pindahkan dulu semua kartu ciri-ciri ke salah satu kotak jawaban sebelum dicek.");
+                return;
+            }
+
+            dragDropSudahDicek = true;
+            evaluasiDragDrop(true);
             updateQuestStatus();
         }
 
@@ -843,9 +1027,11 @@
                     note: "Video siap dipelajari dan bisa dibuka lewat YouTube bila diperlukan."
                 },
                 {
-                    done: checkpointJawaban.value.trim() && semuaKartuBenar(),
+                    done: checkpointJawaban.value.trim() && dragDropSudahDicek && semuaKartuBenar(),
                     label: "Bukti konsep lengkap",
-                    note: "Catatan awal terisi dan semua kartu ditempatkan dengan benar."
+                    note: dragDropSudahDicek
+                        ? "Catatan awal terisi dan hasil pencocokan kartu sudah diperiksa."
+                        : "Isi catatan awal, susun semua kartu, lalu tekan tombol cek jawaban."
                 },
                 {
                     done: semuaSoalTerisi(),
@@ -881,6 +1067,11 @@
                 return;
             }
 
+            if (!dragDropSudahDicek) {
+                alert("Tekan tombol cek jawaban pada bagian cocokkan ciri-ciri terlebih dahulu.");
+                return;
+            }
+
             if (!semuaKartuBenar()) {
                 alert("Periksa kembali hasil drag and drop. Masih ada kartu yang belum ditempatkan dengan tepat.");
                 return;
@@ -909,6 +1100,7 @@
             localStorage.setItem("a3", document.querySelector('input[name="s3"]:checked').value);
             localStorage.setItem("alasan3", alasan3.value);
             localStorage.setItem("aktivitas1", "true");
+            exitActivityEditMode(1);
 
             alert("Jawaban Aktivitas 1 berhasil disimpan. Selanjutnya akan ada penguatan dari guru sebelum membuka Aktivitas 2.");
             window.location.href = "beranda.html";
