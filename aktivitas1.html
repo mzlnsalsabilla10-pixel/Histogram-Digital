@@ -292,11 +292,15 @@
         }
 
         .drop-zone.correct-zone {
-            background: rgba(24, 183, 163, 0.08);
+            border-color: rgba(11, 127, 114, 0.55);
+            background: rgba(24, 183, 163, 0.12);
+            box-shadow: inset 0 0 0 1px rgba(11, 127, 114, 0.08);
         }
 
         .drop-zone.wrong-zone {
-            background: rgba(244, 126, 182, 0.08);
+            border-color: rgba(217, 45, 32, 0.48);
+            background: rgba(217, 45, 32, 0.08);
+            box-shadow: inset 0 0 0 1px rgba(217, 45, 32, 0.08);
         }
 
         .drop-zone p {
@@ -310,14 +314,70 @@
             gap: 10px;
         }
 
+        .drag-item.is-correct {
+            border-color: rgba(11, 127, 114, 0.42);
+            background: #ecfdf3;
+            color: #086c63;
+        }
+
+        .drag-item.is-wrong {
+            border-color: rgba(217, 45, 32, 0.34);
+            background: #fff1f3;
+            color: #b42318;
+        }
+
+        .drag-item-hint {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed rgba(86, 99, 164, 0.22);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .drag-item-hint-icon {
+            flex: 0 0 24px;
+            width: 24px;
+            height: 24px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .drag-item.is-correct .drag-item-hint-icon {
+            background: rgba(24, 183, 163, 0.18);
+            color: #0b7f72;
+        }
+
+        .drag-item.is-wrong .drag-item-hint-icon {
+            background: rgba(217, 45, 32, 0.12);
+            color: #b42318;
+        }
+
         .feedback-box {
             margin-top: 18px;
             padding: 16px 18px;
             border-radius: 18px;
+            border: 1px solid transparent;
             background: #eef4ff;
             color: #3154d7;
-            font-weight: 700;
+            font-weight: 800;
             display: none;
+        }
+
+        .feedback-box.is-success {
+            background: #ecfdf3;
+            border-color: rgba(11, 127, 114, 0.22);
+        }
+
+        .feedback-box.is-error {
+            background: #fff1f3;
+            border-color: rgba(217, 45, 32, 0.18);
         }
 
         .drag-actions {
@@ -735,7 +795,12 @@
         </section>
     </main>
 
-    <script src="script.js?v=20260423a"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/learningResponses.js"></script>
+    <script src="js/draftAutosave.js"></script>
+    <script src="script.js?v=20260423b"></script>
     <script>
         let draggedItem = null;
         let selectedTouchItem = null;
@@ -754,6 +819,10 @@
             const zones = document.querySelectorAll(".drop-zone");
             const dragBank = document.querySelector(".drag-bank");
             const isTouchMode = window.matchMedia("(max-width: 960px)").matches || window.matchMedia("(pointer: coarse)").matches;
+
+            items.forEach((item) => {
+                item.dataset.label = item.dataset.label || item.textContent.trim();
+            });
 
             items.forEach((item) => {
                 item.addEventListener("dragstart", (event) => {
@@ -862,9 +931,137 @@
                 document.getElementById(id).addEventListener("input", updateQuestStatus);
             });
 
+            initLearningResponsesAktivitas1();
+            terapkanRedaksiMandiriAktivitas1();
+            siapkanSessionJawabanAktivitas1();
             muatJawabanAktivitas1();
+            initDraftAutosaveAktivitas1();
             terapkanModeAktivitas1();
             updateQuestStatus();
+        }
+
+        function initDraftAutosaveAktivitas1() {
+            if (!window.DraftAutosave) return;
+
+            window.DraftAutosave.attachDraftAutosave("aktivitas1", {
+                statusMount: "#checkpointJawaban",
+                shouldSkip: () => aktivitas1State.submitted,
+                fields: [
+                    { key: "checkpointJawaban", selector: "#checkpointJawaban" },
+                    { key: "alasan1", selector: "#alasan1" },
+                    { key: "alasan2", selector: "#alasan2" },
+                    { key: "alasan3", selector: "#alasan3" },
+                    { key: "s1", type: "radio", name: "s1" },
+                    { key: "s2", type: "radio", name: "s2" },
+                    { key: "s3", type: "radio", name: "s3" }
+                ],
+                onRestore: updateQuestStatus
+            });
+        }
+
+        function siapkanSessionJawabanAktivitas1() {
+            window.LearningResponses?.prepareLearningResponseSession?.({
+                sessionKey: "learningResponsesSessionUserId:aktivitas1",
+                storageKeys: ["checkpoint1", "a1", "alasan1", "a2", "alasan2", "a3", "alasan3"]
+            });
+        }
+
+        async function terapkanRedaksiMandiriAktivitas1() {
+            const identity = await window.LearningResponses?.getResponseIdentity?.();
+            const isMandiri = (identity?.userType || identity?.user_type) === "mandiri";
+            if (!isMandiri) return;
+
+            const focusSection = document.querySelector("#checkpointJawaban")
+                ?.closest(".activity-card-wide")
+                ?.previousElementSibling;
+            if (focusSection) {
+                const focusText = focusSection.querySelector(".section-title p");
+                if (focusText) {
+                    focusText.textContent = "Catat temuanmu berdasarkan ciri batang, jenis data, dan makna lebar batang.";
+                }
+            }
+
+            const checkpointSection = document.getElementById("checkpointJawaban")?.closest(".reflect-box");
+            if (checkpointSection) {
+                checkpointSection.querySelector(".section-kicker").textContent = "Catatan Awal";
+                checkpointSection.querySelector("h2").textContent = "Tuliskan dugaan awalmu";
+                checkpointSection.querySelector("p").textContent =
+                    "Menurutmu, apa perbedaan paling penting antara diagram batang dan histogram setelah mengamati video?";
+            }
+
+            document.getElementById("checkpointJawaban").placeholder = "Tuliskan hasil pengamatan awalmu di sini...";
+            ["alasan1", "alasan2", "alasan3"].forEach((id) => {
+                document.getElementById(id).placeholder = "Tuliskan alasanmu...";
+            });
+
+            const submitHint = document.querySelector("#activity1SubmitWrap .submit-hint");
+            if (submitHint) {
+                submitHint.textContent = "Selesaikan seluruh target aktivitas ini agar status misi berubah menjadi selesai dan kamu bisa lanjut ke Aktivitas 2.";
+            }
+        }
+
+        function getPilihanKonsepAktivitas1() {
+            const payload = {};
+            ["s1", "s2", "s3"].forEach((name) => {
+                payload[name] = document.querySelector(`input[name="${name}"]:checked`)?.value || "";
+            });
+
+            return Object.values(payload).some(Boolean) ? JSON.stringify(payload) : "";
+        }
+
+        function applyPilihanKonsepAktivitas1(response) {
+            try {
+                const payload = JSON.parse(response.answer_text || "{}");
+                ["s1", "s2", "s3"].forEach((name) => {
+                    const value = payload[name];
+                    if (!value) return;
+                    const target = document.querySelector(`input[name="${name}"][value="${value}"]`);
+                    if (target) {
+                        target.checked = true;
+                        target.dispatchEvent(new Event("change", { bubbles: true }));
+                    }
+                });
+                updateQuestStatus();
+            } catch (error) {
+                console.warn("Jawaban pilihan Aktivitas 1 belum bisa dibaca.", error);
+            }
+        }
+
+        function initLearningResponsesAktivitas1() {
+            if (!window.LearningResponses) return;
+
+            const questionStack = document.querySelector(".question-stack");
+            if (questionStack && !document.getElementById("activity1GroupResponseMount")) {
+                const mount = document.createElement("div");
+                mount.id = "activity1GroupResponseMount";
+                questionStack.insertAdjacentElement("afterend", mount);
+            }
+
+            window.LearningResponses.attachLearningResponseBatchControls({
+                activityKey: "aktivitas1",
+                mount: "#activity1GroupResponseMount",
+                position: "afterbegin",
+                items: [
+                    {
+                        activityKey: "aktivitas1",
+                        questionKey: "checkpoint_jawaban",
+                        getValue: () => document.getElementById("checkpointJawaban").value,
+                        applyValue: (response) => window.LearningResponses.applyLoadedResponseToField("#checkpointJawaban", response)
+                    },
+                    {
+                        activityKey: "aktivitas1",
+                        questionKey: "pilihan_s1_s2_s3",
+                        getValue: getPilihanKonsepAktivitas1,
+                        applyValue: applyPilihanKonsepAktivitas1
+                    },
+                    ...["alasan1", "alasan2", "alasan3"].map((id) => ({
+                        activityKey: "aktivitas1",
+                        questionKey: id,
+                        getValue: () => document.getElementById(id).value,
+                        applyValue: (response) => window.LearningResponses.applyLoadedResponseToField(`#${id}`, response)
+                    }))
+                ]
+            });
         }
 
         function muatJawabanAktivitas1() {
@@ -931,13 +1128,36 @@
             dragDropSudahDicek = false;
             draggedItem = null;
             selectedTouchItem = null;
-            document.querySelectorAll(".drag-item").forEach((item) => item.classList.remove("selected-touch"));
+            document.querySelectorAll(".drag-item").forEach((item) => {
+                item.classList.remove("selected-touch", "is-correct", "is-wrong");
+                item.querySelectorAll(".drag-item-hint").forEach((hint) => hint.remove());
+            });
             document.querySelectorAll(".drop-zone").forEach((zone) => {
                 zone.classList.remove("correct-zone", "wrong-zone");
             });
             const feedback = document.getElementById("dragFeedback");
+            feedback.className = "feedback-box validation-message";
             feedback.style.display = "none";
             feedback.textContent = "";
+        }
+
+        function labelZonaAktivitas1(zoneKey) {
+            return zoneKey === "histogram" ? "Histogram" : "Diagram Batang";
+        }
+
+        function tampilkanHintKartu(item, cocok) {
+            item.classList.remove("is-correct", "is-wrong");
+            item.querySelectorAll(".drag-item-hint").forEach((hint) => hint.remove());
+
+            const hint = document.createElement("div");
+            const targetLabel = labelZonaAktivitas1(item.dataset.target);
+            hint.className = "drag-item-hint";
+            hint.innerHTML = cocok
+                ? `<span class="drag-item-hint-icon" aria-hidden="true">&#10003;</span><span>Sudah tepat. Kartu ini cocok di kotak ${targetLabel}.</span>`
+                : `<span class="drag-item-hint-icon" aria-hidden="true">&#10005;</span><span>Belum tepat. Pindahkan kartu ini ke kotak ${targetLabel}.</span>`;
+
+            item.classList.add(cocok ? "is-correct" : "is-wrong");
+            item.appendChild(hint);
         }
 
         function evaluasiDragDrop(showFeedback = false) {
@@ -949,25 +1169,32 @@
 
             document.querySelectorAll(".drop-zone").forEach((zone) => {
                 zone.classList.remove("correct-zone", "wrong-zone");
+                let semuaDiZonaBenar = true;
+                let adaItemDiZona = false;
+
                 zone.querySelectorAll(".drag-item").forEach((item) => {
+                    adaItemDiZona = true;
                     sudahDitempatkan++;
                     const cocok = item.dataset.target === zone.dataset.zone;
                     if (cocok) {
                         jumlahBenar++;
+                    } else {
+                        semuaDiZonaBenar = false;
                     }
 
                     if (showFeedback) {
-                        if (cocok) {
-                            zone.classList.add("correct-zone");
-                        } else {
-                            zone.classList.add("wrong-zone");
-                        }
+                        tampilkanHintKartu(item, cocok);
                     }
                 });
+
+                if (showFeedback && adaItemDiZona) {
+                    zone.classList.add(semuaDiZonaBenar ? "correct-zone" : "wrong-zone");
+                }
             });
 
             if (showFeedback && sudahDitempatkan === semuaItem.length) {
                 feedback.style.display = "block";
+                feedback.className = `feedback-box validation-message ${jumlahBenar === semuaItem.length ? "is-success" : "is-error"}`;
                 if (jumlahBenar === semuaItem.length) {
                     feedback.textContent = "Bagus. Semua ciri berhasil dicocokkan dengan benar.";
                 } else {
@@ -1058,7 +1285,8 @@
 
         function submitAktivitas1() {
             if (!checkpointJawaban.value.trim()) {
-                alert("Catatan awal kelompok harus diisi.");
+                const isMandiri = localStorage.getItem("userType") === "mandiri";
+                alert(isMandiri ? "Catatan awal harus diisi." : "Catatan awal kelompok harus diisi.");
                 return;
             }
 
@@ -1100,9 +1328,13 @@
             localStorage.setItem("a3", document.querySelector('input[name="s3"]:checked').value);
             localStorage.setItem("alasan3", alasan3.value);
             localStorage.setItem("aktivitas1", "true");
+            window.DraftAutosave?.clearDraft("aktivitas1");
             exitActivityEditMode(1);
 
-            alert("Jawaban Aktivitas 1 berhasil disimpan. Selanjutnya akan ada penguatan dari guru sebelum membuka Aktivitas 2.");
+            const isMandiri = localStorage.getItem("userType") === "mandiri";
+            alert(isMandiri
+                ? "Jawaban Aktivitas 1 berhasil disimpan. Kamu bisa lanjut ke Aktivitas 2."
+                : "Jawaban Aktivitas 1 berhasil disimpan. Selanjutnya akan ada penguatan dari guru sebelum membuka Aktivitas 2.");
             window.location.href = "beranda.html";
         }
 

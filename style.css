@@ -25,6 +25,65 @@
     --font-display: 'Lilita One', 'Trebuchet MS', sans-serif;
 }
 
+.learning-response-tools {
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid rgba(86, 99, 164, 0.14);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.72);
+}
+
+.learning-response-info {
+    margin: 0 0 10px;
+    color: #5b647c;
+    font-size: 0.92rem;
+}
+
+.learning-response-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.learning-response-btn {
+    width: auto;
+    min-width: 0;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.92rem;
+}
+
+.learning-response-btn.secondary {
+    background: #eef2ff;
+    color: #3730a3;
+    box-shadow: none;
+}
+
+.learning-response-status {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    font-size: 0.92rem;
+}
+
+.learning-response-status[hidden] {
+    display: none;
+}
+
+.draft-autosave-status {
+    margin-top: 10px;
+    padding: 9px 12px;
+    border-radius: 14px;
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.draft-autosave-status[hidden] {
+    display: none;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -258,6 +317,24 @@ body::after {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 243, 207, 0.94));
     box-shadow: 0 8px 0 #1d2c7a, 0 14px 24px rgba(0,0,0,0.16);
     position: relative;
+}
+
+.arcade-skin .validation-message {
+    font-size: 1.02rem;
+    line-height: 1.75;
+    font-weight: 800;
+}
+
+.arcade-skin .validation-message.is-success {
+    color: #0b7f72;
+}
+
+.arcade-skin .validation-message.is-error {
+    color: #b42318;
+}
+
+.arcade-skin .validation-message.is-neutral {
+    color: #3154d7;
 }
 
 .arcade-skin .card::after {
@@ -2390,6 +2467,31 @@ header h1 span {
     color: #24358b !important;
 }
 
+.topnav-logout {
+    border: 2px solid rgba(29, 44, 122, .16);
+    border-radius: 999px;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, .86);
+    color: #cf2727;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+    box-shadow: 0 6px 18px rgba(207, 39, 39, .08);
+    transition: .2s ease;
+}
+
+.topnav-logout:hover {
+    transform: translateY(-1px);
+    border-color: rgba(207, 39, 39, .36);
+    background: #fff7f2;
+}
+
+.topnav-logout:disabled {
+    cursor: wait;
+    opacity: .72;
+    transform: none;
+}
+
 .landing-main,
 .dashboard-main {
     max-width: 1240px;
@@ -2827,6 +2929,45 @@ header h1 span {
 .landing-submit {
     width: 100%;
     text-align: center;
+}
+
+.auth-message {
+    margin: 10px 0 18px;
+    padding: 13px 15px;
+    border-radius: 16px;
+    border: 1px solid rgba(217, 45, 32, 0.18);
+    background: #fff1f3;
+    color: #b42318;
+    font-weight: 800;
+    line-height: 1.6;
+    text-align: left;
+}
+
+.auth-message.success {
+    border-color: rgba(11, 127, 114, 0.22);
+    background: #ecfdf3;
+    color: #0b7f72;
+}
+
+.auth-message[hidden] {
+    display: none;
+}
+
+.auth-switch {
+    margin-top: 18px;
+    color: var(--text-soft);
+    text-align: center;
+    line-height: 1.6;
+}
+
+.auth-switch a {
+    color: #3154d7;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
 }
 
 .inputBox {

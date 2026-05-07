@@ -45,7 +45,7 @@
         .guide-item strong { color: #21358e; display: block; margin-bottom: 4px; }
         .guide-note-head { margin-bottom: 18px; }
         .guide-note-head h3 { color: #cf2727; margin-top: 8px; }
-        .build-grid { grid-template-columns: .95fr 1.05fr; margin-top: 24px; }
+        .build-grid { grid-template-columns: minmax(240px, .62fr) minmax(0, 1.38fr); margin-top: 24px; }
         .data-table-shell { margin-top: 14px; border-radius: 20px; overflow-x: auto; overflow-y: hidden; border: 1px solid rgba(86,99,164,.14); background: white; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 14px 12px; text-align: center; border-bottom: 1px solid rgba(86,99,164,.12); color: #31405f; }
@@ -60,34 +60,113 @@
         .studio-btn { border: none; border-radius: 16px; padding: 13px 18px; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, #3154d7, #5e7bff); color: white; }
         .studio-btn.secondary { background: rgba(49,84,215,.14); color: #21358e; border: 1px solid rgba(49,84,215,.2); }
         .studio-btn:disabled { opacity: .45; cursor: not-allowed; }
-        .chart-shell { background: white; border: 1px solid rgba(86,99,164,.14); border-radius: 24px; padding: 22px; }
+        .chart-shell { background: white; border: 1px solid rgba(86,99,164,.14); border-radius: 24px; padding: 22px; overflow: visible; }
         .chart-meta { display: grid; gap: 6px; margin-bottom: 18px; text-align: center; }
         .chart-meta strong { color: #21358e; font-size: 20px; }
         .chart-meta span { color: #5f678c; }
-        .histogram-stage { position: relative; padding: 18px 18px 72px 52px; border-radius: 22px; background: linear-gradient(180deg, rgba(247,249,255,.96), rgba(255,255,255,.98)); border: 1px solid rgba(86,99,164,.12); overflow: hidden; }
+        .histogram-stage { position: relative; padding: 18px 18px 72px 66px; border-radius: 22px; background: linear-gradient(180deg, rgba(247,249,255,.96), rgba(255,255,255,.98)); border: 1px solid rgba(86,99,164,.12); overflow: visible; }
         .y-label { position: absolute; left: 8px; top: 50%; transform: rotate(-90deg) translateY(-50%); transform-origin: left top; color: #21358e; font-weight: 700; }
         .x-label { text-align: center; margin-top: 12px; color: #21358e; font-weight: 700; }
-        .chart-grid { position: absolute; inset: 18px 18px 72px 52px; pointer-events: none; background-image: linear-gradient(to top, rgba(49,84,215,.12) 1px, transparent 1px), linear-gradient(to right, rgba(49,84,215,.05) 1px, transparent 1px); background-size: 100% 20%, 14.285% 100%; }
+        .chart-grid { position: absolute; inset: 18px 18px 72px 66px; pointer-events: none; background-image: linear-gradient(to top, rgba(49,84,215,.12) 1px, transparent 1px), linear-gradient(to right, rgba(49,84,215,.05) 1px, transparent 1px); background-size: 100% 20%, 14.285% 100%; }
         .bars-area { position: relative; z-index: 1; height: 360px; display: flex; align-items: flex-end; gap: 0; border-left: 3px solid #21358e; border-bottom: 3px solid #21358e; background: linear-gradient(180deg, rgba(49,84,215,.03), rgba(49,84,215,.01)); }
         .bar-axis-gap { height: 100%; flex: 0 0 auto; }
         .bar-group { flex: 1 1 0; min-width: 0; height: 100%; display: flex; align-items: flex-end; justify-content: stretch; }
         .bar { width: 100%; min-width: 0; border-radius: 0; background: linear-gradient(180deg, #8fa8ff 0%, #5877ee 48%, #3154d7 100%); display: flex; align-items: flex-start; justify-content: center; color: white; font-size: 13px; font-weight: 700; padding-top: 8px; box-sizing: border-box; transition: height .45s ease, background .3s ease; box-shadow: inset 0 1px 0 rgba(255,255,255,.35); }
         .bar-group:first-child .bar { border-top-left-radius: 10px; }
         .bar-group:last-child .bar { border-top-right-radius: 10px; }
-        .axis-ticks { position: absolute; left: 16px; top: 18px; bottom: 72px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; color: #6a7294; font-size: 12px; }
+        .axis-ticks { position: absolute; left: 26px; top: 18px; bottom: 72px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; color: #6a7294; font-size: 12px; }
         .axis-ticks div { position: relative; padding-right: 6px; }
-        .x-boundaries { position: absolute; left: 52px; right: 18px; bottom: 18px; height: 32px; color: #4d557d; font-size: 12px; }
+        .x-boundaries { position: absolute; left: 66px; right: 18px; bottom: 18px; height: 32px; color: #4d557d; font-size: 12px; }
         .boundary-tick { position: absolute; bottom: 0; text-align: center; white-space: nowrap; font-variant-numeric: tabular-nums; transform: translateX(-50%); }
         .boundary-tick.edge-start { transform: translateX(0); }
         .boundary-tick.edge-end { transform: translateX(-100%); }
         .boundary-tick::before { content: ""; position: absolute; top: -16px; left: 50%; transform: translateX(-50%); width: 2px; height: 10px; border-radius: 999px; background: rgba(33,53,142,.28); }
-        .freq-input-grid { display: grid; gap: 12px; margin-top: 16px; }
-        .freq-input-row { display: grid; grid-template-columns: 1fr 120px; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 18px; background: white; border: 1px solid rgba(86,99,164,.14); }
-        .freq-input-row strong { color: #21358e; }
-        .freq-input-row input { width: 100%; padding: 10px 12px; border-radius: 14px; border: 1px solid rgba(86,99,164,.18); background: #f8faff; }
+        .component-palette { display: grid; gap: 10px; margin-top: 16px; }
+        .component-palette.scrollable { max-height: 420px; overflow-y: auto; padding-right: 6px; scrollbar-width: thin; }
+        .studio-reference-mini { margin: 18px 0 4px; padding: 16px; border-radius: 20px; background: rgba(255,255,255,.76); border: 1px solid rgba(86,99,164,.14); }
+        .studio-reference-mini h3 { margin-bottom: 8px; color: #21358e; font-family: 'Sora', sans-serif; }
+        .studio-reference-mini p { font-size: 14px; line-height: 1.6; }
+        .studio-reference-mini .data-table-shell { max-height: 180px; overflow: auto; margin-top: 10px; border-radius: 16px; }
+        .studio-reference-mini th,
+        .studio-reference-mini td { padding: 9px 10px; font-size: 13px; }
+        .drag-component { border: 1.5px solid rgba(86,99,164,.14); border-radius: 16px; padding: 11px 12px; background: rgba(255,255,255,.92); color: #21358e; cursor: grab; user-select: none; transition: .2s ease; box-shadow: 0 8px 18px rgba(49,84,215,.07); }
+        .drag-component:active { cursor: grabbing; }
+        .drag-component.selected { border-color: rgba(49,84,215,.45); background: rgba(49,84,215,.1); transform: translateY(-2px); }
+        .drag-component.is-placed { opacity: .48; cursor: default; }
+        .drag-component strong { display: block; margin-bottom: 4px; color: #21358e; }
+        .drag-component span { color: #5f678c; font-size: 13px; line-height: 1.5; }
+        .drag-text-component { font-weight: 800; line-height: 1.45; }
+        .drag-component.bar-piece { display: flex; align-items: flex-end; justify-content: center; min-height: 106px; padding: 10px; }
+        .draggable-bar-visual { width: 42px; min-height: 22px; display: flex; align-items: flex-start; justify-content: center; padding-top: 7px; color: white; font-size: 13px; font-weight: 800; border-radius: 10px 10px 0 0; box-shadow: inset 0 1px 0 rgba(255,255,255,.35); }
+        .palette-note { margin-top: 12px; padding: 12px 14px; border-radius: 16px; background: rgba(255,184,92,.12); border: 1px solid rgba(255,184,92,.24); color: #7a5b17; font-weight: 700; line-height: 1.6; }
+        .drop-zone { position: relative; display: flex; align-items: center; justify-content: center; min-height: 30px; border: 1px dashed rgba(86,99,164,.14); border-radius: 14px; background: rgba(255,255,255,.04); transition: .2s ease; }
+        .drop-zone::after { content: ""; position: absolute; right: 8px; top: 8px; width: 16px; height: 16px; border-radius: 50%; opacity: 0; transform: scale(.8); transition: .2s ease; }
+        .drop-zone.drag-over, .drop-zone.selected-target { border-color: rgba(49,84,215,.34); background: rgba(49,84,215,.045); }
+        .drop-zone.is-correct { border-color: rgba(11,127,114,.5); background: rgba(24,183,163,.12); }
+        .drop-zone.is-correct::after { content: "✓"; opacity: 1; transform: scale(1); display: grid; place-items: center; background: #0b7f72; color: white; font-size: 12px; font-weight: 900; }
+        .drop-zone.is-wrong { border-color: rgba(180,35,24,.5); background: rgba(217,45,32,.1); }
+        .drop-zone.is-wrong::after { content: "×"; opacity: 1; transform: scale(1); display: grid; place-items: center; background: #b42318; color: white; font-size: 12px; font-weight: 900; }
+        .drop-title-zone { min-height: 42px; font-weight: 800; color: #21358e; background: rgba(255,255,255,.035); }
+        .drop-axis-label { color: #21358e; font-weight: 800; }
+        .drop-y-zone { position: absolute; left: 2px; top: 50%; width: 28px; min-height: 136px; transform: translateY(-50%); writing-mode: vertical-rl; text-orientation: mixed; z-index: 3; background: rgba(255,255,255,.03); border-color: rgba(86,99,164,.12); font-size: 13px; }
+        .drop-x-zone { margin: 18px 24px 0 66px; min-height: 36px; background: rgba(255,255,255,.035); }
+        .bar-drop-zone { flex: 1 1 0; min-width: 0; height: calc(100% - 4px); align-self: flex-start; align-items: flex-end; justify-content: stretch; border-radius: 0; border-top: 0; border-left: 1px dashed rgba(33,53,142,.08); border-right: 1px dashed rgba(33,53,142,.08); border-bottom: 0; background: transparent; }
+        .bar-drop-zone.drag-over, .bar-drop-zone.selected-target { background: rgba(49,84,215,.035); border-left-color: rgba(49,84,215,.24); border-right-color: rgba(49,84,215,.24); }
+        .bar-drop-zone .bar { pointer-events: none; }
+        .bar-drop-zone.is-correct::after, .bar-drop-zone.is-wrong::after { right: 50%; top: 8px; transform: translateX(50%) scale(1); z-index: 4; }
+        .arcade-skin .studio-wrap .drop-zone {
+            border: 1px dashed rgba(86,99,164,.14);
+            border-radius: 14px;
+            background: rgba(255,255,255,.04);
+            box-shadow: none;
+            outline: none;
+        }
+        .arcade-skin .studio-wrap .drop-zone.drag-over,
+        .arcade-skin .studio-wrap .drop-zone.selected-target {
+            border-color: rgba(49,84,215,.34);
+            background: rgba(49,84,215,.045);
+            box-shadow: none;
+        }
+        .arcade-skin .studio-wrap .bar-drop-zone {
+            border-top: 0;
+            border-bottom: 0;
+            border-left: 1px dashed rgba(33,53,142,.08);
+            border-right: 1px dashed rgba(33,53,142,.08);
+            border-radius: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+        .arcade-skin .studio-wrap .bar-drop-zone.drag-over,
+        .arcade-skin .studio-wrap .bar-drop-zone.selected-target {
+            background: rgba(49,84,215,.035);
+            border-left-color: rgba(49,84,215,.24);
+            border-right-color: rgba(49,84,215,.24);
+            box-shadow: none;
+        }
+        .arcade-skin .studio-wrap .drop-title-zone,
+        .arcade-skin .studio-wrap .drop-x-zone,
+        .arcade-skin .studio-wrap .drop-y-zone {
+            background: rgba(255,255,255,.035);
+            box-shadow: none;
+        }
+        .arcade-skin .studio-wrap .drop-zone.is-correct {
+            border-color: rgba(11,127,114,.55);
+            background: rgba(24,183,163,.12);
+        }
+        .arcade-skin .studio-wrap .drop-zone.is-wrong {
+            border-color: rgba(180,35,24,.55);
+            background: rgba(217,45,32,.1);
+        }
         .system-chart { display: none; }
-        .feedback-list { margin-top: 12px; padding-left: 18px; color: #4d557d; line-height: 1.8; }
+        .result-box.validation-success { background: #ecfdf3; border-color: rgba(11,127,114,.22); }
+        .result-box.validation-error { background: #fff1f3; border-color: rgba(217,45,32,.18); }
+        .result-status-text { margin-top: 8px; }
+        .feedback-list { margin-top: 12px; padding-left: 22px; color: #4d557d; line-height: 1.8; font-size: 1rem; font-weight: 700; }
+        .feedback-list.is-success { color: #0b7f72; }
+        .feedback-list.is-error { color: #b42318; }
         .result-pill { display: inline-flex; margin-top: 12px; padding: 10px 14px; border-radius: 999px; background: rgba(24,183,163,.14); color: #0b7f72; font-weight: 800; }
+        .result-pill.validation-success { background: rgba(24,183,163,.16); color: #0b7f72; }
+        .result-pill.validation-error { background: rgba(217,45,32,.12); color: #b42318; }
         .reflection-card textarea { width: 100%; min-height: 140px; margin-top: 14px; padding: 14px 16px; border-radius: 18px; border: 1px solid rgba(86,99,164,.18); background: white; resize: vertical; }
         .studio-topbar { position: sticky; top: 12px; z-index: 1000; }
         @media (max-width: 980px) {
@@ -97,11 +176,13 @@
             .freq-input-row { grid-template-columns: 1fr; }
             .x-boundaries { font-size: 10px; }
             .boundary-tick { white-space: normal; line-height: 1.25; }
-            .histogram-stage { padding-left: 44px; padding-right: 12px; }
-            .chart-grid { inset: 18px 12px 72px 44px; }
+            .histogram-stage { padding-left: 58px; padding-right: 12px; }
+            .chart-grid { inset: 18px 12px 72px 58px; }
             .bars-area { border-left-width: 2px; border-bottom-width: 2px; }
-            .axis-ticks { left: 8px; }
-            .x-boundaries { left: 44px; right: 12px; }
+            .axis-ticks { left: 18px; }
+            .x-boundaries { left: 58px; right: 12px; }
+            .drop-y-zone { left: 0; width: 26px; font-size: 12px; }
+            .drop-x-zone { margin-left: 58px; margin-right: 12px; }
         }
         @media (max-width: 640px) {
             .studio-topbar.has-hamburger {
@@ -137,12 +218,14 @@
             .steps { padding: 18px; }
             .chart-shell, .panel-card, .form-card, .result-box, .reflection-card { padding: 18px; border-radius: 20px; }
             .chart-meta strong { font-size: 18px; }
-            .histogram-stage { padding: 16px 10px 82px 42px; }
-            .chart-grid { inset: 16px 10px 82px 42px; }
+            .histogram-stage { padding: 16px 10px 82px 54px; }
+            .chart-grid { inset: 16px 10px 82px 54px; }
             .bars-area { height: 240px; }
             .axis-ticks { font-size: 11px; top: 16px; bottom: 82px; }
             .y-label { left: 4px; font-size: 12px; }
-            .x-boundaries { left: 42px; right: 10px; bottom: 14px; font-size: 9px; height: 42px; }
+            .x-boundaries { left: 54px; right: 10px; bottom: 14px; font-size: 9px; height: 42px; }
+            .drop-y-zone { left: 0; width: 24px; min-height: 126px; font-size: 11px; }
+            .drop-x-zone { margin-left: 54px; margin-right: 10px; }
             .boundary-tick::before { top: -13px; height: 8px; }
         }
     </style>
@@ -277,28 +360,10 @@
                 <div class="studio-title">
                     <span class="section-kicker kicker">Komponen Grafik</span>
                     <h2>Siapkan informasi dasar histogram</h2>
-                    <p>Lengkapi komponen grafik dan perhatikan tabel distribusi frekuensi sebagai dasar pembuatan histogram.</p>
+                    <p>Lengkapi judul, label sumbu, dan skala yang akan dipakai sebelum masuk ke studio penyusunan histogram.</p>
                 </div>
 
-                <div class="build-grid">
-                    <div class="panel-card">
-                        <h3>Tabel Distribusi Frekuensi</h3>
-                        <p>Gunakan tabel ini sebagai acuan untuk membangun histogram.</p>
-                        <div class="data-table-shell">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Kelas</th>
-                                        <th>Interval Kelas</th>
-                                        <th>Frekuensi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tableAcuanBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="form-card">
+                <div class="form-card">
                         <h3>Komponen Grafik</h3>
                         <div class="chart-settings">
                             <div class="field">
@@ -321,7 +386,6 @@
                         <div class="hint-box">
                             <p>Gunakan skala sumbu Y yang sedikit lebih besar atau sama dengan frekuensi tertinggi agar batang histogram terlihat jelas.</p>
                         </div>
-                    </div>
                 </div>
 
                 <div class="nav-row">
@@ -336,29 +400,47 @@
                 <div class="studio-title">
                     <span class="section-kicker kicker">Studio Histogram</span>
                     <h2>Bangun histogram digitalmu</h2>
-                    <p>Isi frekuensi pada setiap interval sesuai tabel distribusi frekuensi, lalu amati bagaimana histogram terbentuk secara dinamis.</p>
+                    <p>Susun komponen histogram pada posisi yang tepat. Frekuensi batang sudah berasal dari tabel distribusi frekuensi Aktivitas 3.</p>
+                </div>
+
+                <div class="studio-reference-mini">
+                    <h3>Tabel Distribusi Frekuensi</h3>
+                    <p>Gunakan tabel ini sebagai acuan interval dan frekuensi saat menyusun batang histogram.</p>
+                    <div class="data-table-shell">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Kelas</th>
+                                    <th>Interval Kelas</th>
+                                    <th>Frekuensi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableAcuanStudioBody"></tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <div class="build-grid">
                     <div class="panel-card">
-                        <h3>Isi Frekuensi Histogram</h3>
-                        <p>Masukkan frekuensi setiap kelas sesuai tabel distribusi frekuensi.</p>
-                        <div class="freq-input-grid" id="freqInputGrid"></div>
+                        <h3>Komponen Histogram</h3>
+                        <p>Tarik komponen ke area histogram, atau pilih komponen lalu ketuk area tujuan.</p>
+                        <div class="component-palette scrollable" id="componentPalette"></div>
+                        <div class="palette-note" id="dragPaletteNote">Letakkan judul, label sumbu, dan setiap batang pada posisi yang sesuai.</div>
                     </div>
 
                     <div class="chart-shell" id="histogramCapture">
                         <div class="chart-meta">
-                            <strong id="displayJudulGrafik">Histogram</strong>
+                            <div class="drop-zone drop-title-zone" id="dropTitle" data-drop-type="title"></div>
                         </div>
 
                         <div class="histogram-stage">
                             <div class="axis-ticks" id="axisTicks"></div>
                             <div class="chart-grid"></div>
-                            <div class="y-label" id="displayLabelY">Frekuensi</div>
+                            <div class="drop-zone drop-y-zone drop-axis-label" id="dropYLabel" data-drop-type="y-label"></div>
                             <div class="bars-area" id="barsArea"></div>
                             <div class="x-boundaries" id="xBoundaries"></div>
                         </div>
-                        <div class="x-label" id="displayLabelX">Tepi Kelas</div>
+                        <div class="drop-zone drop-x-zone drop-axis-label" id="dropXLabel" data-drop-type="x-label"></div>
                     </div>
                 </div>
 
@@ -378,9 +460,9 @@
                 </div>
 
                 <div class="check-grid">
-                    <div class="result-box">
+                    <div class="result-box" id="activity4ResultBox">
                         <h3>Hasil Pemeriksaan</h3>
-                        <p id="hasilPemeriksaanText">Histogram belum diperiksa.</p>
+                        <p class="result-status-text validation-message" id="hasilPemeriksaanText">Histogram belum diperiksa.</p>
                         <span class="result-pill" id="resultPill" style="display:none;">0%</span>
                         <ul class="feedback-list" id="feedbackList"></ul>
                     </div>
@@ -424,7 +506,12 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <script src="script.js?v=20260423a"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/learningResponses.js"></script>
+    <script src="js/draftAutosave.js"></script>
+    <script src="script.js?v=20260423b"></script>
     <script>
         let intervalKelas = [];
         let frekuensiBenar = [];
@@ -434,6 +521,15 @@
         let skorKecocokan = 0;
         let komponenSudahSiap = false;
         let histogramSudahDicek = false;
+        let histogramIsCorrect = false;
+        let selectedComponentId = null;
+        let shuffledComponents = [];
+        let placedComponents = {
+            title: null,
+            xLabel: null,
+            yLabel: null,
+            bars: []
+        };
         let aktivitas4State = { submitted: false, reviewMode: false, editMode: false };
         let savedAktivitas4 = null;
         const HISTOGRAM_LEADING_GAP_UNITS = 0.4;
@@ -525,6 +621,8 @@
             setStudioStep(1);
             terapkanPerilakuInputInteger();
             document.getElementById("refleksi").addEventListener("input", updateQuestStatus);
+            initLearningResponsesAktivitas4();
+            siapkanSessionJawabanAktivitas4();
             ["judulGrafikInput", "labelXInput", "labelYInput", "maxYInput"].forEach((id) => {
                 document.getElementById(id).addEventListener("input", () => {
                     komponenSudahSiap = false;
@@ -533,8 +631,65 @@
             });
 
             muatJawabanAktivitas4();
+            initDraftAutosaveAktivitas4();
             terapkanModeAktivitas4();
             updateQuestStatus();
+        }
+
+        function initDraftAutosaveAktivitas4() {
+            if (!window.DraftAutosave) return;
+
+            window.DraftAutosave.attachDraftAutosave("aktivitas4", {
+                statusMount: "#judulGrafikInput",
+                shouldSkip: () => aktivitas4State.submitted,
+                fields: [
+                    { key: "judulGrafikInput", selector: "#judulGrafikInput" },
+                    { key: "labelXInput", selector: "#labelXInput" },
+                    { key: "labelYInput", selector: "#labelYInput" },
+                    { key: "maxYInput", selector: "#maxYInput" },
+                    { key: "refleksi", selector: "#refleksi" }
+                ],
+                onRestore: () => {
+                    komponenSudahSiap = Boolean(
+                        document.getElementById("judulGrafikInput").value.trim() &&
+                        document.getElementById("labelXInput").value.trim() &&
+                        document.getElementById("labelYInput").value.trim() &&
+                        document.getElementById("maxYInput").value.trim()
+                    );
+                    updateQuestStatus();
+                }
+            });
+        }
+
+        function siapkanSessionJawabanAktivitas4() {
+            const userChanged = window.LearningResponses?.prepareLearningResponseSession?.({
+                sessionKey: "learningResponsesSessionUserId:aktivitas4"
+            });
+            if (!userChanged) return;
+
+            const saved = readJSONStorage("hasilAktivitas4", null);
+            if (!saved) return;
+
+            saved.refleksi = "";
+            localStorage.setItem("hasilAktivitas4", JSON.stringify(saved));
+            savedAktivitas4 = saved;
+        }
+
+        function initLearningResponsesAktivitas4() {
+            if (!window.LearningResponses) return;
+
+            window.LearningResponses.attachLearningResponseBatchControls({
+                activityKey: "aktivitas4",
+                mount: "#refleksi",
+                items: [
+                    {
+                        activityKey: "aktivitas4",
+                        questionKey: "interpretasi_histogram",
+                        getValue: () => document.getElementById("refleksi").value,
+                        applyValue: (response) => window.LearningResponses.applyLoadedResponseToField("#refleksi", response)
+                    }
+                ]
+            });
         }
 
         function muatStudio() {
@@ -553,27 +708,35 @@
             frekuensiUser = intervalKelas.map(() => null);
             savedAktivitas4 = readJSONStorage("hasilAktivitas4", null);
 
-            const tbody = document.getElementById("tableAcuanBody");
-            tbody.innerHTML = "";
-
-            if (!intervalKelas.length || !frekuensiBenar.length) {
-                tbody.innerHTML = `<tr><td colspan="3" class="empty-row">Tabel distribusi frekuensi belum tersedia.</td></tr>`;
-            } else {
-                intervalKelas.forEach((interval, index) => {
-                    const row = document.createElement("tr");
-                    row.innerHTML = `<td>K${index + 1}</td><td>${interval}</td><td>${frekuensiBenar[index]}</td>`;
-                    tbody.appendChild(row);
-                });
-            }
+            renderStudioReferenceTable();
 
             document.getElementById("judulGrafikInput").value = "";
             document.getElementById("labelXInput").value = "";
             document.getElementById("labelYInput").value = "";
             document.getElementById("maxYInput").value = "";
 
-            renderFreqInputs();
-            renderHistogram();
+            resetHistogramArrangement();
+            renderDraggableComponents();
+            renderDropHistogramCanvas();
             updateQuestStatus();
+        }
+
+        function renderStudioReferenceTable() {
+            const body = document.getElementById("tableAcuanStudioBody");
+            if (!body) return;
+
+            body.innerHTML = "";
+
+            if (!intervalKelas.length || !frekuensiBenar.length) {
+                body.innerHTML = `<tr><td colspan="3" class="empty-row">Tabel belum tersedia.</td></tr>`;
+                return;
+            }
+
+            intervalKelas.forEach((interval, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td>K${index + 1}</td><td>${interval}</td><td>${frekuensiBenar[index]}</td>`;
+                body.appendChild(row);
+            });
         }
 
         function muatJawabanAktivitas4() {
@@ -583,13 +746,14 @@
                 ? savedAktivitas4.frekuensiUser.slice()
                 : intervalKelas.map(() => null);
             skorKecocokan = Number(savedAktivitas4.kecocokan) || 0;
+            histogramIsCorrect = skorKecocokan === 100;
             komponenSudahSiap = Boolean(
                 (savedAktivitas4.judulGrafik || "").trim() &&
                 (savedAktivitas4.labelX || "").trim() &&
                 (savedAktivitas4.labelY || "").trim() &&
                 String(savedAktivitas4.maxY || "").trim()
             );
-            histogramSudahDicek = true;
+            histogramSudahDicek = histogramIsCorrect;
 
             document.getElementById("judulGrafikInput").value = savedAktivitas4.judulGrafik || "";
             document.getElementById("labelXInput").value = savedAktivitas4.labelX || "";
@@ -597,10 +761,18 @@
             document.getElementById("maxYInput").value = savedAktivitas4.maxY || "";
             document.getElementById("refleksi").value = savedAktivitas4.refleksi || "";
 
-            renderFreqInputs();
-            renderHistogram();
+            if (histogramIsCorrect) {
+                placedComponents = {
+                    title: "title",
+                    xLabel: "x-label",
+                    yLabel: "y-label",
+                    bars: intervalKelas.map((_, index) => `bar-${index}`)
+                };
+            }
+            renderDraggableComponents();
+            renderDropHistogramCanvas();
             renderReferenceHistogram();
-            renderHistogramResult(skorKecocokan, buildHistogramFeedback().detail);
+            renderHistogramResult(skorKecocokan, histogramIsCorrect ? [] : ["Masih ada bagian yang belum tepat. Periksa kembali susunan histogrammu."]);
 
             if (savedAktivitas4.histogramImage) {
                 setTimeout(() => {
@@ -617,7 +789,6 @@
                 "#labelXInput",
                 "#labelYInput",
                 "#maxYInput",
-                "#freqInputGrid input",
                 "#refleksi"
             ], isReadOnly);
 
@@ -626,6 +797,11 @@
             const checkButton = document.getElementById("btnCekHistogram");
             checkButton.textContent = isReadOnly ? "Lihat Hasil Pemeriksaan" : "Periksa Histogram";
             checkButton.onclick = isReadOnly ? () => setStudioStep(4) : cekHistogram;
+
+            document.querySelectorAll(".drag-component, .drop-zone").forEach((element) => {
+                element.classList.toggle("is-disabled", isReadOnly);
+                element.draggable = !isReadOnly && element.classList.contains("drag-component") && !element.classList.contains("is-placed");
+            });
 
             document.getElementById("activity4SubmitButton").style.display = isReadOnly ? "none" : "inline-flex";
             document.getElementById("activity4SubmitButton").textContent = aktivitas4State.editMode
@@ -728,6 +904,12 @@
                 xLabel.style.fontSize = "14px";
             }
 
+            clone.querySelectorAll(".drop-zone").forEach((zone) => {
+                zone.classList.remove("is-correct", "is-wrong", "drag-over", "selected-target");
+                zone.style.borderColor = "transparent";
+                zone.style.background = "transparent";
+            });
+
             sandbox.appendChild(clone);
             document.body.appendChild(sandbox);
 
@@ -776,82 +958,290 @@
                 return;
             }
 
-            document.getElementById("displayJudulGrafik").innerText = judul;
-            document.getElementById("displayLabelX").innerText = labelX;
-            document.getElementById("displayLabelY").innerText = labelY;
             komponenSudahSiap = true;
-            renderHistogram();
+            resetHistogramArrangement();
+            renderDraggableComponents();
+            renderDropHistogramCanvas();
             updateQuestStatus();
             setStudioStep(3);
         }
 
-        function renderFreqInputs() {
-            const wrap = document.getElementById("freqInputGrid");
-            wrap.innerHTML = "";
+        function resetHistogramArrangement() {
+            placedComponents = {
+                title: null,
+                xLabel: null,
+                yLabel: null,
+                bars: intervalKelas.map(() => null)
+            };
+            selectedComponentId = null;
+            shuffledComponents = shuffleComponents(buildHistogramComponents());
+            frekuensiUser = intervalKelas.map(() => null);
+            histogramSudahDicek = false;
+            histogramIsCorrect = false;
+            skorKecocokan = 0;
+        }
+
+        function buildHistogramComponents() {
+            const maxY = getMaxYValue();
+            const components = [
+                {
+                    id: "title",
+                    type: "title",
+                    label: "Judul histogram",
+                    text: document.getElementById("judulGrafikInput").value.trim()
+                },
+                {
+                    id: "x-label",
+                    type: "x-label",
+                    label: "Label sumbu X",
+                    text: document.getElementById("labelXInput").value.trim()
+                },
+                {
+                    id: "y-label",
+                    type: "y-label",
+                    label: "Label sumbu Y",
+                    text: document.getElementById("labelYInput").value.trim()
+                }
+            ];
+
             intervalKelas.forEach((interval, index) => {
-                const nilaiAwal = frekuensiUser[index];
-                const row = document.createElement("div");
-                row.className = "freq-input-row";
-                row.innerHTML = `
-                    <strong>K${index + 1} | ${interval}</strong>
-                    <input type="text" data-integer-input="true" inputmode="numeric" value="${nilaiAwal ?? ""}" data-index="${index}" placeholder="Frekuensi">
-                `;
-                wrap.appendChild(row);
+                const value = frekuensiBenar[index] || 0;
+                components.push({
+                    id: `bar-${index}`,
+                    type: "bar",
+                    index,
+                    value,
+                    height: maxY === 0 ? 0 : (value / maxY) * 100,
+                    background: HISTOGRAM_BAR_BACKGROUNDS[index % HISTOGRAM_BAR_BACKGROUNDS.length]
+                });
             });
 
-            terapkanPerilakuInputInteger(wrap);
+            return components;
+        }
 
-            wrap.querySelectorAll("input").forEach((input) => {
-                input.addEventListener("input", (event) => {
+        function shuffleComponents(items) {
+            const copy = items.slice();
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function getComponentById(componentId) {
+            return buildHistogramComponents().find((component) => component.id === componentId) || null;
+        }
+
+        function isComponentPlaced(componentId) {
+            return placedComponents.title === componentId ||
+                placedComponents.xLabel === componentId ||
+                placedComponents.yLabel === componentId ||
+                placedComponents.bars.includes(componentId);
+        }
+
+        function renderDraggableComponents() {
+            const palette = document.getElementById("componentPalette");
+            palette.innerHTML = "";
+
+            if (!shuffledComponents.length) {
+                shuffledComponents = shuffleComponents(buildHistogramComponents());
+            }
+
+            shuffledComponents.forEach((component) => {
+                const item = document.createElement("div");
+                item.className = `drag-component ${component.type === "bar" ? "bar-piece" : ""}`;
+                item.dataset.componentId = component.id;
+                item.draggable = !aktivitas4State.reviewMode && !isComponentPlaced(component.id);
+
+                if (selectedComponentId === component.id) item.classList.add("selected");
+                if (isComponentPlaced(component.id)) item.classList.add("is-placed");
+
+                if (component.type === "bar") {
+                    const paletteHeight = Math.max(28, Math.round((component.height / 100) * 98));
+                    item.innerHTML = `
+                        <div class="draggable-bar-visual" style="height:${paletteHeight}px; background:${component.background};">${component.value}</div>
+                    `;
+                } else {
+                    item.classList.add("drag-text-component");
+                    item.textContent = component.text;
+                }
+
+                item.addEventListener("dragstart", handleDragStart);
+                item.addEventListener("click", () => handleComponentSelect(component.id));
+                palette.appendChild(item);
+            });
+
+            terapkanModeAktivitas4();
+        }
+
+        function renderDropHistogramCanvas() {
+            renderHistogramChart({
+                barsAreaId: "barsArea",
+                axisTicksId: "axisTicks",
+                xBoundariesId: "xBoundaries",
+                titleId: "dropTitle",
+                labelXId: "dropXLabel",
+                labelYId: "dropYLabel",
+                frekuensi: frekuensiUser,
+                maxY: getMaxYValue(),
+                judul: "",
+                labelX: "",
+                labelY: "",
+                asDropCanvas: true
+            });
+
+            renderPlacedText("dropTitle", placedComponents.title);
+            renderPlacedText("dropXLabel", placedComponents.xLabel);
+            renderPlacedText("dropYLabel", placedComponents.yLabel);
+            bindDropZones();
+        }
+
+        function renderPlacedText(targetId, componentId) {
+            const target = document.getElementById(targetId);
+            const component = getComponentById(componentId);
+            target.innerHTML = component ? component.text : "";
+        }
+
+        function bindDropZones() {
+            document.querySelectorAll(".drop-zone").forEach((zone) => {
+                zone.ondragover = (event) => {
                     if (aktivitas4State.reviewMode) return;
-                    const idx = Number(event.target.dataset.index);
-                    frekuensiUser[idx] = event.target.value === "" ? null : Number(event.target.value);
+                    event.preventDefault();
+                    zone.classList.add("drag-over");
+                };
+                zone.ondragleave = () => zone.classList.remove("drag-over");
+                zone.ondrop = handleDrop;
+                zone.onclick = () => handleDropZoneClick(zone);
+            });
+        }
+
+        function handleDragStart(event) {
+            if (aktivitas4State.reviewMode) return;
+            event.dataTransfer.setData("text/plain", event.currentTarget.dataset.componentId);
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            const zone = event.currentTarget;
+            zone.classList.remove("drag-over");
+            const componentId = event.dataTransfer.getData("text/plain");
+            placeComponent(componentId, zone);
+        }
+
+        function handleComponentSelect(componentId) {
+            if (aktivitas4State.reviewMode || isComponentPlaced(componentId)) return;
+            selectedComponentId = selectedComponentId === componentId ? null : componentId;
+            renderDraggableComponents();
+            document.querySelectorAll(".drop-zone").forEach((zone) => {
+                zone.classList.toggle("selected-target", Boolean(selectedComponentId));
+            });
+        }
+
+        function handleDropZoneClick(zone) {
+            if (aktivitas4State.reviewMode) return;
+
+            if (!selectedComponentId) {
+                const placedId = getDropZoneComponentId(zone);
+                if (placedId) {
+                    removeComponentPlacement(placedId);
+                    selectedComponentId = placedId;
                     histogramSudahDicek = false;
-                    renderHistogram();
-                    updateQuestStatus();
-                });
+                    histogramIsCorrect = false;
+                    renderDraggableComponents();
+                    renderDropHistogramCanvas();
+                }
+                return;
+            }
+
+            placeComponent(selectedComponentId, zone);
+        }
+
+        function placeComponent(componentId, zone) {
+            const component = getComponentById(componentId);
+            if (!component) return;
+
+            const dropType = zone.dataset.dropType;
+            const dropIndex = Number(zone.dataset.index);
+            removeComponentPlacement(componentId);
+
+            if (dropType === "title") {
+                if (placedComponents.title) removeComponentPlacement(placedComponents.title);
+                placedComponents.title = componentId;
+            } else if (dropType === "x-label") {
+                if (placedComponents.xLabel) removeComponentPlacement(placedComponents.xLabel);
+                placedComponents.xLabel = componentId;
+            } else if (dropType === "y-label") {
+                if (placedComponents.yLabel) removeComponentPlacement(placedComponents.yLabel);
+                placedComponents.yLabel = componentId;
+            } else if (dropType === "bar" && Number.isInteger(dropIndex)) {
+                if (placedComponents.bars[dropIndex]) removeComponentPlacement(placedComponents.bars[dropIndex]);
+                placedComponents.bars[dropIndex] = componentId;
+                frekuensiUser[dropIndex] = component.type === "bar" ? component.value : null;
+            }
+
+            selectedComponentId = null;
+            histogramSudahDicek = false;
+            histogramIsCorrect = false;
+            skorKecocokan = 0;
+            renderDraggableComponents();
+            renderDropHistogramCanvas();
+            updateQuestStatus();
+        }
+
+        function getDropZoneComponentId(zone) {
+            const dropType = zone.dataset.dropType;
+            const dropIndex = Number(zone.dataset.index);
+
+            if (dropType === "title") return placedComponents.title;
+            if (dropType === "x-label") return placedComponents.xLabel;
+            if (dropType === "y-label") return placedComponents.yLabel;
+            if (dropType === "bar" && Number.isInteger(dropIndex)) return placedComponents.bars[dropIndex];
+            return null;
+        }
+
+        function removeComponentPlacement(componentId) {
+            if (placedComponents.title === componentId) placedComponents.title = null;
+            if (placedComponents.xLabel === componentId) placedComponents.xLabel = null;
+            if (placedComponents.yLabel === componentId) placedComponents.yLabel = null;
+            placedComponents.bars = placedComponents.bars.map((item, index) => {
+                if (item === componentId) {
+                    frekuensiUser[index] = null;
+                    return null;
+                }
+                return item;
             });
         }
 
         function buildHistogramFeedback() {
-            let total = 0;
-            let detail = [];
-
-            frekuensiUser.forEach((fUser, i) => {
-                const fBenar = frekuensiBenar[i];
-                let skor;
-                if (fBenar === 0) {
-                    skor = fUser === 0 ? 1 : 0;
-                } else {
-                    skor = 1 - Math.abs(fUser - fBenar) / fBenar;
-                    if (skor < 0) skor = 0;
-                }
-                total += skor;
-                if (fUser !== fBenar) {
-                    detail.push(`Kelas ${intervalKelas[i]}: frekuensi yang kamu isi ${fUser}, seharusnya ${fBenar}.`);
-                }
-            });
-
+            const validation = validateHistogramArrangement();
             return {
-                score: Math.round((total / frekuensiBenar.length) * 100),
-                detail
+                score: validation.score,
+                detail: validation.isCorrect ? [] : ["Masih ada bagian yang belum tepat. Periksa kembali susunan histogrammu."]
             };
         }
 
         function renderHistogramResult(score, detail) {
-            document.getElementById("hasilPemeriksaanText").innerText =
-                score === 100
-                    ? "Histogram yang kamu buat sudah sesuai dengan tabel distribusi frekuensi."
-                    : "Histogram sudah terbentuk, tetapi masih ada beberapa bagian yang perlu diperbaiki.";
+            const isSuccess = score === 100;
+            const resultBox = document.getElementById("activity4ResultBox");
+            const resultText = document.getElementById("hasilPemeriksaanText");
+
+            resultBox.classList.remove("validation-success", "validation-error");
+            resultBox.classList.add(isSuccess ? "validation-success" : "validation-error");
+            resultText.className = `result-status-text validation-message ${isSuccess ? "is-success" : "is-error"}`;
+            resultText.innerText = isSuccess
+                ? "Histogram yang kamu susun sudah tepat."
+                : "Masih ada bagian yang belum tepat. Periksa kembali susunan histogrammu.";
 
             const pill = document.getElementById("resultPill");
             pill.style.display = "inline-flex";
+            pill.className = `result-pill ${isSuccess ? "validation-success" : "validation-error"}`;
             pill.innerText = `${score}% cocok`;
 
             const list = document.getElementById("feedbackList");
+            list.className = `feedback-list ${isSuccess ? "is-success" : "is-error"}`;
             list.innerHTML = "";
             if (detail.length === 0) {
-                list.innerHTML = "<li>Semua frekuensi pada histogram sudah sesuai.</li>";
+                list.innerHTML = "<li>Semua komponen histogram sudah berada pada posisi yang tepat.</li>";
                 return;
             }
 
@@ -863,7 +1253,7 @@
         }
 
         function renderHistogram() {
-            const maxY = Number(document.getElementById("maxYInput").value) || Math.max(...frekuensiBenar) + 1;
+            const maxY = getMaxYValue();
             const judul = document.getElementById("judulGrafikInput").value.trim() || `Histogram ${namaData}`;
             const labelX = document.getElementById("labelXInput").value.trim() || "Tepi Kelas";
             const labelY = document.getElementById("labelYInput").value.trim() || "Frekuensi";
@@ -872,9 +1262,9 @@
                 barsAreaId: "barsArea",
                 axisTicksId: "axisTicks",
                 xBoundariesId: "xBoundaries",
-                titleId: "displayJudulGrafik",
-                labelXId: "displayLabelX",
-                labelYId: "displayLabelY",
+                titleId: "dropTitle",
+                labelXId: "dropXLabel",
+                labelYId: "dropYLabel",
                 frekuensi: frekuensiUser,
                 maxY,
                 judul,
@@ -884,7 +1274,7 @@
         }
 
         function renderReferenceHistogram() {
-            const maxY = Number(document.getElementById("maxYInput").value) || Math.max(...frekuensiBenar) + 1;
+            const maxY = getMaxYValue();
             const judul = (document.getElementById("judulGrafikInput").value.trim() || `Histogram ${namaData}`) + " (Acuan)";
             const labelX = document.getElementById("labelXInput").value.trim() || "Tepi Kelas";
             const labelY = document.getElementById("labelYInput").value.trim() || "Frekuensi";
@@ -943,11 +1333,21 @@
                 const value = config.frekuensi[index] || 0;
                 const height = config.maxY === 0 ? 0 : (value / config.maxY) * 100;
                 const group = document.createElement("div");
-                group.className = "bar-group";
                 const background = HISTOGRAM_BAR_BACKGROUNDS[index % HISTOGRAM_BAR_BACKGROUNDS.length];
-                group.innerHTML = `
-                    <div class="bar" style="height:${height}%; background:${background};">${value > 0 ? value : ""}</div>
-                `;
+                group.className = config.asDropCanvas ? "drop-zone bar-drop-zone" : "bar-group";
+
+                if (config.asDropCanvas) {
+                    group.dataset.dropType = "bar";
+                    group.dataset.index = String(index);
+                    const component = getComponentById(placedComponents.bars[index]);
+                    if (component?.type === "bar") {
+                        group.innerHTML = `<div class="bar" style="height:${Math.max(component.height, 1)}%; background:${component.background};">${component.value > 0 ? component.value : ""}</div>`;
+                    }
+                } else {
+                    group.innerHTML = `
+                        <div class="bar" style="height:${height}%; background:${background};">${value > 0 ? value : ""}</div>
+                    `;
+                }
                 barsArea.appendChild(group);
             });
 
@@ -962,35 +1362,82 @@
                 xBoundaries.appendChild(tick);
             });
 
-            document.getElementById(config.titleId).innerText = config.judul;
-            document.getElementById(config.labelXId).innerText = config.labelX;
-            document.getElementById(config.labelYId).innerText = config.labelY;
+            if (!config.asDropCanvas) {
+                document.getElementById(config.titleId).innerText = config.judul;
+                document.getElementById(config.labelXId).innerText = config.labelX;
+                document.getElementById(config.labelYId).innerText = config.labelY;
+            }
+        }
+
+        function getMaxYValue() {
+            return Number(document.getElementById("maxYInput").value) || Math.max(...frekuensiBenar) + 1;
+        }
+
+        function validateHistogramArrangement() {
+            const checks = [
+                {
+                    targetId: "dropTitle",
+                    correct: placedComponents.title === "title"
+                },
+                {
+                    targetId: "dropXLabel",
+                    correct: placedComponents.xLabel === "x-label"
+                },
+                {
+                    targetId: "dropYLabel",
+                    correct: placedComponents.yLabel === "y-label"
+                },
+                ...intervalKelas.map((_, index) => ({
+                    targetId: `dropBar${index}`,
+                    correct: placedComponents.bars[index] === `bar-${index}`,
+                    index
+                }))
+            ];
+
+            const correctCount = checks.filter((item) => item.correct).length;
+
+            return {
+                isCorrect: correctCount === checks.length,
+                score: checks.length ? Math.round((correctCount / checks.length) * 100) : 0,
+                checks
+            };
+        }
+
+        function updateDropFeedback(validation) {
+            document.querySelectorAll(".drop-zone").forEach((zone) => {
+                zone.classList.remove("is-correct", "is-wrong");
+            });
+
+            validation.checks.forEach((item) => {
+                const target = item.index === undefined
+                    ? document.getElementById(item.targetId)
+                    : document.querySelector(`.bar-drop-zone[data-index="${item.index}"]`);
+                if (!target) return;
+                target.classList.add(item.correct ? "is-correct" : "is-wrong");
+            });
         }
 
         async function cekHistogram() {
-            const masihKosong = frekuensiUser.some((nilai) => nilai === 0 && frekuensiBenar.includes(nilai) === false);
-            const adaKosongInput = document.querySelectorAll("#freqInputGrid input").length !== intervalKelas.length ||
-                Array.from(document.querySelectorAll("#freqInputGrid input")).some((input) => input.value === "");
-
-            if (adaKosongInput) {
-                alert("Lengkapi dahulu frekuensi pada setiap kelas sebelum memeriksa histogram.");
-                return;
-            }
-
-            const feedback = buildHistogramFeedback();
-            skorKecocokan = feedback.score;
-            renderHistogramResult(skorKecocokan, feedback.detail);
-
+            const validation = validateHistogramArrangement();
+            skorKecocokan = validation.score;
+            histogramIsCorrect = validation.isCorrect;
             histogramSudahDicek = true;
+            updateDropFeedback(validation);
+            renderHistogramResult(skorKecocokan, validation.isCorrect ? [] : ["Masih ada bagian yang belum tepat. Periksa kembali susunan histogrammu."]);
+            frekuensiUser = validation.isCorrect ? frekuensiBenar.slice() : frekuensiUser;
             renderReferenceHistogram();
             await simpanHistogramKeStorage();
             updateQuestStatus();
-            setStudioStep(4);
+            if (validation.isCorrect) {
+                document.getElementById("dragPaletteNote").textContent = "Histogram yang kamu susun sudah tepat.";
+                setStudioStep(4);
+            } else {
+                document.getElementById("dragPaletteNote").textContent = "Masih ada bagian yang belum tepat. Periksa kembali susunan histogrammu.";
+            }
         }
 
         function semuaFrekuensiTerisi() {
-            const inputs = Array.from(document.querySelectorAll("#freqInputGrid input"));
-            return inputs.length === intervalKelas.length && inputs.every((input) => input.value !== "");
+            return histogramIsCorrect;
         }
 
         function updateQuestStatus() {
@@ -1004,7 +1451,7 @@
                 {
                     done: semuaFrekuensiTerisi() && histogramSudahDicek,
                     label: "Histogram utama terbentuk",
-                    note: "Frekuensi terisi lengkap dan histogram sudah diperiksa."
+                    note: "Komponen histogram sudah tersusun dan diperiksa."
                 },
                 {
                     done: Boolean(refleksi),
@@ -1029,6 +1476,11 @@
 
         async function submitAktivitas4() {
             const refleksi = document.getElementById("refleksi").value.trim();
+            if (!histogramIsCorrect) {
+                alert("Periksa histogram terlebih dahulu dan pastikan semua komponen sudah tepat.");
+                return;
+            }
+
             if (!refleksi) {
                 alert("Tuliskan terlebih dahulu interpretasi atau refleksimu terhadap histogram.");
                 return;
@@ -1037,7 +1489,7 @@
             await simpanHistogramKeStorage();
 
             const hasil = {
-                frekuensiUser,
+                frekuensiUser: frekuensiBenar.slice(),
                 frekuensiBenar,
                 intervalKelas,
                 judulGrafik: document.getElementById("judulGrafikInput").value.trim(),
@@ -1045,12 +1497,13 @@
                 labelY: document.getElementById("labelYInput").value.trim(),
                 maxY: document.getElementById("maxYInput").value,
                 refleksi,
-                kecocokan: skorKecocokan,
+                kecocokan: 100,
                 histogramImage: localStorage.getItem("histogramImage") || ""
             };
 
             localStorage.setItem("hasilAktivitas4", JSON.stringify(hasil));
             localStorage.setItem("aktivitas4", "true");
+            window.DraftAutosave?.clearDraft("aktivitas4");
             exitActivityEditMode(4);
 
             alert("Aktivitas 4 berhasil disimpan.");

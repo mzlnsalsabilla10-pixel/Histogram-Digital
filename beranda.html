@@ -25,6 +25,7 @@
             <a href="index.html#tujuan-pembelajaran">Tujuan Pembelajaran</a>
             <a href="index.html#panduan-penggunaan">Panduan Penggunaan</a>
             <a class="topnav-cta" href="beranda.html">Beranda Belajar</a>
+            <button class="topnav-logout" type="button" id="logoutButton">Keluar</button>
         </nav>
     </header>
 
@@ -133,7 +134,10 @@
         </div>
     </div>
 
-    <script src="script.js?v=20260423a"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="script.js?v=20260423b"></script>
     <script>
         const WORLD_DETAILS = {
             1: {
@@ -166,9 +170,20 @@
         };
         const WORLD_ART_VERSION = "20260409";
 
-        function isiSapaan() {
+        async function isiSapaan() {
+            if (window.HistogramAuth) {
+                const profile = await window.HistogramAuth.getCurrentProfile({ allowLegacyFallback: true });
+                if (profile) {
+                    document.getElementById("sapaanJudul").innerHTML = window.HistogramAuth.formatGreeting(profile);
+                    return;
+                }
+            }
+
             const namaLengkap = localStorage.getItem("namaLengkap") || "Murid";
-            document.getElementById("sapaanJudul").innerHTML = `Halo, <span>${namaLengkap}</span>!`;
+            const kelompok = localStorage.getItem("kelompokNama") || "";
+            document.getElementById("sapaanJudul").innerHTML = kelompok
+                ? `Halo, <span>${namaLengkap}</span> — ${kelompok}`
+                : `Halo, <span>${namaLengkap}</span>`;
         }
 
         function getWorldIllustrationMarkup(worldNo, title) {
@@ -235,7 +250,7 @@
             LEVEL_META.forEach((item) => {
                 const done = isLevelDone(item.no);
                 const unlocked = isLevelUnlocked(item.no);
-                const waitingPortal = item.no === 2 && !unlocked && isLevelDone(1);
+                const waitingPortal = item.no === 2 && !unlocked && isLevelDone(1) && localStorage.getItem("userType") !== "mandiri";
                 const stateClass = done ? "done" : unlocked ? "current" : "locked";
                 const stateText = done ? "Selesai" : waitingPortal ? "Akses" : unlocked ? "Mulai" : "Kunci";
                 const badgeClass = done ? "clear" : waitingPortal ? "portal" : unlocked ? "play" : "lock";
@@ -266,6 +281,7 @@
             });
 
             focusCurrentWorld(progress.nextLevel);
+            requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "auto" }));
         }
 
         function focusCurrentWorld(nextLevel) {
@@ -277,7 +293,12 @@
             const target = slides[targetIndex];
             if (target) {
                 setTimeout(() => {
-                    target.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+                    const laneCenter = lane.clientWidth / 2;
+                    const targetCenter = target.offsetLeft + (target.offsetWidth / 2);
+                    lane.scrollTo({
+                        left: Math.max(0, targetCenter - laneCenter),
+                        behavior: "smooth"
+                    });
                 }, 120);
             }
         }
@@ -293,7 +314,7 @@
         function handleWorldClick(worldNo) {
             const unlocked = isLevelUnlocked(worldNo);
             const done = isLevelDone(worldNo);
-            const canOpenPortal = worldNo === 2 && isLevelDone(1);
+            const canOpenPortal = worldNo === 2 && isLevelDone(1) && localStorage.getItem("userType") !== "mandiri";
 
             if (!unlocked && !done && !canOpenPortal) {
                 triggerLockedAnimation(worldNo);
@@ -326,7 +347,7 @@
             const detail = WORLD_DETAILS[worldNo];
             const done = isLevelDone(worldNo);
             const unlocked = isLevelUnlocked(worldNo);
-            const canOpenPortal = worldNo === 2 && isLevelDone(1) && !unlocked;
+            const canOpenPortal = worldNo === 2 && isLevelDone(1) && !unlocked && localStorage.getItem("userType") !== "mandiri";
             const modal = document.getElementById("worldModal");
             const enterButton = document.getElementById("modalEnterButton");
             const passwordWrap = document.getElementById("modalPasswordWrap");
@@ -402,7 +423,7 @@
             menuToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
         });
 
-        dashboardNav.querySelectorAll("a").forEach((link) => {
+        dashboardNav.querySelectorAll("a, button").forEach((link) => {
             link.addEventListener("click", () => {
                 if (window.innerWidth <= 980) {
                     tutupMenu();
@@ -423,5 +444,6 @@
             }
         });
     </script>
+    <script src="js/beranda.js"></script>
 </body>
 </html>

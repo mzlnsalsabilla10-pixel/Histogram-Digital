@@ -32,30 +32,31 @@
         <section class="content-section form-section single-form-section">
             <div class="section-heading">
                 <span class="section-kicker">Mulai Belajar</span>
-                <h2>Isi identitas diri terlebih dahulu</h2>
-                <p>Data ini digunakan untuk mencatat proses dan hasil belajar selama menggunakan media.</p>
+                <h2>Masuk ke akun pembelajaran</h2>
+                <p>Gunakan kode akun dari guru atau email yang sudah terdaftar untuk melanjutkan belajar.</p>
             </div>
 
             <div class="login-shell">
                 <form class="login-container modern-login" id="loginForm">
                     <div class="inputBox">
-                        <label for="namaLengkap">Nama Lengkap</label>
-                        <input type="text" id="namaLengkap" placeholder="Masukkan nama lengkap">
+                        <label for="loginIdentifier">Kode Akun / Email</label>
+                        <input type="text" id="loginIdentifier" autocomplete="username" placeholder="Contoh: S001 atau nama@email.com">
                     </div>
 
                     <div class="inputBox">
-                        <label for="kelompokNama">Nama Kelompok</label>
-                        <input type="text" id="kelompokNama" placeholder="Misal: Kelompok Histogram 1">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" autocomplete="current-password" placeholder="Masukkan password">
                     </div>
 
-                    <div class="inputBox">
-                        <label for="kelompokKelas">Kelas / Rombel</label>
-                        <input type="text" id="kelompokKelas" placeholder="Misal: X-3">
-                    </div>
+                    <p class="auth-message" id="authMessage" hidden></p>
 
-                    <button class="button landing-submit" type="submit">
-                        Masuk ke Beranda Belajar
+                    <button class="button landing-submit" type="submit" id="loginSubmitButton">
+                        Masuk
                     </button>
+
+                    <p class="auth-switch">
+                        Belum punya akun? <a href="register.html">Daftar</a>
+                    </p>
                 </form>
             </div>
         </section>
@@ -66,7 +67,6 @@
         const loginTopbarSpacer = document.getElementById("loginTopbarSpacer");
         const loginMenuToggle = document.getElementById("loginMenuToggle");
         const loginNav = document.getElementById("loginNav");
-        const loginForm = document.getElementById("loginForm");
 
         function tutupLoginMenu() {
             loginTopbar.classList.remove("menu-open");
@@ -121,28 +121,10 @@
         updateLoginTopbarMetrics();
         toggleLoginTopbar();
 
-        function mulai() {
-            let namaLengkap = document.getElementById("namaLengkap").value.trim();
-            let nama = document.getElementById("kelompokNama").value.trim();
-            let kelas = document.getElementById("kelompokKelas").value.trim();
-
-            if (!namaLengkap || !nama || !kelas) {
-                alert("Semua data harus diisi ya!");
-                return;
-            }
-
-            localStorage.setItem("namaLengkap", namaLengkap);
-            localStorage.setItem("kelompokNama", nama);
-            localStorage.setItem("kelompokKelas", kelas);
-            localStorage.setItem("login", "true");
-
-            window.location.href = "beranda.html";
-        }
-
-        loginForm.addEventListener("submit", (event) => {
-            event.preventDefault();
-            mulai();
-        });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/login.js"></script>
 </body>
 </html>

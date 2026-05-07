@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun Pembelajaran Histogram</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="landing-body arcade-skin">
+    <header class="topbar sticky-topbar has-hamburger" id="registerTopbar">
+        <div class="brand-mark">
+            <span class="brand-dot"></span>
+            <div>
+                <strong>Histogram Digital</strong>
+                <p>Daftar akun mandiri</p>
+            </div>
+        </div>
+        <button class="menu-toggle" type="button" id="registerMenuToggle" aria-expanded="false" aria-controls="registerNav" aria-label="Buka menu navigasi">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav class="topnav nav-drawer" id="registerNav">
+            <a href="index.html#tentang-media">Tentang Media</a>
+            <a href="index.html#tujuan-pembelajaran">Tujuan Pembelajaran</a>
+            <a href="login.html">Masuk</a>
+        </nav>
+    </header>
+    <div class="topbar-spacer" id="registerTopbarSpacer" aria-hidden="true"></div>
+
+    <main class="landing-main">
+        <section class="content-section form-section single-form-section">
+            <div class="section-heading">
+                <span class="section-kicker">Akun Mandiri</span>
+                <h2>Daftar untuk belajar mandiri</h2>
+                <p>Akun mandiri tidak memakai kelas atau kelompok karena digunakan untuk belajar secara individual.</p>
+            </div>
+
+            <div class="login-shell">
+                <form class="login-container modern-login" id="registerForm">
+                    <div class="inputBox">
+                        <label for="registerFullName">Nama Lengkap</label>
+                        <input type="text" id="registerFullName" autocomplete="name" placeholder="Masukkan nama lengkap">
+                    </div>
+
+                    <div class="inputBox">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" autocomplete="email" placeholder="nama@email.com">
+                    </div>
+
+                    <div class="inputBox">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" autocomplete="new-password" placeholder="Minimal 6 karakter">
+                    </div>
+
+                    <div class="inputBox">
+                        <label for="registerConfirmPassword">Konfirmasi Password</label>
+                        <input type="password" id="registerConfirmPassword" autocomplete="new-password" placeholder="Ulangi password">
+                    </div>
+
+                    <p class="auth-message" id="authMessage" hidden></p>
+
+                    <button class="button landing-submit" type="submit" id="registerSubmitButton">
+                        Daftar
+                    </button>
+
+                    <p class="auth-switch">
+                        Sudah punya akun? <a href="login.html">Masuk</a>
+                    </p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const registerTopbar = document.getElementById("registerTopbar");
+        const registerTopbarSpacer = document.getElementById("registerTopbarSpacer");
+        const registerMenuToggle = document.getElementById("registerMenuToggle");
+        const registerNav = document.getElementById("registerNav");
+
+        function tutupRegisterMenu() {
+            registerTopbar.classList.remove("menu-open");
+            registerMenuToggle.setAttribute("aria-expanded", "false");
+        }
+
+        registerMenuToggle.addEventListener("click", () => {
+            const isOpen = registerTopbar.classList.toggle("menu-open");
+            registerMenuToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+
+        registerNav.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                if (window.innerWidth <= 980) {
+                    tutupRegisterMenu();
+                }
+            });
+        });
+
+        document.addEventListener("click", (event) => {
+            if (window.innerWidth > 980) return;
+            if (!registerTopbar.contains(event.target)) {
+                tutupRegisterMenu();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 980) {
+                tutupRegisterMenu();
+            }
+            updateRegisterTopbarMetrics();
+            toggleRegisterTopbar();
+        });
+
+        function updateRegisterTopbarMetrics() {
+            registerTopbarSpacer.style.setProperty("--topbar-space", `${registerTopbar.offsetHeight + 8}px`);
+        }
+
+        let registerTopbarFloating = false;
+
+        function toggleRegisterTopbar() {
+            const shouldFloat = window.scrollY > 12;
+            if (shouldFloat === registerTopbarFloating) return;
+
+            registerTopbarFloating = shouldFloat;
+            registerTopbar.classList.toggle("is-floating", shouldFloat);
+            registerTopbarSpacer.classList.toggle("active", shouldFloat);
+            updateRegisterTopbarMetrics();
+        }
+
+        window.addEventListener("scroll", toggleRegisterTopbar, { passive: true });
+        updateRegisterTopbarMetrics();
+        toggleRegisterTopbar();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/register.js"></script>
+</body>
+</html>

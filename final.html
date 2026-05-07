@@ -338,11 +338,11 @@
                     <strong>Nama Lengkap</strong>
                     <span id="identitasNamaLengkap">-</span>
                 </div>
-                <div class="identity-item">
+                <div class="identity-item" id="identityGroupItem">
                     <strong>Nama Kelompok</strong>
                     <span id="identitasKelompok">-</span>
                 </div>
-                <div class="identity-item">
+                <div class="identity-item" id="identityClassItem">
                     <strong>Kelas / Rombel</strong>
                     <span id="identitasKelas">-</span>
                 </div>
@@ -372,7 +372,10 @@
         </section>
     </main>
 
-    <script src="script.js?v=20260423a"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="script.js?v=20260423b"></script>
     <script>
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxC00bXwymu9NeURPzCwosi9XnEOa-eoKNjPQl2_pNWcruokxUdNUuggElAfuGHFyi5/exec";
         let finalData = {};
@@ -651,8 +654,10 @@
 
         function renderHero() {
             document.getElementById("finalGreeting").innerText = `Selamat, ${finalData.identitas.namaLengkap}!`;
-            document.getElementById("finalIntro").innerText =
-                `Kamu dari ${finalData.identitas.kelompokNama} kelas ${finalData.identitas.kelompokKelas} sudah menuntaskan lima aktivitas pembelajaran histogram. Sekarang kamu bisa melihat rangkuman kemenangan dan laporan hasil kerja dari awal sampai akhir.`;
+            const punyaKelompok = finalData.identitas.kelompokNama && finalData.identitas.kelompokNama !== "-";
+            document.getElementById("finalIntro").innerText = punyaKelompok
+                ? `Kamu dari ${finalData.identitas.kelompokNama} kelas ${finalData.identitas.kelompokKelas} sudah menuntaskan lima aktivitas pembelajaran histogram. Sekarang kamu bisa melihat rangkuman kemenangan dan laporan hasil kerja dari awal sampai akhir.`
+                : "Kamu sudah menuntaskan lima aktivitas pembelajaran histogram secara mandiri. Sekarang kamu bisa melihat rangkuman kemenangan dan laporan hasil kerja dari awal sampai akhir.";
         }
 
         function renderVictorySummary() {
@@ -705,9 +710,15 @@
         }
 
         function renderIdentity() {
+            const punyaKelompok = finalData.identitas.kelompokNama && finalData.identitas.kelompokNama !== "-";
             document.getElementById("identitasNamaLengkap").innerText = finalData.identitas.namaLengkap;
-            document.getElementById("identitasKelompok").innerText = finalData.identitas.kelompokNama;
-            document.getElementById("identitasKelas").innerText = finalData.identitas.kelompokKelas;
+            document.getElementById("identityGroupItem").style.display = punyaKelompok ? "" : "none";
+            document.getElementById("identityClassItem").style.display = punyaKelompok ? "" : "none";
+
+            if (punyaKelompok) {
+                document.getElementById("identitasKelompok").innerText = finalData.identitas.kelompokNama;
+                document.getElementById("identitasKelas").innerText = finalData.identitas.kelompokKelas;
+            }
         }
 
         function renderStatus() {
@@ -793,8 +804,10 @@
         <h2>Identitas Murid</h2>
         <div class="card">
             <p><strong>Nama Lengkap:</strong> ${escapeHtml(finalData.identitas.namaLengkap)}</p>
-            <p><strong>Nama Kelompok:</strong> ${escapeHtml(finalData.identitas.kelompokNama)}</p>
-            <p><strong>Kelas / Rombel:</strong> ${escapeHtml(finalData.identitas.kelompokKelas)}</p>
+            ${finalData.identitas.kelompokNama && finalData.identitas.kelompokNama !== "-"
+                ? `<p><strong>Nama Kelompok:</strong> ${escapeHtml(finalData.identitas.kelompokNama)}</p>
+            <p><strong>Kelas / Rombel:</strong> ${escapeHtml(finalData.identitas.kelompokKelas)}</p>`
+                : ""}
             <p><strong>Data yang Digunakan:</strong> ${escapeHtml(finalData.identitas.namaData)}</p>
             <p><strong>Satuan:</strong> ${escapeHtml(finalData.identitas.satuanData)}</p>
         </div>
@@ -862,7 +875,7 @@
             <p><strong>Judul histogram:</strong> ${escapeHtml(hasil4.judulGrafik || "-")}</p>
             <p><strong>Label sumbu X:</strong> ${escapeHtml(hasil4.labelX || "-")}</p>
             <p><strong>Label sumbu Y:</strong> ${escapeHtml(hasil4.labelY || "-")}</p>
-            <p><strong>Frekuensi yang diisi murid:</strong> ${escapeHtml((hasil4.frekuensiUser || []).join(", "))}</p>
+            <p><strong>Susunan frekuensi histogram:</strong> ${escapeHtml((hasil4.frekuensiUser || []).join(", "))}</p>
             <p><strong>Frekuensi acuan:</strong> ${escapeHtml((hasil4.frekuensiBenar || []).join(", "))}</p>
             <p><strong>Tingkat kecocokan:</strong> ${hasil4.kecocokan ?? "-"}${hasil4.kecocokan !== undefined ? "%" : ""}</p>
             <p><strong>Interpretasi histogram:</strong> ${escapeHtml(hasil4.refleksi || "-")}</p>
@@ -1023,11 +1036,24 @@
             }
         }
 
-        function selesaiDanKeluar() {
-            const yakin = confirm("Setelah keluar, sesi belajar akan ditutup dan data lokal pada browser ini akan dibersihkan. Apakah kamu yakin ingin keluar?");
+        async function selesaiDanKeluar() {
+            const yakin = confirm("Setelah keluar, sesi login akan ditutup. Progress aktivitas di browser ini tetap disimpan. Apakah kamu yakin ingin keluar?");
             if (!yakin) return;
 
-            localStorage.clear();
+            if (window.HistogramAuth) {
+                await window.HistogramAuth.signOutAndReset({ redirectTo: "index.html" });
+                return;
+            }
+
+            [
+                "login",
+                "namaLengkap",
+                "kelompokNama",
+                "kelompokKelas",
+                "userType",
+                "userId",
+                "supabaseProfile"
+            ].forEach((key) => localStorage.removeItem(key));
             window.location.href = "index.html";
         }
     </script>

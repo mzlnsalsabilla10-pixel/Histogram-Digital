@@ -54,10 +54,22 @@ const LEVEL_META = [
     }
 ];
 
-function cekLogin() {
-    if (!localStorage.getItem("namaLengkap") || !localStorage.getItem("kelompokNama") || !localStorage.getItem("kelompokKelas")) {
-        window.location.href = "login.html";
+async function cekLogin() {
+    try {
+        if (window.HistogramAuth) {
+            const profile = await window.HistogramAuth.requireLoggedIn({ redirectTo: "login.html" });
+            return Boolean(profile);
+        }
+    } catch (error) {
+        console.warn("Gagal memeriksa session Supabase, memakai fallback lokal sementara.", error);
     }
+
+    if (!localStorage.getItem("namaLengkap")) {
+        window.location.href = "login.html";
+        return false;
+    }
+
+    return true;
 }
 
 /* ============================================================
@@ -106,7 +118,12 @@ function isLevelDone(no) {
 
 function isLevelUnlocked(no) {
     if (no === 1) return true;
-    if (no === 2) return localStorage.getItem("aktivitas2_unlock") === "true";
+    if (no === 2) {
+        if (localStorage.getItem("userType") === "mandiri") {
+            return isLevelDone(1);
+        }
+        return localStorage.getItem("aktivitas2_unlock") === "true";
+    }
     return isLevelDone(no - 1);
 }
 
@@ -254,8 +271,9 @@ function setDisabledState(selectors, isDisabled) {
 /* ============================================================
    CEK IZIN AKSES (Agar tidak lompat aktivitas)
    ============================================================ */
-function cekAkses(noAktivitas) {
-    cekLogin();
+async function cekAkses(noAktivitas) {
+    const loggedIn = await cekLogin();
+    if (!loggedIn) return;
 
     if (noAktivitas > 1) {
         const prev = noAktivitas - 1;

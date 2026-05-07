@@ -32,9 +32,13 @@
         .concept-summary-head { margin-top: 22px; margin-bottom: 18px; }
         .concept-summary-head h2 { font-family: 'Sora', sans-serif; color: #cf2727; font-size: clamp(1.3rem, 2vw, 1.85rem); margin-top: 8px; }
         .concept-summary-head p { color: #5f678c; line-height: 1.75; margin-top: 10px; }
+        .learning-section { background: #f8faff; border: 1px solid rgba(86,99,164,.14); border-radius: 26px; padding: 22px; margin-top: 24px; }
+        .learning-section:first-of-type { margin-top: 26px; }
+        .learning-section-head h3 { font-family: 'Sora', sans-serif; color: #21358e; margin-top: 10px; }
+        .learning-section-head p { color: #5f678c; line-height: 1.75; margin-top: 10px; }
         .activity3-hud.status-only { grid-template-columns: 1fr; }
         .activity3-hud.status-only .quest-board { display: none; }
-        .concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 26px; }
+        .concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 24px; }
         .video-box, .note-box, .concept-list, .data-box, .calc-box { background: #f8faff; border: 1px solid rgba(86,99,164,.14); border-radius: 24px; padding: 20px; }
         .video-frame { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 20px; background: #dfe6ff; margin-top: 14px; }
         .video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
@@ -43,7 +47,17 @@
         .video-fallback p { color: #6a7294; font-size: 14px; }
         textarea, input { width: 100%; padding: 12px 14px; border-radius: 16px; border: 1px solid rgba(86,99,164,.18); background: white; }
         textarea { min-height: 140px; resize: vertical; }
-        .concept-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 18px; margin-top: 24px; }
+        .section-helper { color: #5f678c; line-height: 1.7; }
+        .note-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 18px; }
+        .note-feedback, .feedback { margin-top: 16px; padding: 16px 18px; border-radius: 18px; border: 1px solid transparent; background: #eef4ff; color: #3154d7; font-weight: 800; display: none; }
+        .note-feedback.is-success, .feedback.is-success { background: #ecfdf3; border-color: rgba(11,127,114,.22); }
+        .note-feedback.is-error, .feedback.is-error { background: #fff1f3; border-color: rgba(217,45,32,.18); }
+        .note-feedback.is-neutral, .feedback.is-neutral { background: #eef4ff; border-color: rgba(49,84,215,.16); }
+        .summary-reveal { display: none; }
+        .summary-reveal.active { display: block; animation: fadeUp .4s ease; }
+        .summary-order-note { margin-top: 18px; padding: 16px 18px; border-radius: 20px; background: rgba(255,184,92,.16); border: 1px solid rgba(255,184,92,.3); color: #7a5b17; line-height: 1.75; }
+        .summary-order-note strong { color: #7a4b20; }
+        .concept-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 18px; margin-top: 20px; }
         .concept { background: white; border: 1px solid rgba(86,99,164,.14); border-radius: 20px; padding: 16px; }
         .formula { display: inline-flex; margin-top: 10px; padding: 8px 12px; border-radius: 14px; background: rgba(49,84,215,.08); color: #3154d7; font-weight: 700; }
         .example { margin-top: 10px; padding: 10px 12px; border-radius: 14px; background: rgba(255,184,92,.14); color: #765716; line-height: 1.7; }
@@ -59,8 +73,9 @@
         .stat strong { color: #21358e; font-size: 24px; }
         .calc-stack { display: grid; gap: 14px; }
         .calc { background: white; border: 1px solid rgba(86,99,164,.14); border-radius: 20px; padding: 16px; }
-        .helper { margin-top: 8px; font-size: 13px; color: #6a7294; }
-        .helper.ok { color: #0b7f72; font-weight: 700; }
+        .helper { margin-top: 8px; font-size: 0.98rem; color: #6a7294; line-height: 1.65; font-weight: 700; }
+        .helper.is-success { color: #0b7f72; }
+        .helper.is-error { color: #b42318; }
         .btn-row, .nav-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-top: 20px; }
         .btn-lite { border: 1px solid rgba(49,84,215,.16); background: rgba(49,84,215,.08); color: #3154d7; }
         .a3-btn { border: none; border-radius: 16px; padding: 13px 18px; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, #3154d7, #5e7bff); color: white; }
@@ -73,7 +88,6 @@
         td input { background: #f8faff; }
         .freq-pill { display: inline-flex; min-width: 42px; justify-content: center; padding: 8px 12px; border-radius: 999px; background: rgba(24,183,163,.14); color: #0b7f72; font-weight: 800; animation: popIn .3s ease; }
         @keyframes popIn { from { opacity: 0; transform: scale(.82);} to { opacity: 1; transform: scale(1);} }
-        .feedback { margin-top: 16px; padding: 16px 18px; border-radius: 18px; background: #eef4ff; color: #3154d7; font-weight: 700; display: none; }
         .summary-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 18px; }
         .summary-stat { background: #f8faff; border: 1px solid rgba(86,99,164,.14); border-radius: 20px; padding: 16px; }
         .summary-stat span { display: block; font-size: 13px; color: #6a7294; margin-bottom: 8px; }
@@ -119,6 +133,7 @@
             .steps { padding: 18px; }
             .concept-grid, .main-grid { gap: 18px; margin-top: 18px; }
             .concept-list { gap: 14px; margin-top: 18px; }
+            .note-actions { flex-direction: column; align-items: stretch; }
             th, td { padding: 12px 10px; font-size: 13px; }
         }
     </style>
@@ -217,38 +232,60 @@
                     <p>Baca konsep singkat berikut, tonton video penguat, lalu tuliskan catatan pentingmu sebelum lanjut ke pengolahan data.</p>
                 </div>
 
-                <div class="concept-grid">
-                    <div class="video-box">
-                        <h3>Video Penguat Materi</h3>
-                        <p>Video ini dapat digunakan sebagai penguat tambahan untuk memahami tabel distribusi frekuensi.</p>
-                        <div class="video-frame">
-                            <iframe src="https://www.youtube-nocookie.com/embed/zT4Pk6m0KtQ?rel=0&modestbranding=1" title="Video tabel distribusi frekuensi" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <div class="learning-section">
+                    <div class="learning-section-head">
+                        <span class="section-kicker">Section 1</span>
+                        <h3>Isi catatan inti dari video</h3>
+                        <p>Tonton video penguat, lalu tuliskan poin penting yang kamu tangkap tentang langkah menyusun tabel distribusi frekuensi dan histogram.</p>
+                    </div>
+
+                    <div class="concept-grid">
+                        <div class="video-box">
+                            <h3>Video Penguat Materi</h3>
+                            <p>Video ini dapat digunakan sebagai penguat tambahan untuk memahami tabel distribusi frekuensi.</p>
+                            <div class="video-frame">
+                                <iframe src="https://www.youtube-nocookie.com/embed/zT4Pk6m0KtQ?rel=0&modestbranding=1" title="Video tabel distribusi frekuensi" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                            <div class="video-fallback">
+                                <a class="a3-btn btn-lite" href="https://www.youtube.com/watch?v=zT4Pk6m0KtQ" target="_blank" rel="noopener noreferrer">Buka Video di YouTube</a>
+                                <p>Gunakan tautan ini jika video tidak bisa diputar langsung di dalam web.</p>
+                            </div>
                         </div>
-                        <div class="video-fallback">
-                            <a class="a3-btn btn-lite" href="https://www.youtube.com/watch?v=zT4Pk6m0KtQ" target="_blank" rel="noopener noreferrer">Buka Video di YouTube</a>
-                            <p>Gunakan tautan ini jika video tidak bisa diputar langsung di dalam web.</p>
+                        <div class="note-box">
+                            <h3>Catatan Inti</h3>
+                            <p>Tuliskan hal penting yang kamu pahami dari video, misalnya minimum-maksimum, jangkauan, banyak kelas, interval, atau frekuensi.</p>
+                            <textarea id="catatanKonsep" placeholder="Tuliskan catatan pentingmu di sini..."></textarea>
                         </div>
                     </div>
-                    <div class="note-box">
-                        <h3>Catatan Inti</h3>
-                        <p>Tuliskan hal penting yang kamu pahami dari materi atau video, misalnya arti jangkauan, banyak kelas, atau frekuensi.</p>
-                        <textarea id="catatanKonsep" placeholder="Tuliskan catatan pentingmu di sini..."></textarea>
+
+                    <div class="note-actions">
+                        <button class="a3-btn btn-lite" type="button" id="activity3SummaryCheckButton" onclick="cekCatatanKonsep()">Cek Ringkasan</button>
+                        <p class="section-helper">Setelah catatan diisi, gunakan tombol ini untuk melihat apakah catatanmu sudah memuat poin penting dari video dan untuk membuka rangkuman penguatan.</p>
                     </div>
+
+                    <div class="note-feedback validation-message" id="conceptFeedback"></div>
                 </div>
 
-                <div class="concept-summary-head">
-                    <span class="section-kicker">Catatan</span>
-                    <h2>Rangkuman konsep penting</h2>
-                    <p>Gunakan rangkuman ini sebagai bekal sebelum menyalakan mesin tabel dan menghitung distribusi frekuensi.</p>
-                </div>
+                <div class="learning-section summary-reveal" id="conceptSummarySection">
+                    <div class="learning-section-head">
+                        <span class="section-kicker">Section 2</span>
+                        <h3>Rangkuman langkah membuat histogram</h3>
+                        <p>Gunakan rangkuman berikut sebagai penguatan setelah menonton video. Baca dari atas ke bawah karena langkah membuat histogram harus dilakukan secara urut.</p>
+                    </div>
 
-                <div class="concept-list">
-                    <article class="concept"><h3>Data Terurut</h3><p>Data disusun dari nilai terkecil ke terbesar agar lebih mudah dianalisis.</p><div class="example">Contoh: 150, 152, 154, 156, 160</div></article>
-                    <article class="concept"><h3>Minimum dan Maksimum</h3><p>Minimum adalah data terkecil, maksimum adalah data terbesar.</p><div class="example">Keduanya menjadi batas awal untuk menghitung jangkauan.</div></article>
-                    <article class="concept"><h3>Jangkauan</h3><p>Jangkauan menunjukkan lebar sebaran data.</p><div class="formula">R = maksimum - minimum</div></article>
-                    <article class="concept"><h3>Banyak Kelas</h3><p>Banyak kelas menunjukkan berapa kelompok interval yang akan dipakai.</p><div class="formula">k = 1 + 3,3 log n</div></article>
-                    <article class="concept"><h3>Panjang Interval</h3><p>Panjang interval adalah lebar setiap kelas.</p><div class="formula">i = R / k</div></article>
-                    <article class="concept"><h3>Frekuensi</h3><p>Frekuensi adalah banyaknya data yang masuk ke dalam suatu kelas.</p><div class="example">Semakin banyak data dalam kelas, semakin besar frekuensinya.</div></article>
+                    <div class="summary-order-note">
+                        <strong>Catatan penting:</strong> langkah membuat histogram harus dilakukan berurutan. Jika satu langkah terlewat, hasil tabel distribusi frekuensi dan histogram bisa menjadi tidak tepat.
+                    </div>
+
+                    <div class="concept-list">
+                        <article class="concept"><h3>Mengurutkan Data</h3><p>Urutkan data dari nilai terkecil ke nilai terbesar agar sebaran data lebih mudah dibaca dan proses berikutnya lebih rapi.</p><div class="example">Contoh: 150, 152, 154, 156, 160.</div></article>
+                        <article class="concept"><h3>Menentukan Nilai Minimum dan Maksimum</h3><p>Tentukan data terkecil sebagai minimum dan data terbesar sebagai maksimum. Kedua nilai ini menjadi dasar saat menghitung jangkauan.</p><div class="example">Minimum menunjukkan batas awal data, sedangkan maksimum menunjukkan batas akhir data.</div></article>
+                        <article class="concept"><h3>Menghitung Jangkauan Data</h3><p>Hitung jangkauan untuk mengetahui lebar sebaran data dengan mengurangkan nilai maksimum dan minimum.</p><div class="formula">R = maksimum - minimum</div></article>
+                        <article class="concept"><h3>Menentukan Banyak Kelas</h3><p>Tentukan berapa banyak interval kelas yang akan dipakai. Pada materi ini, banyak kelas dapat dicari dengan Aturan Sturges.</p><div class="formula">k = 1 + 3,3 log n</div></article>
+                        <article class="concept"><h3>Menentukan Panjang Interval Kelas</h3><p>Hitung lebar setiap interval kelas dengan membagi jangkauan data oleh banyak kelas, lalu sesuaikan pembulatannya agar semua data dapat masuk.</p><div class="formula">i = R / k</div></article>
+                        <article class="concept"><h3>Menyusun Interval Kelas</h3><p>Susun interval kelas mulai dari nilai minimum, lalu lanjutkan secara berurutan sampai seluruh data tercakup tanpa ada kelas yang tumpang tindih.</p><div class="example">Jika kelas pertama berakhir di 58, maka kelas berikutnya dimulai dari 59.</div></article>
+                        <article class="concept"><h3>Menghitung Frekuensi Tiap Kelas</h3><p>Masukkan setiap data ke interval yang sesuai, lalu hitung banyak data pada tiap interval untuk memperoleh frekuensi.</p><div class="example">Jumlah seluruh frekuensi harus sama dengan jumlah data awal.</div></article>
+                    </div>
                 </div>
 
                 <div class="nav-row">
@@ -376,7 +413,12 @@
         </section>
     </main>
 
-    <script src="script.js?v=20260423a"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/learningResponses.js"></script>
+    <script src="js/draftAutosave.js"></script>
+    <script src="script.js?v=20260423b"></script>
     <script>
         let data = [];
         let minVal = 0;
@@ -388,6 +430,7 @@
         let frekuensiBenar = [];
         let hitungSudahBenar = false;
         let tabelSudahBenar = false;
+        let ringkasanKonsepSudahDicek = false;
         let aktivitas3State = { submitted: false, reviewMode: false, editMode: false };
 
         function initA3() {
@@ -400,7 +443,14 @@
 
             setStep(1);
             terapkanPerilakuInputInteger();
-            document.getElementById("catatanKonsep").addEventListener("input", updateQuestStatus);
+            document.getElementById("catatanKonsep").addEventListener("input", () => {
+                if (!aktivitas3State.reviewMode) {
+                    resetRingkasanKonsep();
+                }
+                updateQuestStatus();
+            });
+            initLearningResponsesAktivitas3();
+            siapkanSessionJawabanAktivitas3();
             ["inputRange", "inputKelas", "inputInterval"].forEach((id) => {
                 document.getElementById(id).addEventListener("input", () => {
                     hitungSudahBenar = false;
@@ -410,8 +460,128 @@
             });
 
             muatJawabanAktivitas3();
+            initDraftAutosaveAktivitas3();
             terapkanModeAktivitas3();
             updateQuestStatus();
+        }
+
+        function collectDraftAktivitas3() {
+            return {
+                catatanKonsep: document.getElementById("catatanKonsep").value,
+                ringkasanKonsepSudahDicek,
+                inputRange: document.getElementById("inputRange").value,
+                inputKelas: document.getElementById("inputKelas").value,
+                inputInterval: document.getElementById("inputInterval").value,
+                tableRows: Array.from(document.querySelectorAll("#tabelInterval tr")).map((row) => ({
+                    bawah: row.querySelector(".bawah")?.value || "",
+                    atas: row.querySelector(".atas")?.value || "",
+                    frekuensi: row.querySelector(".frekuensi-input")?.value || ""
+                }))
+            };
+        }
+
+        function escapeDraftAttrAktivitas3(value) {
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/"/g, "&quot;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        function saveDraftNowAktivitas3() {
+            if (aktivitas3State.submitted) return;
+            window.DraftAutosave?.saveDraft("aktivitas3", collectDraftAktivitas3());
+        }
+
+        function restoreDraftAktivitas3(draft) {
+            document.getElementById("catatanKonsep").value = draft.catatanKonsep || "";
+            document.getElementById("inputRange").value = draft.inputRange || "";
+            document.getElementById("inputKelas").value = draft.inputKelas || "";
+            document.getElementById("inputInterval").value = draft.inputInterval || "";
+            ringkasanKonsepSudahDicek = Boolean(draft.ringkasanKonsepSudahDicek);
+
+            if (ringkasanKonsepSudahDicek) {
+                document.getElementById("conceptSummarySection").classList.add("active");
+            }
+
+            const rows = Array.isArray(draft.tableRows) ? draft.tableRows : [];
+            if (rows.length) {
+                const tbody = document.getElementById("tabelInterval");
+                tbody.innerHTML = "";
+                rows.forEach((item, index) => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>K${index + 1}</td>
+                        <td><input type="text" class="bawah" data-integer-input="true" inputmode="numeric" value="${escapeDraftAttrAktivitas3(item.bawah)}"></td>
+                        <td><input type="text" class="atas" data-integer-input="true" inputmode="numeric" value="${escapeDraftAttrAktivitas3(item.atas)}"></td>
+                        <td><input type="text" class="frekuensi-input" data-integer-input="true" inputmode="numeric" value="${escapeDraftAttrAktivitas3(item.frekuensi)}" placeholder="f"></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+                terapkanPerilakuInputInteger(tbody);
+                document.getElementById("tableShell").style.display = "block";
+                document.getElementById("tableActions").style.display = "flex";
+                document.getElementById("intervalHint").innerText =
+                    `Petunjuk: batas bawah kelas pertama dimulai dari ${minVal}, dan batas atas kelas terakhir sebaiknya mencapai ${maxVal}.`;
+            }
+
+            hitungSudahBenar = Number(document.getElementById("inputRange").value) === rangeVal &&
+                Number(document.getElementById("inputKelas").value) === kelasVal &&
+                Number(document.getElementById("inputInterval").value) === intervalVal;
+            document.getElementById("btnBuatTabel").disabled = !hitungSudahBenar;
+            tabelSudahBenar = false;
+            document.getElementById("btnKeRingkasan").disabled = true;
+            updateQuestStatus();
+        }
+
+        function initDraftAutosaveAktivitas3() {
+            if (!window.DraftAutosave) return;
+
+            window.DraftAutosave.attachDraftAutosave("aktivitas3", {
+                statusMount: "#catatanKonsep",
+                shouldSkip: () => aktivitas3State.submitted,
+                collect: collectDraftAktivitas3,
+                restore: restoreDraftAktivitas3,
+                fields: [
+                    { key: "catatanKonsep", selector: "#catatanKonsep" },
+                    { key: "inputRange", selector: "#inputRange" },
+                    { key: "inputKelas", selector: "#inputKelas" },
+                    { key: "inputInterval", selector: "#inputInterval" }
+                ],
+                extraSelectors: ["#tabelInterval"],
+                onRestore: updateQuestStatus
+            });
+        }
+
+        function siapkanSessionJawabanAktivitas3() {
+            const userChanged = window.LearningResponses?.prepareLearningResponseSession?.({
+                sessionKey: "learningResponsesSessionUserId:aktivitas3"
+            });
+            if (!userChanged) return;
+
+            const saved = readJSONStorage("hasilAktivitas3", null);
+            if (!saved) return;
+
+            saved.catatanKonsep = "";
+            saved.ringkasanKonsepSudahDicek = false;
+            localStorage.setItem("hasilAktivitas3", JSON.stringify(saved));
+        }
+
+        function initLearningResponsesAktivitas3() {
+            if (!window.LearningResponses) return;
+
+            window.LearningResponses.attachLearningResponseBatchControls({
+                activityKey: "aktivitas3",
+                mount: "#catatanKonsep",
+                items: [
+                    {
+                        activityKey: "aktivitas3",
+                        questionKey: "catatan_konsep_video",
+                        getValue: () => document.getElementById("catatanKonsep").value,
+                        applyValue: (response) => window.LearningResponses.applyLoadedResponseToField("#catatanKonsep", response)
+                    }
+                ]
+            });
         }
 
         function muatData() {
@@ -521,6 +691,7 @@
 
             return {
                 catatanKonsep: "",
+                ringkasanKonsepSudahDicek: false,
                 range: rangeVal,
                 kelas: legacyInterval.length,
                 interval: intervalVal,
@@ -534,9 +705,14 @@
             if (!saved) return;
 
             document.getElementById("catatanKonsep").value = saved.catatanKonsep || "";
+            ringkasanKonsepSudahDicek = Boolean(saved.ringkasanKonsepSudahDicek);
             document.getElementById("inputRange").value = saved.range ?? rangeVal;
             document.getElementById("inputKelas").value = saved.kelas ?? kelasVal;
             document.getElementById("inputInterval").value = saved.interval ?? intervalVal;
+
+            if (ringkasanKonsepSudahDicek) {
+                document.getElementById("conceptSummarySection").classList.add("active");
+            }
 
             intervalKelas = Array.isArray(saved.intervalKelas) ? saved.intervalKelas.slice() : [];
             frekuensiBenar = Array.isArray(saved.frekuensiBenar) ? saved.frekuensiBenar.slice() : [];
@@ -575,7 +751,7 @@
             document.getElementById("tableActions").style.display = "flex";
             document.getElementById("intervalHint").innerText =
                 `Petunjuk: batas bawah kelas pertama dimulai dari ${minVal}, dan batas atas kelas terakhir sebaiknya mencapai ${maxVal}.`;
-            showFeedback("Tabel distribusi frekuensi yang tersimpan berhasil dimuat.");
+            showFeedback("Tabel distribusi frekuensi yang tersimpan berhasil dimuat.", "neutral");
         }
 
         function renderRingkasanAktivitas3() {
@@ -604,6 +780,7 @@
             ], isReadOnly);
 
             setDisabledState([
+                "#activity3SummaryCheckButton",
                 "#activity3CheckButton",
                 "#btnBuatTabel",
                 "#activity3CheckTableButton"
@@ -631,8 +808,67 @@
                     alert("Tuliskan terlebih dahulu catatan inti sebelum lanjut ke pengolahan data.");
                     return;
                 }
+
+                if (!ringkasanKonsepSudahDicek && !aktivitas3State.reviewMode) {
+                    alert("Tekan Cek Ringkasan terlebih dahulu agar rangkuman penguatan muncul sebelum lanjut ke pengolahan data.");
+                    return;
+                }
             }
             setStep(no);
+        }
+
+        function resetRingkasanKonsep() {
+            ringkasanKonsepSudahDicek = false;
+
+            const feedback = document.getElementById("conceptFeedback");
+            feedback.className = "note-feedback validation-message";
+            feedback.style.display = "none";
+            feedback.textContent = "";
+
+            document.getElementById("conceptSummarySection").classList.remove("active");
+        }
+
+        function evaluasiCatatanKonsep(catatan) {
+            const teks = catatan.toLowerCase();
+            const indikator = [
+                { label: "mengurutkan data", cocok: /urut|terkecil|terbesar/.test(teks) },
+                { label: "minimum dan maksimum", cocok: /(minimum|minimal|terkecil)/.test(teks) && /(maksimum|maksimal|terbesar)/.test(teks) },
+                { label: "jangkauan", cocok: /jangkauan|selisih/.test(teks) },
+                { label: "banyak kelas", cocok: /kelas|sturges|log/.test(teks) },
+                { label: "panjang interval", cocok: /interval/.test(teks) },
+                { label: "frekuensi", cocok: /frekuensi/.test(teks) }
+            ];
+
+            const cocok = indikator.filter((item) => item.cocok);
+            const kurang = indikator.filter((item) => !item.cocok).map((item) => item.label);
+            const isSuccess = cocok.length >= 3;
+
+            return {
+                isSuccess,
+                text: isSuccess
+                    ? "Catatanmu sudah memuat poin penting dari video. Rangkuman langkah membuat histogram dibuka di bawah sebagai penguatan."
+                    : `Catatanmu sudah mulai memuat ide utama. Kalau ingin lebih lengkap, kamu bisa menambahkan poin seperti ${kurang.slice(0, 3).join(", ")}. Rangkuman penguatan sudah dibuka untuk membantumu melengkapi catatan.`
+            };
+        }
+
+        function cekCatatanKonsep() {
+            const catatan = document.getElementById("catatanKonsep").value.trim();
+            if (!catatan) {
+                alert("Tuliskan terlebih dahulu catatan inti berdasarkan video sebelum mengecek ringkasan.");
+                return;
+            }
+
+            const hasil = evaluasiCatatanKonsep(catatan);
+            const feedback = document.getElementById("conceptFeedback");
+
+            ringkasanKonsepSudahDicek = true;
+            document.getElementById("conceptSummarySection").classList.add("active");
+            feedback.style.display = "block";
+            feedback.className = `note-feedback validation-message ${hasil.isSuccess ? "is-success" : "is-neutral"}`;
+            feedback.textContent = hasil.text;
+
+            saveDraftNowAktivitas3();
+            updateQuestStatus();
         }
 
         function cekHitung() {
@@ -644,13 +880,13 @@
             const helperKelas = document.getElementById("helperKelas");
             const helperInterval = document.getElementById("helperInterval");
 
-            helperRange.className = inputRange === rangeVal ? "helper ok" : "helper";
+            helperRange.className = inputRange === rangeVal ? "helper validation-message is-success" : "helper validation-message is-error";
             helperRange.innerText = inputRange === rangeVal ? "Jangkauan sudah tepat." : `Coba lagi. Jangkauan data yang digunakan di sini adalah ${rangeVal}.`;
 
-            helperKelas.className = inputKelas === kelasVal ? "helper ok" : "helper";
+            helperKelas.className = inputKelas === kelasVal ? "helper validation-message is-success" : "helper validation-message is-error";
             helperKelas.innerText = inputKelas === kelasVal ? "Banyak kelas sudah sesuai." : `Gunakan aturan Sturges. Banyak kelas yang digunakan di sini adalah ${kelasVal}.`;
 
-            helperInterval.className = inputInterval === intervalVal ? "helper ok" : "helper";
+            helperInterval.className = inputInterval === intervalVal ? "helper validation-message is-success" : "helper validation-message is-error";
             helperInterval.innerText = inputInterval === intervalVal ? "Panjang interval sudah sesuai." : `Panjang interval yang digunakan di sini adalah ${intervalVal}.`;
 
             hitungSudahBenar = inputRange === rangeVal && inputKelas === kelasVal && inputInterval === intervalVal;
@@ -687,7 +923,8 @@
             document.getElementById("tableActions").style.display = "flex";
             document.getElementById("intervalHint").innerText =
                 `Petunjuk: batas bawah kelas pertama dimulai dari ${minVal}, dan batas atas kelas terakhir sebaiknya mencapai ${maxVal}.`;
-            showFeedback("Tabel interval sudah dibentuk. Susun interval kelasmu sendiri dengan memperhatikan batas awal dan batas akhir data.");
+            showFeedback("Tabel interval sudah dibentuk. Susun interval kelasmu sendiri dengan memperhatikan batas awal dan batas akhir data.", "neutral");
+            saveDraftNowAktivitas3();
             updateQuestStatus();
         }
 
@@ -723,14 +960,16 @@
             if (!valid || intervalKelas.length !== k) {
                 tabelSudahBenar = false;
                 document.getElementById("btnKeRingkasan").disabled = true;
-                showFeedback("Masih ada interval yang belum tepat. Periksa kembali urutan kelas, batas bawah, batas atas, dan lebar interval.", true);
+                showFeedback("Masih ada interval yang belum tepat. Periksa kembali urutan kelas, batas bawah, batas atas, dan lebar interval.", "error");
+                saveDraftNowAktivitas3();
                 updateQuestStatus();
                 return;
             }
 
             tabelSudahBenar = true;
             document.getElementById("btnKeRingkasan").disabled = false;
-            showFeedback("Bagus. Interval kelas dan frekuensi yang kamu isi sudah sesuai.");
+            showFeedback("Bagus. Interval kelas dan frekuensi yang kamu isi sudah sesuai.", "success");
+            saveDraftNowAktivitas3();
             updateQuestStatus();
         }
 
@@ -750,20 +989,21 @@
             updateQuestStatus();
         }
 
-        function showFeedback(text, isError = false) {
+        function showFeedback(text, status = "neutral") {
             const box = document.getElementById("feedbackBox");
             box.style.display = "block";
-            box.style.background = isError ? "#fff1f2" : "#eef4ff";
-            box.style.color = isError ? "#b42318" : "#3154d7";
+            box.className = `feedback validation-message is-${status}`;
             box.textContent = text;
         }
 
         function updateQuestStatus() {
             const statuses = [
                 {
-                    done: Boolean(document.getElementById("catatanKonsep").value.trim()),
+                    done: Boolean(document.getElementById("catatanKonsep").value.trim()) && ringkasanKonsepSudahDicek,
                     label: "Catatan bengkel tersimpan",
-                    note: "Catatan konsep inti sudah ditulis."
+                    note: ringkasanKonsepSudahDicek
+                        ? "Catatan konsep inti sudah ditulis dan rangkuman penguatan sudah dibuka."
+                        : "Tulis catatan dari video lalu tekan Cek Ringkasan."
                 },
                 {
                     done: hitungSudahBenar,
@@ -801,6 +1041,7 @@
             localStorage.setItem("frekuensiBenar", JSON.stringify(frekuensiBenar));
             localStorage.setItem("hasilAktivitas3", JSON.stringify({
                 catatanKonsep: document.getElementById("catatanKonsep").value.trim(),
+                ringkasanKonsepSudahDicek,
                 range: Number(document.getElementById("inputRange").value),
                 kelas: Number(document.getElementById("inputKelas").value),
                 interval: Number(document.getElementById("inputInterval").value),
@@ -808,6 +1049,7 @@
                 frekuensiBenar
             }));
             localStorage.setItem("aktivitas3", "true");
+            window.DraftAutosave?.clearDraft("aktivitas3");
             exitActivityEditMode(3);
 
             alert("Aktivitas 3 selesai. Lanjut ke Aktivitas 4.");

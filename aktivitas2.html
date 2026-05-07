@@ -165,6 +165,27 @@
             color: #6a7294;
         }
 
+        .dataset-notice {
+            margin-top: 14px;
+            padding: 13px 15px;
+            border-radius: 18px;
+            background: rgba(24, 183, 163, 0.12);
+            border: 1px solid rgba(24, 183, 163, 0.24);
+            color: #0b7f72;
+            font-weight: 700;
+            line-height: 1.6;
+        }
+
+        .dataset-notice.error {
+            background: rgba(255, 98, 85, 0.1);
+            border-color: rgba(255, 98, 85, 0.26);
+            color: #b8322b;
+        }
+
+        .dataset-notice[hidden] {
+            display: none;
+        }
+
         .collector-grid {
             display: grid;
             grid-template-columns: 0.9fr 1.1fr;
@@ -521,23 +542,23 @@
             </div>
 
             <div class="context-grid">
-                <article class="context-card" onclick="pilihKonteks('Tinggi badan murid', 'cm', this)">
+                <article class="context-card" data-context-key="tinggi_badan" onclick="pilihKonteks('Tinggi badan murid', 'cm', this)">
                     <h3>Tinggi badan</h3>
                     <p>Contoh data pengukuran tinggi badan murid dalam satuan cm.</p>
                 </article>
-                <article class="context-card" onclick="pilihKonteks('Lama perjalanan ke sekolah', 'menit', this)">
+                <article class="context-card" data-context-key="lama_perjalanan" onclick="pilihKonteks('Lama perjalanan ke sekolah', 'menit', this)">
                     <h3>Lama perjalanan</h3>
                     <p>Contoh data waktu tempuh dari rumah ke sekolah dalam satuan menit.</p>
                 </article>
-                <article class="context-card" onclick="pilihKonteks('Berat badan murid', 'kg', this)">
+                <article class="context-card" data-context-key="berat_badan" onclick="pilihKonteks('Berat badan murid', 'kg', this)">
                     <h3>Berat badan</h3>
                     <p>Contoh data pengukuran berat badan murid dalam satuan kg.</p>
                 </article>
-                <article class="context-card" onclick="pilihKonteks('Uang saku harian murid', 'rupiah', this)">
+                <article class="context-card" data-context-key="uang_saku_harian" onclick="pilihKonteks('Uang saku harian murid', 'rupiah', this)">
                     <h3>Uang saku harian</h3>
                     <p>Contoh data jumlah uang saku harian murid dalam satuan rupiah.</p>
                 </article>
-                <article class="context-card" onclick="pilihKonteks('Waktu menyelesaikan tugas sederhana', 'menit', this)">
+                <article class="context-card" data-context-key="waktu_tugas" onclick="pilihKonteks('Waktu menyelesaikan tugas sederhana', 'menit', this)">
                     <h3>Waktu menyelesaikan tugas</h3>
                     <p>Contoh data waktu yang dibutuhkan murid menyelesaikan tugas sederhana dalam satuan menit.</p>
                 </article>
@@ -587,6 +608,8 @@
                         <button class="secondary-action soft" id="activity2DeleteLastButton" onclick="hapusDataTerakhir()">Hapus Data Terakhir</button>
                         <button class="secondary-action soft" id="activity2ResetButton" onclick="resetData()">Reset Data</button>
                     </div>
+
+                    <p class="dataset-notice" id="activity2DatasetNotice" hidden></p>
 
                     <div class="progress-info">
                         <strong id="progressCount">0 dari 25 data terkumpul</strong>
@@ -664,12 +687,21 @@
         </section>
     </main>
 
-    <script src="script.js?v=20260423a"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/learningResponses.js"></script>
+    <script src="js/draftAutosave.js"></script>
+    <script src="js/activity2Dataset.js"></script>
+    <script src="script.js?v=20260423b"></script>
     <script>
         let dataAktivitas = [];
         let aktivitas2State = { submitted: false, reviewMode: false, editMode: false };
+        let aktivitas2AutoDatasetMode = false;
+        let aktivitas2DatasetValid = true;
+        let aktivitas2MandiriMode = false;
 
-        function siapkanAktivitas2() {
+        async function siapkanAktivitas2() {
             aktivitas2State = renderActivityArchiveBanner(2, {
                 bannerId: "activity2ReviewBanner",
                 messageId: "activity2ReviewMessage",
@@ -689,12 +721,81 @@
                 document.getElementById(id).addEventListener("input", updateQuestStatus);
             });
 
+            initLearningResponsesAktivitas2();
+            terapkanRedaksiMandiriAktivitas2();
+            siapkanSessionJawabanAktivitas2();
             muatJawabanAktivitas2();
+            await initActivity2DatasetMode();
+            initDraftAutosaveAktivitas2();
             terapkanModeAktivitas2();
         }
 
+        function initDraftAutosaveAktivitas2() {
+            if (!window.DraftAutosave) return;
+
+            window.DraftAutosave.attachDraftAutosave("aktivitas2", {
+                statusMount: "#refleksiAkt2",
+                shouldSkip: () => aktivitas2State.submitted,
+                fields: [
+                    { key: "refleksiAkt2", selector: "#refleksiAkt2" }
+                ],
+                onRestore: updateQuestStatus
+            });
+        }
+
+        function siapkanSessionJawabanAktivitas2() {
+            window.LearningResponses?.prepareLearningResponseSession?.({
+                sessionKey: "learningResponsesSessionUserId:aktivitas2",
+                storageKeys: ["refleksiAktivitas2"]
+            });
+        }
+
+        async function terapkanRedaksiMandiriAktivitas2() {
+            const identity = await window.LearningResponses?.getResponseIdentity?.();
+            const isMandiri = (identity?.userType || identity?.user_type) === "mandiri";
+            aktivitas2MandiriMode = isMandiri;
+            if (!isMandiri) return;
+
+            const contextText = document.querySelector(".data-card .section-head p");
+            if (contextText) {
+                contextText.textContent = "Pilihan ini membantumu membayangkan data yang cocok untuk disajikan dalam histogram.";
+            }
+
+            const summaryText = document.querySelector(".summary-card .section-head p");
+            if (summaryText) {
+                summaryText.textContent = "Ringkasan ini membantumu memahami data yang sudah dikumpulkan.";
+            }
+
+            const progressMessage = document.getElementById("progressMessage");
+            if (progressMessage && !dataAktivitas.length) {
+                progressMessage.textContent = "Mulailah menambahkan data hasil pengukuran atau observasimu.";
+            }
+
+            const refleksi = document.getElementById("refleksiAkt2");
+            if (refleksi) {
+                refleksi.placeholder = "Tuliskan refleksimu di sini...";
+            }
+        }
+
+        function initLearningResponsesAktivitas2() {
+            if (!window.LearningResponses) return;
+
+            window.LearningResponses.attachLearningResponseBatchControls({
+                activityKey: "aktivitas2",
+                mount: "#refleksiAkt2",
+                items: [
+                    {
+                        activityKey: "aktivitas2",
+                        questionKey: "refleksi_aktivitas2",
+                        getValue: () => document.getElementById("refleksiAkt2").value,
+                        applyValue: (response) => window.LearningResponses.applyLoadedResponseToField("#refleksiAkt2", response)
+                    }
+                ]
+            });
+        }
+
         function pilihKonteks(nama, satuan, elemen) {
-            if (aktivitas2State.reviewMode) return;
+            if (aktivitas2State.reviewMode || aktivitas2AutoDatasetMode) return;
 
             document.getElementById("namaData").value = nama;
             document.getElementById("satuanData").value = satuan;
@@ -730,8 +831,128 @@
             updateTampilanData();
         }
 
+        async function initActivity2DatasetMode() {
+            if (aktivitas2State.reviewMode) {
+                showActivity2DatasetNotice("", false, true);
+                return;
+            }
+
+            const identity = await getActivity2Identity();
+            const isResearchStudent = identity?.userType === "siswa_penelitian" && Boolean(identity?.kelompokNama);
+
+            if (!isResearchStudent) {
+                setActivity2ManualMode();
+                return;
+            }
+
+            const context = window.Activity2Dataset?.getActivity2ContextByGroup(identity.kelompokNama);
+            if (!context) {
+                setActivity2AutoDatasetMode({
+                    context: null,
+                    message: "Dataset kelompok belum tersedia. Hubungi guru/admin.",
+                    isError: true
+                });
+                return;
+            }
+
+            setActivity2AutoDatasetMode({ context });
+
+            try {
+                const dataset = await window.Activity2Dataset.loadActivity2DatasetFromSupabase(context.group_name);
+                applyActivity2Dataset({
+                    ...context,
+                    ...dataset,
+                    context_title: dataset.context_title || context.context_title,
+                    unit: dataset.unit || context.unit
+                });
+
+                if (dataset.data_values.length < 25) {
+                    showActivity2DatasetNotice("Dataset kelompok sudah dimuat, tetapi jumlah data kurang dari 25. Hubungi guru/admin untuk melengkapi data.", true);
+                    aktivitas2DatasetValid = false;
+                    return;
+                }
+
+                showActivity2DatasetNotice("Data sudah otomatis dimuat berdasarkan kelompok.");
+                aktivitas2DatasetValid = true;
+            } catch (error) {
+                console.error(error);
+                setActivity2AutoDatasetMode({
+                    context,
+                    message: error.message || "Dataset kelompok belum tersedia. Hubungi guru/admin.",
+                    isError: true
+                });
+            }
+        }
+
+        async function getActivity2Identity() {
+            if (window.HistogramAuth?.getCurrentIdentity) {
+                return window.HistogramAuth.getCurrentIdentity({ allowLegacyFallback: true });
+            }
+
+            return {
+                userId: localStorage.getItem("userId") || "",
+                namaLengkap: localStorage.getItem("namaLengkap") || "",
+                kelompokNama: localStorage.getItem("kelompokNama") || "",
+                kelompokKelas: localStorage.getItem("kelompokKelas") || "",
+                userType: localStorage.getItem("userType") || "mandiri"
+            };
+        }
+
+        function applyActivity2Dataset(dataset) {
+            const values = Array.isArray(dataset.data_values)
+                ? dataset.data_values.map(Number).filter((value) => Number.isFinite(value))
+                : [];
+
+            dataAktivitas = values;
+            document.getElementById("namaData").value = dataset.context_title || "";
+            document.getElementById("satuanData").value = dataset.unit || "";
+            highlightActivity2Context(dataset.context_key);
+            updateTampilanData();
+        }
+
+        function setActivity2AutoDatasetMode({ context = null, message = "Data sudah otomatis dimuat berdasarkan kelompok.", isError = false } = {}) {
+            aktivitas2AutoDatasetMode = true;
+            aktivitas2DatasetValid = !isError;
+            dataAktivitas = [];
+
+            if (context) {
+                document.getElementById("namaData").value = context.context_title;
+                document.getElementById("satuanData").value = context.unit;
+                highlightActivity2Context(context.context_key);
+            }
+
+            showActivity2DatasetNotice(message, isError);
+            updateTampilanData();
+        }
+
+        function setActivity2ManualMode() {
+            aktivitas2AutoDatasetMode = false;
+            aktivitas2DatasetValid = true;
+            showActivity2DatasetNotice("", false, true);
+
+            document.querySelectorAll(".context-card").forEach((card) => {
+                card.style.pointerEvents = aktivitas2State.reviewMode ? "none" : "";
+            });
+        }
+
+        function showActivity2DatasetNotice(message, isError = false, hidden = false) {
+            const notice = document.getElementById("activity2DatasetNotice");
+            if (!notice) return;
+
+            notice.textContent = message;
+            notice.className = `dataset-notice ${isError ? "error" : ""}`;
+            notice.hidden = hidden || !message;
+        }
+
+        function highlightActivity2Context(contextKey) {
+            document.querySelectorAll(".context-card").forEach((card) => {
+                card.classList.toggle("active", card.dataset.contextKey === contextKey);
+            });
+        }
+
         function terapkanModeAktivitas2() {
             const isReadOnly = aktivitas2State.reviewMode;
+            const disableManualInput = isReadOnly || aktivitas2AutoDatasetMode;
 
             setReadOnlyState([
                 "#namaData",
@@ -740,15 +961,21 @@
                 "#refleksiAkt2"
             ], isReadOnly);
 
+            setReadOnlyState([
+                "#namaData",
+                "#satuanData",
+                "#singleDataInput"
+            ], disableManualInput);
+
             setDisabledState([
                 "#singleDataInput",
                 "#activity2AddDataButton",
                 "#activity2DeleteLastButton",
                 "#activity2ResetButton"
-            ], isReadOnly);
+            ], disableManualInput);
 
             document.querySelectorAll(".context-card").forEach((card) => {
-                card.style.pointerEvents = isReadOnly ? "none" : "";
+                card.style.pointerEvents = disableManualInput ? "none" : "";
             });
 
             document.getElementById("activity2SubmitWrap").style.display = isReadOnly ? "none" : "block";
@@ -758,6 +985,8 @@
         }
 
         function tambahData() {
+            if (aktivitas2AutoDatasetMode) return;
+
             const input = document.getElementById("singleDataInput");
             const nilai = input.value.trim();
 
@@ -773,6 +1002,8 @@
         }
 
         function hapusDataTerakhir() {
+            if (aktivitas2AutoDatasetMode) return;
+
             if (dataAktivitas.length === 0) {
                 alert("Belum ada data yang bisa dihapus.");
                 return;
@@ -783,6 +1014,8 @@
         }
 
         function resetData() {
+            if (aktivitas2AutoDatasetMode) return;
+
             if (dataAktivitas.length === 0) return;
 
             const yakin = confirm("Apakah kamu yakin ingin menghapus semua data yang sudah dimasukkan?");
@@ -830,7 +1063,13 @@
             progressBarFill.style.width = `${persen}%`;
 
             if (dataAktivitas.length === 0) {
-                progressMessage.textContent = "Mulailah menambahkan data hasil pengukuran atau observasi kelompokmu.";
+                progressMessage.textContent = aktivitas2MandiriMode
+                    ? "Mulailah menambahkan data hasil pengukuran atau observasimu."
+                    : "Mulailah menambahkan data hasil pengukuran atau observasi kelompokmu.";
+            } else if (aktivitas2AutoDatasetMode) {
+                progressMessage.textContent = dataAktivitas.length >= 25
+                    ? "Data sudah otomatis dimuat berdasarkan kelompok."
+                    : "Dataset kelompok sudah dimuat, tetapi jumlah data belum mencapai 25.";
             } else if (dataAktivitas.length < 25) {
                 progressMessage.textContent = "Data sudah mulai terkumpul. Lanjutkan sampai minimal 25 data.";
             } else {
@@ -886,6 +1125,11 @@
                 return;
             }
 
+            if (aktivitas2AutoDatasetMode && !aktivitas2DatasetValid) {
+                alert("Dataset kelompok belum siap digunakan. Hubungi guru/admin.");
+                return;
+            }
+
             if (dataAktivitas.length < 25) {
                 alert("Minimal harus ada 25 data yang valid.");
                 return;
@@ -901,6 +1145,7 @@
             localStorage.setItem("dataAktivitas2", JSON.stringify(dataAktivitas));
             localStorage.setItem("refleksiAktivitas2", refleksi);
             localStorage.setItem("aktivitas2", "true");
+            window.DraftAutosave?.clearDraft("aktivitas2");
             exitActivityEditMode(2);
 
             alert("Aktivitas 2 selesai. Lanjut ke Aktivitas 3.");
